@@ -9,17 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-<<<<<<< HEAD
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "description": "",
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "firebase": "^11.2.0"
-=======
-  "dependencies": {
+    "firebase": "^11.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.3"
@@ -35,6 +26,5 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
     "vite": "^6.0.5"
->>>>>>> ade38b7a024363fe80944f62bf00fd574484561b
   }
 }
