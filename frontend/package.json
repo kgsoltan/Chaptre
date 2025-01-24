@@ -9,5 +9,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "firebase": "^11.2.0"
+  }
 }
