@@ -7,7 +7,7 @@ function BookCard({ book }) {
       <img src={book.coverImage} alt={"Image Not Found"} />
       <h3>{book.title}</h3>
       <p>By {book.author}</p>
-      <Link to={`/book/${book.id}`}>Read Book</Link>
+      <Link to={`/book/${book.bookId}`}>Read Book</Link>
     </div>
   );
 }

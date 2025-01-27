@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BookList from '../components/BookGrid';
-import { getAllBooks, getBookContentByID } from '../services/api';
+import { getAllBooks } from '../services/api';
 
 function Home() {
   const [books, setBooks] = useState([]);

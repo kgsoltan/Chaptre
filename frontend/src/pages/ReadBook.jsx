@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { getBookContentByBookID } from '../services/api';
 
 function ReadBook() {
-  const [book, setBook] = useState(null);
+  const [book, setBook] = useState([]);
   const { bookId } = useParams();
 
   useEffect(() => {
-    // Fetch book content
     const fetchBook = async () => {
-      // Replace with actual API call
-      const response = await fetch(`https://api.example.com/books/${bookId}`);
-      const data = await response.json();
-      setBook(data);
-    };
-
-    fetchBook();
-  }, [bookId]);
+      try {
+        const allBooks = await getBookContentByBookID(bookId)
+        setBook(allBooks)
+      } catch(e){
+        alert("FAILED TO LOAD BOOK")
+      }
+    }
+    fetchBook()
+  }, [bookId])
 
   if (!book) return <div>Loading...</div>;
 

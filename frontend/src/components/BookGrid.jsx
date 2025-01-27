@@ -5,7 +5,7 @@ function BookList({ books }) {
   return (
     <div className="book-list">
       {books.map(book => (
-        <BookCard key={book.id} book={book} />
+        <BookCard key={book.bookId} book={book} />
       ))}
     </div>
   );
