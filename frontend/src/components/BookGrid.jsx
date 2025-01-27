@@ -1,7 +1,7 @@
 import React from 'react';
 import BookCard from './BookCard';
 
-function BookList({ books }) {
+function BookGrid({ books }) {
   return (
     <div className="book-list">
       {books.map(book => (
@@ -11,4 +11,4 @@ function BookList({ books }) {
   );
 }
 
-export default BookList;
+export default BookGrid;

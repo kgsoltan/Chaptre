@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import ReadBook from './pages/ReadBook';
 import LoginPage from './pages/LoginPage';
+import EditBook from './pages/EditBook';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile/:authorId" element={<Profile />} />
           <Route path="/book/:bookId" element={<ReadBook />} />
+          <Route path="/book/:bookId/editor" element={<EditBook />} />
         </Routes>
         <Footer />
       </div>

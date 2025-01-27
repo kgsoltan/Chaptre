@@ -2,11 +2,13 @@ export const getAllBooks = async () => {
 
     // mock book database
     return (
-        [
-            { "authorID" : 1 ,"bookId": 1, "title": "John's Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/24/600/900"},
-            { "authorID" : 2 ,"bookId": 2, "title": "Another Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
-            { "authorID" : 1 ,"bookId": 3, "title": "John's Alternative Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/27/600/900" }
-        ]
+        {
+            "books" : [
+                { "authorID" : 1 ,"bookId": 1, "title": "John's Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/24/600/900"},
+                { "authorID" : 2 ,"bookId": 2, "title": "Another Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
+                { "authorID" : 1 ,"bookId": 3, "title": "John's Alternative Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/27/600/900" }
+            ]
+        }
     )
     //delete code above after adding filling out the API stuff below
 

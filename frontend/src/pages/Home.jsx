@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import BookList from '../components/BookGrid';
+import BookGrid from '../components/BookGrid';
 import { getAllBooks } from '../services/api';
 
 function Home() {
@@ -8,7 +8,7 @@ function Home() {
     const loadAllBooks = async () => {
       try {
         const allBooks = await getAllBooks()
-        setBooks(allBooks)
+        setBooks(allBooks.books)
       } catch(e){
         alert("FAILED TO LOAD BOOKS")
       }
@@ -19,7 +19,7 @@ function Home() {
   return (
     <div className="home">
       <h1>Welcome to Chaptre</h1>
-      <BookList books={books} />
+      <BookGrid books={books} />
     </div>
   );
 }
