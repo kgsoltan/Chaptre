@@ -26,7 +26,15 @@ export const getAllBooks = async () => {
 
 export const getBookContentByID = async () => {
 
-    //delete code above this as its mock data
+    // mock book database
+    return (
+        [
+            { "id": 1, "title": "John's Story",
+             "author": "John Smith",
+             "Content" : "Hello this is the entire book. Hello this is the entire book. Hello this is the entire book. "},
+        ]
+    )
+    //delete code above after adding filling out the API stuff below
 
     try {
         const response = await fetch(""); //Add the url later
