@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import BookList from '../components/BookList';
+import BookList from '../components/BookGrid';
 
 function Profile() {
   const [author, setAuthor] = useState(null);
