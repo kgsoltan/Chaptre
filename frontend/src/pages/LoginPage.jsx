@@ -1,10 +1,9 @@
 import React from 'react';
 import Login from '../components/Login';
-
+import '../Login.css'; 
 function LoginPage() {
     return (
-        <div>
-            <h1>Welcome to Chapter</h1>
+        <div className='bg'>
             <Login />
         </div>
     );

@@ -10,6 +10,8 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   padding: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .book-card {
@@ -21,4 +23,12 @@ body {
 .book-card img {
   max-width: 100%;
   height: auto;
+}
+
+.chapter-logo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 10; 
 }
