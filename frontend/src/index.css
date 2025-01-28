@@ -1,4 +1,5 @@
 /* Add your global styles here */
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -31,4 +32,54 @@ body {
   right: 0;
   padding: 10px;
   z-index: 10; 
+}
+
+.header {
+  background-color: #ffecec;
+  padding: 15px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end; 
+  padding-right: 30px;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.nav-item {
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: #d32f2f;
+  font-weight: bold;
+  transition: background 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+  background: rgba(211, 47, 47, 0.2);
+}
+
+.login-btn {
+  border: 2px solid #d32f2f;
+  border-radius: 8px;
+  padding: 10px 15px;
+}
+
+.login-btn:hover {
+  background: #d32f2f;
+  color: white;
 }
