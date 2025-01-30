@@ -1,0 +1,58 @@
+//Database spec
+
+authors
+  └── AUTHOR_ID
+        ├── FIRST_NAME: string
+        ├── LAST_NAME: string
+        ├── EMAIL: string
+        ├── BIO: string
+        ├── LOCATION: string
+        ├── BOOKS_AS_AUTHOR: [int] (array of book IDs) //Owns these and has edit permissions aka is the author to these book IDs
+        ├── FAVORITED_BOOKS: [int] (array of book IDs) //The ones the profile has clicked favorite on
+        ├── PROFILE_PIC_URL: string (URL of the profile image)
+
+books
+  └── BOOK_ID
+        ├── BOOK_TITLE: string
+        ├── GENRE_TAGS: [string] (array of genre tags)
+        ├── CHAPTERS: 
+        │     └── chapter_1: 
+        │         ├── TITLE: string
+        │         ├── TEXT: string
+        │     └── chapter_2: 
+        │         ├── TITLE: string
+        │         ├── TEXT: string
+        │     └── ... 
+        ├── COVER_IMAGE_URL: string (URL of the book cover)
+
+
+Example of author:
+{
+  "FIRST_NAME": "John",
+  "LAST_NAME": "Smith",
+  "EMAIL": "jsmith@email.com",
+  "BIO": "I AM JOHN",
+  "LOCATION": "ANTARCTICA",
+  "BOOKS_AS_AUTHOR": [4, 3, 5],
+  "FAVORITED_BOOKS": [7, 8],
+  "PROFILE_PIC_URL": "imageurl.url"
+}
+
+Example of book:
+{
+  "BOOK_TITLE": "John's story",
+  "GENRE_TAGS": ["Crime", "Action"],
+  "CHAPTERS": {
+    "chapter_1": {
+      "TITLE": "The Beginning",
+      "TEXT": "Blah blah blah"
+    },
+    "chapter_2": {
+      "TITLE": "After the beginning",
+      "TEXT": "Blah blah blah"
+    },
+  },
+  "COVER_IMAGE_URL": "imageurl.url"
+}
+
+//APIs
