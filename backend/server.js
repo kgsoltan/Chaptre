@@ -99,7 +99,25 @@ app.post('/authors', async (req, res) => {
     }
 });
 
-//BOOKS POST, GET, AND PATCH -----------------------------
+
+app.put('/authors/:authorId', async (req, res) => {
+    const { authorId } = req.params;
+    const { name, bio } = req.body;
+  
+    try {
+      const authorRef = db.collection('authors').doc(authorId);
+      await authorRef.update({ name, bio });
+      
+      const updatedAuthor = await authorRef.get();
+      res.json({ id: updatedAuthor.id, ...updatedAuthor.data() });
+    } catch (error) {
+      console.error('Error updating author:', error);
+      res.status(500).send('Error updating author');
+    }
+  });
+  
+
+//BOOKS POST AND GET -----------------------------
 app.get('/books', async (req, res) => {
     try {
         const snapshot = await db.collection('books').get();
