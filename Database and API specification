@@ -15,11 +15,17 @@ books
   └── BOOK_ID
         ├── BOOK_TITLE: string
         ├── GENRE_TAGS: [string] (array of genre tags)
+        |── NUM_CHAPTERS: int
+        |── DATE: time
         ├── CHAPTERS: 
-        │     └── chapter_1: 
+        │     └── chapter_1:
+        |         ├── PARENT_ID : int
+        |         ├── IS_DRAFT : bool
         │         ├── TITLE: string
         │         ├── TEXT: string
         │     └── chapter_2: 
+        |         ├── PARENT_ID : int
+        |         ├── IS_DRAFT : bool
         │         ├── TITLE: string
         │         ├── TEXT: string
         │     └── ... 
