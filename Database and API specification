@@ -15,6 +15,7 @@ authors
 books
   └── BOOK_ID
         ├── BOOK_TITLE: string
+        ├── IS_PUBLISHED: bool
         ├── AUTHOR: string
         ├── AUTHOR_ID: string
         ├── GENRE_TAGS: [string] (array of genre tags)
@@ -23,13 +24,13 @@ books
         |── DATE: time
         ├── CHAPTERS: 
         │     └── chapter_1:
-        |         ├── PARENT_ID : int
+        |         ├── PARENT_ID : string
         |         ├── IS_DRAFT : bool
         │         ├── TITLE: string
         |         ├── CHAPTER_NUM: int
         │         ├── TEXT: string
         │     └── chapter_2: 
-        |         ├── PARENT_ID : int
+        |         ├── PARENT_ID : string
         |         ├── IS_DRAFT : bool
         │         ├── TITLE: string
         |         ├── CHAPTER_NUM: int
@@ -38,33 +39,25 @@ books
         ├── COVER_IMAGE_URL: string (URL of the book cover)
 
 
-Example of author:
+
+//API Spec
+Unprotected Endpoints:
+
+GET /authors/:authorId
+Get author profile (ID, First name, BIO, Location, Books as Author, Following, Profile Pic URL)
+Example/format:
 {
-  "FIRST_NAME": "John",
-  "LAST_NAME": "Smith",
-  "EMAIL": "jsmith@email.com",
-  "BIO": "I AM JOHN",
-  "LOCATION": "ANTARCTICA",
-  "BOOKS_AS_AUTHOR": [4, 3, 5],
-  "FAVORITED_BOOKS": [7, 8],
-  "PROFILE_PIC_URL": "imageurl.url"
+  "id": "43252",
+  "first_name": "John",
+  "bio": "John's Bio",
+  "location": "California",
+  "books_as_author": ["64353", "845"],
+  "following": ["5434", "345"],
+  "profile_pic_url": "exampleurl"
 }
 
-Example of book:
-{
-  "BOOK_TITLE": "John's story",
-  "GENRE_TAGS": ["Crime", "Action"],
-  "CHAPTERS": {
-    "chapter_1": {
-      "TITLE": "The Beginning",
-      "TEXT": "Blah blah blah"
-    },
-    "chapter_2": {
-      "TITLE": "After the beginning",
-      "TEXT": "Blah blah blah"
-    },
-  },
-  "COVER_IMAGE_URL": "imageurl.url"
-}
 
-//APIs
+
+
+
+
