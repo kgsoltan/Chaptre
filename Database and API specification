@@ -40,8 +40,7 @@ books
 
 
 
-//API Spec
-Unprotected Endpoints:
+//-------------------------------------Unprotected Endpoints-----------------------------------
 
 GET /authors/:authorId
 Get author profile (ID, First name, BIO, Location, Books as Author, Following, Profile Pic URL)
@@ -59,5 +58,154 @@ Example/format:
 
 
 
+GET /books/:bookId
+Get information about a book IF PUBLISHED (ID, title, author, author_id, genre tags, number of chapters, date, cover image url)
+Example/format:
+{
+  "id": "2432",
+  "title": "johns book",
+  "author": "John Smith",
+  "author_id": "43242",
+  "genre_tags": ["horror", "action"],
+  "num_chapters": 10,
+  "date": "datetime,
+  "cover_image_url": "coverurl"
+}
 
+
+
+
+GET /books/:bookId/:chapterNum
+Gets a non-draft chapter from a PUBLISHED book
+Example/format:
+{
+  "parent_book_id": "2432",
+  "chapter_num" : 1
+  "chapter_title": "The start",
+  "text": "hello, this is chapter one blah blah blah.",
+}
+
+
+
+
+GET /books?count={x}
+Gets x number of PUBLISHED book's information.
+Example/format if x = 2:
+{
+  "books": [
+              {
+                  "id": "2432",
+                  "title": "johns book",
+                  "author": "John Smith",
+                  "author_id": "43242",
+                  "genre_tags": ["horror", "action"],
+                  "num_chapters": 10,
+                  "date": "datetime,
+                  "cover_image_url": "coverurl"
+            },
+            {
+                  "id": "53453",
+                  "title": "david's book",
+                  "author": "David",
+                  "author_id": "242",
+                  "genre_tags": ["action"],
+                  "num_chapters": 4,
+                  "date": "datetime,
+                  "cover_image_url": "coverurl"
+          }
+          ]
+}
+
+
+
+
+GET /books/:authorId
+Gets all the PUBLISHED book's info associated with the authorID
+Example/format if x = 2:
+{
+  "books": [
+              {
+                  "id": "2432",
+                  "title": "johns book",
+                  "author": "John Smith",
+                  "author_id": "43242",
+                  "genre_tags": ["horror", "action"],
+                  "num_chapters": 10,
+                  "date": "datetime,
+                  "cover_image_url": "coverurl"
+            },
+            {
+                  "id": "534453",
+                  "title": "johns second book",
+                  "author": "John Smith",
+                  "author_id": "43242",
+                  "genre_tags": ["action"],
+                  "num_chapters": 5,
+                  "date": "datetime,
+                  "cover_image_url": "coverurl"
+          }
+          ]
+}
+
+
+//-------------------------------------Protected Endpoints-------------------------------------
+Must include header:
+Authorization: Bearer <Firebase_ID_Token>
+
+POST /authors
+Makes a new author
+Example/format:
+{
+  "first_name": "John",
+  "last_name": "Smith",
+  "email": "jsmith@email.email",
+  "location": "California",
+  "profile_pic_url": "url"
+}
+
+
+
+
+PATCH /authors/:authorId
+Update the author's information. Only includes fields that were updated.
+Example/format:
+{
+  "bio": "new bio",
+  "location": "new location",
+  "profile_pic_url": "newurl"
+}
+
+
+
+
+POST /books
+Makes a new book with the given author info, tags, etc
+Example/format:
+{
+  "title": "newBook",
+  "author_id": "43543",
+  "genre_tags": ["action"],
+  "cover_image_url": "coverurl"
+}
+
+
+
+
+POST /books/:bookId/newChapter
+Makes a new chapter in the given book with the given title.
+Example/format:
+{
+  "chapter_title": "Next chapter",
+}
+
+
+
+
+PATCH /books/:bookId/:chapterNum
+Modifys the chapter with new text.
+Example/format:
+{
+  "chapter_title": "The start",
+  "text": "new content",
+}
 
