@@ -79,9 +79,10 @@ I sent one POST request manually through the authors route and it showed up on
 the firestore database.
 */
 
-//GET doesn't have any requirements
-//POST needs all fields in req.body
-//PATCH only needs the fields being updated in req.body
+//GET doesn't have any json requirements
+//POST needs json containing all fields in req.body
+//PATCH only needs json containing the fields being updated in req.body
+//DELETE doesn't have any json requirements
 
 //BOOKS POST, GET, AND PATCH -----------------------------
 //use to return a list of all books
@@ -130,6 +131,29 @@ app.patch('/books/:bookId', async (req, res) => {
         res.status(200).json({ id: bookId, ...updatedData });
     } catch (error) {
         res.status(500).send('Error updating book');
+    }
+});
+
+//delete an existing book
+app.delete("/books/:bookId", async (req, res) => {
+    const { bookId } = req.params;
+
+    const bookRef = db.collection("books").doc(bookId);
+    const chaptersRef = bookRef.collection("chapters");
+    
+    //add all doc references to batch for deletion
+    const batch = db.batch();
+    const chaptersSnapshot = await chaptersRef.get();
+    if (!chaptersSnapshot.empty) {
+            chaptersSnapshot.forEach((doc) => { batch.delete(doc.ref); });
+        }
+    batch.delete(bookRef);
+
+    try {
+        await batch.commit();
+        res.status(200).send(`Book '${bookId}' deleted`);
+    } catch (error) {
+        res.status(500).send(`Error deleting book '${bookId}'`);
     }
 });
 
@@ -182,6 +206,17 @@ app.patch('/chapters/:bookId/:chapterId', async (req, res) => {
     }
 });
 
+//delete an existing chapter in a specified book
+app.delete("/chapters/:bookId/:chapterId", async (req, res) => {
+    const { bookId, chapterId } = req.params;
+    try {
+        await db.collection('books').doc(bookId).collection('chapters').doc(chapterId).delete();
+        res.status(200).send(`Chapter '${chapterId}' from book '${bookId}' deleted`);
+    } catch (error) {
+        res.status(500).send(`Error deleting chapter '${chapterId}' from book '${bookId}'`);
+    }
+});
+
 //AUTHORS POST GET PATCH -----------------------------
 //get a list of all authors
 app.get('/authors', async (req, res) => {
@@ -230,6 +265,17 @@ app.patch('/authors/:authorId', async (req, res) => {
         res.status(200).json({ id: authorId, ...updatedData });
     } catch (error) {
         res.status(500).send('Error updating author');
+    }
+});
+
+//delete an existing author
+app.delete("/authors/:authorId", async (req, res) => {
+    const { authorId } = req.params;
+    try {
+        await db.collection('authors').doc(authorId).delete();
+        res.status(200).send(`Author '${authorId}' deleted`);
+    } catch (error) {
+        res.status(500).send(`Error deleting author '${authorId}'`);
     }
 });
 
