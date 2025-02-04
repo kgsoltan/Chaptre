@@ -79,6 +79,7 @@ I sent one POST request manually through the authors route and it showed up on
 the firestore database.
 */
 
+/*
 app.get('/authors', async(req, res) => {
     try{
         const snapshot = await db.collection('authors').get();
@@ -98,6 +99,7 @@ app.post('/authors', async (req, res) => {
         res.status(500).send('Error creating author');
     }
 });
+*/
 
 //BOOKS POST, GET, AND PATCH -----------------------------
 app.get('/books', async (req, res) => {
@@ -111,10 +113,10 @@ app.get('/books', async (req, res) => {
 });
 
 app.post('/books', async (req, res) => {
-    const { title, author, userID, chapters, drafts, published, genre } = req.body;
+    const { book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags } = req.body;
     try {
-        const docRef = await db.collection('books').add({ title, author, userID, chapters, drafts, published, genre });
-        res.status(201).json({ id: docRef.id, title, author, userID, chapters, drafts, published, genre });
+        const docRef = await db.collection('books').add({ book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags });
+        res.status(201).json({ id: docRef.id, book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags });
     } catch (error) {
         res.status(500).send('Error creating book');
     }
@@ -122,18 +124,20 @@ app.post('/books', async (req, res) => {
 
 app.patch('/books/:bookId', async (req, res) => {
     const { bookId } = req.params; // Extract the book ID from the URL parameter
-    const { title, author, userID, chapters, drafts, published, genre } = req.body; // Extract updated data from the request body
+    const { book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags } = req.body; // Extract updated data from the request body
 
     // Prepare the data object to update
     const updatedData = {};
 
-    if (title) updatedData.title = title;
+    if (book_title) updatedData.book_title = book_title;
+    if (is_published) updatedData.is_published = is_published;
     if (author) updatedData.author = author;
-    if (userID) updatedData.userID = userID;
-    if (chapters) updatedData.chapters = chapters;
-    if (drafts) updatedData.drafts = drafts;
-    if (published) updatedData.published = published;
-    if (genre) updatedData.genre = genre;
+    if (author_id) updatedData.author_id = author_id
+    if (num_chapters) updatedData.num_chapters = num_chapters;
+    if (num_drafts) updatedData.num_drafts = num_drafts;
+    if (date) updatedData.date = date;
+    if (cover_image_url) updatedData.cover_image_url = cover_image_url;
+    if (genre_tags) updatedData.genre_tags = genre_tags;
 
     try {
         // Update the book document using the book ID
@@ -161,28 +165,27 @@ app.get('/chapters/:bookId', async (req, res) => {
 });
 
 app.post('/chapters', async (req, res) => {
-    const { title, content, chapterNum, bookId, draft } = req.body;
+    const { parent_id, is_draft, title, chapter_num, text } = req.body;
     try {
-        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ title, content, chapterNum, bookId, draft });
-        res.status(201).json({ id: docRef.id, title, content, chapterNum, bookId, draft });
+        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ parent_id, is_draft, title, chapter_num, text });
+        res.status(201).json({ id: docRef.id, parent_id, is_draft, title, chapter_num, text });
     } catch (error) {
         res.status(500).send('Error creating chapter');
     }
 });
 
-app.patch('/chapters/:chapterId', async (req, res) => {
-    //bookId required in this patch call
-    const { chapterId } = req.params; // Extract the  ID from the URL parameter
-    const { title, content, chapterNum, bookId, draft } = req.body; // Extract updated data from the request body
+app.patch('/chapters/:bookId/:chapterId', async (req, res) => {
+    const { bookId, chapterId } = req.params; // Extract the  ID from the URL parameter
+    const { parent_id, is_draft, title, chapter_num, text } = req.body; // Extract updated data from the request body
 
     // Prepare the data object to update
     const updatedData = {};
 
+    if (parent_id) updatedData.parent_id = parent_id;
+    if (is_draft) updatedData.is_draft = is_draft;
     if (title) updatedData.title = title;
-    if (content) updatedData.content = content;
-    if (chapterNum) updatedData.chapterNum = chapterNum;
-    if (bookId) updatedData.bookId = bookId;
-    if (draft) updatedData.draft = draft;
+    if (chapter_num) updatedData.chapter_num = chapter_num;
+    if (text) updatedData.text = text
 
     try {
         // Update the document using the ID
@@ -196,51 +199,54 @@ app.patch('/chapters/:chapterId', async (req, res) => {
     }
 });
 
-//USERS POST GET PATCH -----------------------------
-app.get('/users', async (req, res) => {
+//AUTHORS POST GET PATCH -----------------------------
+app.get('/authors', async (req, res) => {
     try {
-        const snapshot = await db.collection('users').get();
+        const snapshot = await db.collection('authors').get();
         const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(users);
     } catch (error) {
-        res.status(500).send('Error fetching users');
+        res.status(500).send('Error fetching authors');
     }
 });
 
-app.post('/users', async (req, res) => {
-    const { name, author, bio, books, bookmarks, following } = req.body;
+app.post('/authors', async (req, res) => {
+    const { first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following } = req.body;
 
     try {
-        const docRef = await db.collection('users').add({ name, author, bio, books, bookmarks, following });
-        res.status(201).json({ id: docRef.id, name, author, bio, books, bookmarks, following });
+        const docRef = await db.collection('authors').add({ first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following });
+        res.status(201).json({ id: docRef.id, first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following });
     } catch (error) {
-        res.status(500).send('Error creating user');
+        res.status(500).send('Error creating author');
     }
 });
 
-app.patch('/users/:userId', async (req, res) => {
-    const { userId } = req.params; // Extract the ID from the URL parameter
-    const { name, author, bio, books, bookmarks, following } = req.body; // Extract updated data from the request body
+app.patch('/authors/:authorId', async (req, res) => {
+    const { authorId } = req.params; // Extract the ID from the URL parameter
+    const { first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following } = req.body; // Extract updated data from the request body
 
     // Prepare the data object to update
     const updatedData = {};
 
-    if (name) updatedData.name = name;
-    if (author) updatedData.author = author;
+    if (first_name) updatedData.first_name = first_name;
+    if (last_name) updatedData.last_name = last_name;
+    if (email) updatedData.email = email;
     if (bio) updatedData.bio = bio;
+    if (location) updatedData.location = location;
+    if (profile_pic_url) updatedData.profile_pic_url = profile_pic_url;
     if (books) updatedData.books = books;
     if (bookmarks) updatedData.bookmarks = bookmarks;
     if (following) updatedData.following = following;
 
     try {
         // Update the document using the ID
-        const docRef = db.collection('users').doc(userId);
+        const docRef = db.collection('authors').doc(authorId);
         await docRef.update(updatedData);
 
         // Respond with the updated document details
-        res.status(200).json({ id: userId, ...updatedData });
+        res.status(200).json({ id: authorId, ...updatedData });
     } catch (error) {
-        res.status(500).send('Error updating user');
+        res.status(500).send('Error updating author');
     }
 });
 
