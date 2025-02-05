@@ -79,6 +79,45 @@ I sent one POST request manually through the authors route and it showed up on
 the firestore database.
 */
 
+app.get('/authors', async(req, res) => {
+    try{
+        const snapshot = await db.collection('authors').get();
+        const authors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        res.json(authors);
+    }catch (error){
+        res.status(500).send('Error with fetching authors');
+    }
+});
+
+app.post('/authors', async (req, res) => {
+    const { name } = req.body;
+    try {
+        const docRef = await db.collection('authors').add({ name });
+        res.status(201).json({ id: docRef.id, name });
+    } catch (error) {
+        res.status(500).send('Error creating author');
+    }
+});
+
+
+app.put('/authors/:authorId', async (req, res) => {
+    const { authorId } = req.params;
+    const { name, bio } = req.body;
+  
+    try {
+      const authorRef = db.collection('authors').doc(authorId);
+      await authorRef.update({ name, bio });
+      
+      const updatedAuthor = await authorRef.get();
+      res.json({ id: updatedAuthor.id, ...updatedAuthor.data() });
+    } catch (error) {
+      console.error('Error updating author:', error);
+      res.status(500).send('Error updating author');
+    }
+  });
+  
+
+//BOOKS POST AND GET -----------------------------
 //GET doesn't have any json requirements
 //POST needs json containing all fields in req.body
 //PATCH only needs json containing the fields being updated in req.body
