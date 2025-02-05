@@ -33,6 +33,7 @@ function Profile() {
       }
     }
     fetchAuthor();
+    fetchAuthor();
 
     const fetchBooks = async () => {
       try {
@@ -40,6 +41,7 @@ function Profile() {
         const authorBooks = allBooks.books.filter(b => b.authorID == authorId);
         setBooks(authorBooks);
       } catch(e){
+        alert("FAILED TO LOAD BOOKS");
         alert("FAILED TO LOAD BOOKS");
       }
     }
@@ -92,6 +94,28 @@ function Profile() {
 
   return (
     <div className="profile">
+      {isEditing ? (
+        <>
+          <input
+            name="name"
+            value={editedAuthor.name}
+            onChange={handleChange}
+          />
+          <textarea
+            name="bio"
+            value={editedAuthor.bio}
+            onChange={handleChange}
+          />
+          <button onClick={handleSave}>Save</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <h1>{author.name}'s Profile</h1>
+          <p>{author.bio}</p>
+          <button onClick={handleEdit}>Edit Profile</button>
+        </>
+      )}
       {isEditing ? (
         <>
           <input
