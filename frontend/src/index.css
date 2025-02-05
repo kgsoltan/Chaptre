@@ -134,3 +134,25 @@ body {
   padding: 10px;
   z-index: 10;
 }
+
+/* Chapter Edit View (TextEditor) */
+.text-editor-container {
+  margin: 0 auto;
+  max-width: 1250px; /* Adjust to your preferred width */
+  padding: 20px;
+  min-height: 750px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.ReactQuill {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  min-height: 100px; /* Adjust the minimum height to a larger value */
+  box-sizing: border-box;
+}
