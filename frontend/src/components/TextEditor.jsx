@@ -1,29 +1,38 @@
-import React, {useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useRef, forwardRef, useImperativeHandle } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
+// Define modules for toolbar
 const modules = {
   toolbar: [
-    ["bold", "italic", "underline"], //Add more options if we need
+    [{ 'font': [] }, { 'size': [] }],
+    [{ 'align': [] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['image'],
+    ['undo', 'redo'],
+    [{ 'color': [] }, { 'background': [] }],
   ],
 };
 
 const TextEditor = forwardRef((props, ref) => {
+  const { className, value, onChange, placeholder } = props;
   const quillRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    getContents: () => quillRef.current.getEditor().getContents(), // Get Delta format
-    getHTML: () => quillRef.current.getEditor().root.innerHTML, // Get HTML content
+    getContents: () => quillRef.current.getEditor().getContents(),
+    getHTML: () => quillRef.current.getEditor().root.innerHTML,
   }));
 
   return (
-    <div>
-    <ReactQuill
-      ref={quillRef}
-      theme="snow"
-      modules={modules}
-    />
-    </div>
+      <ReactQuill
+        ref={quillRef}
+        theme="snow" 
+        value={value} 
+        onChange={onChange}
+        modules={modules} 
+        placeholder={placeholder}
+      />
   );
 });
 
