@@ -45,8 +45,6 @@ function Profile() {
     }
     fetchBooks();
   }, [authorId]);
-    fetchBooks()
-  }, [authorId])
 
   const handleEdit = () => {
     setIsEditing(true);
