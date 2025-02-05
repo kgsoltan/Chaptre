@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
-import { getAllBooks, getAuthorProfileByID, updateAuthorProfile } from '../services/api';
-import { getAllBooks, getAuthorProfileByID, addBook } from '../services/api';
+import { getAllBooks, getAuthorProfileByID, updateAuthorProfile, addBook } from '../services/api';
 import Modal from 'react-modal';
 
 function Profile() {
@@ -92,28 +91,6 @@ function Profile() {
 
   return (
     <div className="profile">
-      {isEditing ? (
-        <>
-          <input
-            name="name"
-            value={editedAuthor.name}
-            onChange={handleChange}
-          />
-          <textarea
-            name="bio"
-            value={editedAuthor.bio}
-            onChange={handleChange}
-          />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </>
-      ) : (
-        <>
-          <h1>{author.name}'s Profile</h1>
-          <p>{author.bio}</p>
-          <button onClick={handleEdit}>Edit Profile</button>
-        </>
-      )}
       {isEditing ? (
         <>
           <input
