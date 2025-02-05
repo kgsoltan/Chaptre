@@ -25,6 +25,22 @@ export const getAllBooks = async () => {
     }
 };
 
+// In api.js
+export const updateAuthorProfile = async (authorId, updatedProfile) => {
+    const response = await fetch(`/api/authors/${authorId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedProfile),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update author profile');
+    }
+    return response.json();
+  };
+  
+
 export const getAuthorProfileByID = async (ID) => {
 
     // mock book database

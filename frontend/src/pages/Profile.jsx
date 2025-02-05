@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
+import { getAllBooks, getAuthorProfileByID, updateAuthorProfile } from '../services/api';
 import { getAllBooks, getAuthorProfileByID, addBook } from '../services/api';
 import Modal from 'react-modal';
 
 function Profile() {
-  const [author, setAuthor] = useState([]);
+  const [author, setAuthor] = useState(null);
   const [books, setBooks] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedAuthor, setEditedAuthor] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newBook, setNewBook] = useState({
     book_title: '',
@@ -22,13 +25,14 @@ function Profile() {
   useEffect(() => {
     const fetchAuthor = async () => {
       try {
-        const authorProfile = await getAuthorProfileByID(authorId)
-        setAuthor(authorProfile)
+        const authorProfile = await getAuthorProfileByID(authorId);
+        setAuthor(authorProfile);
+        setEditedAuthor(authorProfile);
       } catch(e){
-        alert("FAILED TO LOAD AUTHOR")
+        alert("FAILED TO LOAD AUTHOR");
       }
     }
-    fetchAuthor()
+    fetchAuthor();
 
     const fetchBooks = async () => {
       try {
@@ -36,12 +40,37 @@ function Profile() {
         const authorBooks = allBooks.books.filter(b => b.authorID == authorId);
         setBooks(authorBooks);
       } catch(e){
-        alert("FAILED TO LOAD BOOKS")
+        alert("FAILED TO LOAD BOOKS");
       }
     }
+    fetchBooks();
+  }, [authorId]);
     fetchBooks()
   }, [authorId])
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateAuthorProfile(authorId, editedAuthor);
+      setAuthor(editedAuthor);
+      setIsEditing(false);
+    } catch (e) {
+      alert("FAILED TO UPDATE AUTHOR");
+    }
+  };
+
+  const handleCancel = () => {
+    setEditedAuthor(author);
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedAuthor(prev => ({ ...prev, [name]: value }));
+  };
   const handleAddBook = async (e) => {
     e.preventDefault();
     try {
@@ -65,8 +94,28 @@ function Profile() {
 
   return (
     <div className="profile">
-      <h1>{author.name}'s Profile</h1>
-      <p>{author.bio}</p>
+      {isEditing ? (
+        <>
+          <input
+            name="name"
+            value={editedAuthor.name}
+            onChange={handleChange}
+          />
+          <textarea
+            name="bio"
+            value={editedAuthor.bio}
+            onChange={handleChange}
+          />
+          <button onClick={handleSave}>Save</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <h1>{author.name}'s Profile</h1>
+          <p>{author.bio}</p>
+          <button onClick={handleEdit}>Edit Profile</button>
+        </>
+      )}
       <h3>{author.name}'s books:</h3>
       <button onClick={() => setModalIsOpen(true)}>Add New Book</button>
       <BookGrid books={books} />
