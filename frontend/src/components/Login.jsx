@@ -8,7 +8,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import '../Login.css'; // Ensure correct path
-import googleLogo from "../assets/google_logo.png";
+import googleLogo from "../public/assets/google_logo.png";
 
 function Login() {
   const [email, setEmail] = useState("");

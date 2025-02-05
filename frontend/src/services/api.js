@@ -6,7 +6,10 @@ export const getAllBooks = async () => {
             "books" : [
                 { "authorID" : 1 ,"bookId": 1, "title": "John's Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/24/600/900"},
                 { "authorID" : 2 ,"bookId": 2, "title": "Another Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
-                { "authorID" : 1 ,"bookId": 3, "title": "John's Alternative Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/27/600/900" }
+                { "authorID" : 1 ,"bookId": 3, "title": "John's Alternative Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/27/600/900" },
+                { "authorID" : 2 ,"bookId": 4, "title": "David's Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
+                { "authorID" : 2 ,"bookId": 5, "title": "Book that's cool Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
+                { "authorID" : 2 ,"bookId": 6, "title": "Zoo Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
             ]
         }
     )
