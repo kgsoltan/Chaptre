@@ -33,7 +33,6 @@ function Profile() {
       }
     }
     fetchAuthor();
-    fetchAuthor();
 
     const fetchBooks = async () => {
       try {
@@ -41,7 +40,6 @@ function Profile() {
         const authorBooks = allBooks.books.filter(b => b.authorID == authorId);
         setBooks(authorBooks);
       } catch(e){
-        alert("FAILED TO LOAD BOOKS");
         alert("FAILED TO LOAD BOOKS");
       }
     }
