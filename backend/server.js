@@ -122,50 +122,6 @@ app.get('/books/:bookId', async (req, res) => {
     }
 });
 
-//get all books from a specific author
-app.get('/books/:authorId', async (req, res) => {
-    const { authorId } = req.params; 
-    try {
-        const snapshot = await db.collection('books').where('author_id', '==', authorId).get();
-        const books = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        res.json(books);
-    } catch (error) {
-        res.status(500).send('Error fetching books');
-    }
-});
-
-//get a chapter from a book
-app.get('/books/:bookId/chapters/:chapterNum', async (req, res) => {
-    const { bookId, chapterNum } = req.params;
-    try {
-        const doc = await db.collection('books').doc(bookId).get();
-        if (!doc.exists) {
-            return res.status(404).json({ message: 'Book not found' });
-        }
-
-        const bookData = doc.data();
-        if(!bookData.is_published) {
-            return res.status(403).json({ message: 'Book not published' });
-        }
-
-        //find the non draft chapter
-        const chapterQuery = await db.collection('books').doc(bookId).collection('chapters').where('chapter_num', '==', parseInt(chapterNum)).get();
-        if (chapterQuery.empty) {
-            return res.status(404).json({ message: 'Chapter not found' });
-        }
-        const chapterDoc = chapterQuery.docs[0] //should only be 1 matching chapter number
-
-        const chapterData = chapterDoc.data();
-        if(chapterData.is_draft) {
-            return res.status(403).json({ message: 'Chapter not published' });
-        }
-
-        res.json({ id: chapterDoc.id, ...chapterDoc.data() });
-    } catch (error) {
-        res.status(500).send('Error fetching chapter');
-    }
-});
-
 //add a book to do the database
 app.post('/books', async (req, res) => {
     const { book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags } = req.body;
@@ -230,10 +186,10 @@ app.delete("/books/:bookId", async (req, res) => {
 
 //CHAPTERS POST GET PATCH DELETE -----------------------------------------------
 //get a list of all chapters for specified book
-app.get('/chapters/:bookId', async (req, res) => {
+app.get('/books/:bookId/chapters', async (req, res) => {
     const { bookId } = req.params;
     try {
-        const snapshot = await db.collection('chapters').where('bookId', '==', bookId).get();
+        const snapshot = await db.collection('books').doc(bookId).collection('chapters').get();
         const chapters = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(chapters);
     } catch (error) {
@@ -241,8 +197,40 @@ app.get('/chapters/:bookId', async (req, res) => {
     }
 });
 
+//get a chapter by its chapter number from a specific book
+app.get('/books/:bookId/chapters/:chapterNum', async (req, res) => {
+    const { bookId, chapterNum } = req.params;
+    try {
+        const doc = await db.collection('books').doc(bookId).get();
+        if (!doc.exists) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        const bookData = doc.data();
+        if(!bookData.is_published) {
+            return res.status(403).json({ message: 'Book not published' });
+        }
+
+        //find the non draft chapter
+        const chapterQuery = await db.collection('books').doc(bookId).collection('chapters').where('chapter_num', '==', parseInt(chapterNum)).get();
+        if (chapterQuery.empty) {
+            return res.status(404).json({ message: 'Chapter not found' });
+        }
+        const chapterDoc = chapterQuery.docs[0] //should only be 1 matching chapter number
+
+        const chapterData = chapterDoc.data();
+        if(chapterData.is_draft) {
+            return res.status(403).json({ message: 'Chapter not published' });
+        }
+
+        res.json({ id: chapterDoc.id, ...chapterDoc.data() });
+    } catch (error) {
+        res.status(500).send('Error fetching chapter');
+    }
+});
+
 //add a new chapter for a specified book
-app.post('/chapters/:bookId', async (req, res) => {
+app.post('/books/:bookId/chapters', async (req, res) => {
     const { bookId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body;
     try {
@@ -254,7 +242,7 @@ app.post('/chapters/:bookId', async (req, res) => {
 });
 
 //edit an already existing chapter in a specified book
-app.patch('/chapters/:bookId/:chapterId', async (req, res) => {
+app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
     const { bookId, chapterId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body; 
 
@@ -277,7 +265,7 @@ app.patch('/chapters/:bookId/:chapterId', async (req, res) => {
 });
 
 //delete an existing chapter in a specified book
-app.delete("/chapters/:bookId/:chapterId", async (req, res) => {
+app.delete("/books/:bookId/chapters/:chapterId", async (req, res) => {
     const { bookId, chapterId } = req.params;
     try {
         await db.collection('books').doc(bookId).collection('chapters').doc(chapterId).delete();
@@ -312,6 +300,18 @@ app.get('/authors/:authorId', async (req, res) => {
         res.json({ id: doc.id, ...doc.data() });
     } catch (error) {
         res.status(500).send('Error fetching author');
+    }
+});
+
+//get all books from a specific author
+app.get('/authors/:authorId/books', async (req, res) => {
+    const { authorId } = req.params; 
+    try {
+        const snapshot = await db.collection('books').where('author_id', '==', authorId).get();
+        const books = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        res.json(books);
+    } catch (error) {
+        res.status(500).send('Error fetching books');
     }
 });
 
