@@ -300,10 +300,10 @@ app.get('/authors', async (req, res) => {
 });
 
 //get a specific author
-app.get('/books/:authorId', async (req, res) => {
+app.get('/authors/:authorId', async (req, res) => {
     const { authorId } = req.params;
     try {
-        const doc = await db.collection('books').doc(authorId).get();
+        const doc = await db.collection('authors').doc(authorId).get();
 
         if (!doc.exists) {
             return res.status(404).json({ message: 'Author not found' });
