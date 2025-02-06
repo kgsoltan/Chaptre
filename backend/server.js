@@ -79,59 +79,90 @@ I sent one POST request manually through the authors route and it showed up on
 the firestore database.
 */
 
-app.get('/authors', async(req, res) => {
-    try{
-        const snapshot = await db.collection('authors').get();
-        const authors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        res.json(authors);
-    }catch (error){
-        res.status(500).send('Error with fetching authors');
-    }
-});
-
-app.post('/authors', async (req, res) => {
-    const { name } = req.body;
-    try {
-        const docRef = await db.collection('authors').add({ name });
-        res.status(201).json({ id: docRef.id, name });
-    } catch (error) {
-        res.status(500).send('Error creating author');
-    }
-});
-
-
-app.put('/authors/:authorId', async (req, res) => {
-    const { authorId } = req.params;
-    const { name, bio } = req.body;
-  
-    try {
-      const authorRef = db.collection('authors').doc(authorId);
-      await authorRef.update({ name, bio });
-      
-      const updatedAuthor = await authorRef.get();
-      res.json({ id: updatedAuthor.id, ...updatedAuthor.data() });
-    } catch (error) {
-      console.error('Error updating author:', error);
-      res.status(500).send('Error updating author');
-    }
-  });
-  
-
-//BOOKS POST AND GET -----------------------------
 //GET doesn't have any json requirements
 //POST needs json containing all fields in req.body
 //PATCH only needs json containing the fields being updated in req.body
 //DELETE doesn't have any json requirements
 
-//BOOKS POST, GET, AND PATCH -----------------------------
-//use to return a list of all books
+//BOOKS POST GET PATCH DELETE -----------------------------
+//use to return a list of all books, optional to limit the amount returned
 app.get('/books', async (req, res) => {
+    const count = parseInt(req.query.count);
     try {
-        const snapshot = await db.collection('books').get();
+        let query = db.collection('books');
+        if (!isNaN(count) && count > 0) {
+            query = query.limit(count);
+        }
+        const snapshot = await query.get();
         const books = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(books);
     } catch (error) {
         res.status(500).send('Error fetching books');
+    }
+});
+
+//get a specific book
+app.get('/books/:bookId', async (req, res) => {
+    const { bookId } = req.params;
+    try {
+        const doc = await db.collection('books').doc(bookId).get();
+        
+        if (!doc.exists) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        const bookData = doc.data();
+        if(!bookData.is_published) {
+            return res.status(403).json({ message: 'Book not published' });
+        }
+
+        res.json({ id: doc.id, ...doc.data() });
+    } catch (error) {
+        res.status(500).send('Error fetching book');
+    }
+});
+
+//get all books from a specific author
+app.get('/books/:authorId', async (req, res) => {
+    const { authorId } = req.params; 
+    try {
+        const snapshot = await db.collection('books').where('author_id', '==', authorId).get();
+        const books = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        res.json(books);
+    } catch (error) {
+        res.status(500).send('Error fetching books');
+    }
+});
+
+//get a chapter from a book
+app.get('/books/:bookId/chapters/:chapterNum', async (req, res) => {
+    const { bookId, chapterNum } = req.params;
+    try {
+        const doc = await db.collection('books').doc(bookId).get();
+        if (!doc.exists) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        const bookData = doc.data();
+        if(!bookData.is_published) {
+            return res.status(403).json({ message: 'Book not published' });
+        }
+
+        //find the non draft chapter
+        const chapterQuery = await db.collection('books').doc(bookId).collection('chapters').where('chapter_num', '==', parseInt(chapterNum)).get();
+        if (chapterQuery.empty) {
+            return res.status(404).json({ message: 'Chapter not found' });
+        }
+        const chapterDoc = chapterQuery.docs[0] //should only be 1 matching chapter number
+
+        const chapterData = chapterDoc.data();
+        if(chapterData.is_draft) {
+            return res.status(403).json({ message: 'Chapter not published' });
+        }
+
+        res.json({ id: chapterDoc.id, ...chapterDoc.data() });
+    } catch (error) {
+        res.status(500).send('Error fetching chapter');
     }
 });
 
@@ -197,7 +228,7 @@ app.delete("/books/:bookId", async (req, res) => {
 });
 
 
-//CHAPTERS POST GET PATCH-----------------------------------------------
+//CHAPTERS POST GET PATCH DELETE -----------------------------------------------
 //get a list of all chapters for specified book
 app.get('/chapters/:bookId', async (req, res) => {
     const { bookId } = req.params;
@@ -256,7 +287,7 @@ app.delete("/chapters/:bookId/:chapterId", async (req, res) => {
     }
 });
 
-//AUTHORS POST GET PATCH -----------------------------
+//AUTHORS POST GET PATCH DELETE -----------------------------
 //get a list of all authors
 app.get('/authors', async (req, res) => {
     try {
@@ -265,6 +296,22 @@ app.get('/authors', async (req, res) => {
         res.json(users);
     } catch (error) {
         res.status(500).send('Error fetching authors');
+    }
+});
+
+//get a specific author
+app.get('/books/:authorId', async (req, res) => {
+    const { authorId } = req.params;
+    try {
+        const doc = await db.collection('books').doc(authorId).get();
+
+        if (!doc.exists) {
+            return res.status(404).json({ message: 'Author not found' });
+        }
+
+        res.json({ id: doc.id, ...doc.data() });
+    } catch (error) {
+        res.status(500).send('Error fetching author');
     }
 });
 
