@@ -3,6 +3,23 @@ import { useParams } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getAllBooks, getAuthorProfileByID, updateAuthorProfile, addBook } from '../services/api';
 import Modal from 'react-modal';
+import Select from 'react-select';
+
+//genre/tags for the select at the bottom
+const genreOptions = [
+  { value: "Fantasy", label: "Fantasy" },
+  { value: "Sci-Fi", label: "Sci-Fi" },
+  { value: "Mystery", label: "Mystery" },
+  { value: "Romance", label: "Romance" },
+  { value: "Horror", label: "Horror" },
+  { value: "Comedy", label: "Comedy" },
+  { value: "Action", label: "Action" },
+  { value: "Adventure", label: "Adventure" },
+  { value: "Drama", label: "Drama" },
+  { value: "Coming of age", label: "Coming of age" },
+  { value: "Fiction", label: "Fiction" },
+  { value: "Non-Fiction", label: "Non-Fiction" },
+];
 
 function Profile() {
   const [author, setAuthor] = useState(null);
@@ -158,11 +175,12 @@ function Profile() {
             value={newBook.cover_image_url}
             onChange={(e) => setNewBook({...newBook, cover_image_url: e.target.value})}
           />
-          <input
-            type="text"
-            placeholder="Genre Tags (comma-separated)"
-            value={newBook.genre_tags.join(',')}
-            onChange={(e) => setNewBook({...newBook, genre_tags: e.target.value.split(',')})}
+          <Select
+            isMulti
+            placeholder="Select genres/tags"
+            options={genreOptions}
+            value={genreOptions.filter(option => newBook.genre_tags.includes(option.value))}
+            onChange={(selectedOptions) => setNewBook({ ...newBook, genre_tags: selectedOptions.map(option => option.value)})}
           />
           <button type="submit">Add Book</button>
         </form>
