@@ -303,6 +303,7 @@ app.get('/authors/:authorId', async (req, res) => {
     }
 });
 
+
 //get all books from a specific author
 app.get('/authors/:authorId/books', async (req, res) => {
     const { authorId } = req.params; 
@@ -317,11 +318,11 @@ app.get('/authors/:authorId/books', async (req, res) => {
 
 //add a new author to the database
 app.post('/authors', async (req, res) => {
-    const { first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following } = req.body;
+    const {first_name, last_name, email, location} = req.body;
 
     try {
-        const docRef = await db.collection('authors').add({ first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following });
-        res.status(201).json({ id: docRef.id, first_name, last_name, email, bio, location, profile_pic_url, books, bookmarks, following });
+        const docRef = await db.collection('authors').add({first_name, last_name, email, location});
+        res.status(201).json({ id: docRef.id, first_name, last_name, email, location});
     } catch (error) {
         res.status(500).send('Error creating author');
     }

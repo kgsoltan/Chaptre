@@ -1,62 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
-import { getAllBooks, getAuthorProfileByID } from '../services/api';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuthorDetails, getAuthorBooks } from '../services/api';
 
 function Profile() {
-  const [author, setAuthor] = useState([]);
-  const [books, setBooks] = useState([]);
-  const [user, setUser] = useState(null);  // Track current user
   const { authorId } = useParams();
-  
+  const [author, setAuthor] = useState(null);
+  const [books, setBooks] = useState([]);
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
+    const loadAuthorData = async () => {
+      try {
+        const authorDetails = await getAuthorDetails(authorId);
+        setAuthor(authorDetails);
+
+        const authorBooks = await getAuthorBooks(authorId);
+        setBooks(authorBooks.books);
+      } catch (e) {
+        alert('Failed to load author data.');
+      }
+    };
+
+    loadAuthorData();
+
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-    return () => unsubscribe(); 
-  }, []);
 
-  useEffect(() => {
-    const fetchAuthor = async () => {
-      try {
-        const authorProfile = await getAuthorProfileByID(authorId)
-        setAuthor(authorProfile);
-      } catch(e){
-        alert("FAILED TO LOAD AUTHOR");
-      }
-    }
-    fetchAuthor();
-
-    const fetchBooks = async () => {
-      try {
-        // Fetch all books
-        const allBooks = await getAllBooks();
-
-        const authorBooks = allBooks.books.filter(b => b.authorID === authorId);
-        setBooks(authorBooks);
-      } catch(e){
-        alert("FAILED TO LOAD BOOKS");
-      }
-    }
-    fetchBooks();
-    
+    return () => unsubscribe();
   }, [authorId]);
 
-  if (!author) return <div>Loading...</div>;
+  if (!author || !books.length) return <div>Loading...</div>;
 
   return (
     <div className="profile">
-      <h1>{author.name}'s Profile</h1>
+      <h1>{author.first_name} {author.last_name}'s Profile</h1>
       <p>{author.bio}</p>
-      <h3>{author.name}'s books:</h3>
+      <h3>{author.first_name}'s books:</h3>
 
-      {user ? (
-        <BookGrid books={books} showEditLink={true} />
-      ) : (
-        <BookGrid books={books} showEditLink={false} />
-      )}
+      <BookGrid books={books} showEditLink={user} />
     </div>
   );
 }
