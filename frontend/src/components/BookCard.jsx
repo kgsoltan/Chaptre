@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function BookCard({ book }) {
+function BookCard({ book, showEditLink }) {
   return (
-    <Link to={`/book/${book.bookId}`} className="book-card">
-      <img src={book.coverImage} alt={"Image Not Found"} />
+    <div className="book-card">
+      <img src={book.coverImage} alt="Image Not Found" />
       <h3>{book.title}</h3>
       <p>By {book.author}</p>
-    </Link>
+      <Link to={`/book/${book.bookId}`}>Read Book</Link>
+      <br></br>
+      {showEditLink ? <Link to={`/book/${book.bookId}/editor`} className="edit-button">Edit Book</Link> : null}
+    </div>
   );
 }
 
