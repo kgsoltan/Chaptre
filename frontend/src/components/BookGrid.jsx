@@ -1,11 +1,11 @@
 import React from 'react';
 import BookCard from './BookCard';
 
-function BookGrid({ books }) {
+function BookGrid({ books , showEditLink}) {
   return (
     <div className="book-list">
       {books.map(book => (
-        <BookCard key={book.bookId} book={book} />
+        <BookCard key={book.bookId} book={book} showEditLink= {showEditLink}/>
       ))}
     </div>
   );
