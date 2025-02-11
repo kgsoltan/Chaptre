@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../index.css';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import NewBookModal from '../components/NewBookModal'
 
 function Header() {
+  const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
   const auth = getAuth();
 
@@ -25,8 +27,13 @@ function Header() {
 
       <nav className="nav-container">
         <ul className="nav-list">
-          <li><Link to="/write" className="nav-item">Write</Link></li>
-          <li><Link to="/library" className="nav-item">Library</Link></li>
+        {user && (
+            <li>
+              <button onClick={() => setShowModal(true)} className="nav-item">
+                New Book
+              </button>
+            </li>
+          )}
           {user && <li><Link to={`/profile/${user.uid}`} className="nav-item">Profile</Link></li>}
 
           <li>
@@ -40,6 +47,8 @@ function Header() {
           </li>
         </ul>
       </nav>
+
+      {showModal && <NewBookModal user={user} onClose={() => setShowModal(false)} />}
     </header>
   );
 }

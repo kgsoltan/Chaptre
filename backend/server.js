@@ -124,10 +124,34 @@ app.get('/books/:bookId', async (req, res) => {
 
 //add a book to do the database
 app.post('/books', async (req, res) => {
-    const { book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags } = req.body;
+    
+    const {book_title, author, author_id, cover_image_url, genre_tags} = req.body;
+
+    const token = req.headers.authorization?.split('Bearer ')[1];
+    
+    if (!token) {
+        return res.status(400).send('Missng auth token');
+    }
+    decodedToken = await admin.auth().verifyIdToken(token);
+
+    
+    const newBook = {
+        book_title,
+        is_published: false,
+        author,
+        author_id,
+        genre_tags,
+        num_chapters: 0,
+        num_drafts: 0,
+        date : "TODO",
+        chapters: [],
+        cover_image_url
+    };
+
+
     try {
-        const docRef = await db.collection('books').add({ book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags });
-        res.status(201).json({ id: docRef.id, book_title, is_published, author, author_id, num_chapters, num_drafts, date, cover_image_url, genre_tags });
+        const docRef = await db.collection('books').add(newBook);
+        res.status(201).json({ id: docRef.id, book_title});
     } catch (error) {
         res.status(500).send('Error creating book');
     }
@@ -318,12 +342,36 @@ app.get('/authors/:authorId/books', async (req, res) => {
 
 //add a new author to the database
 app.post('/authors', async (req, res) => {
-    const {first_name, last_name, email, location} = req.body;
-
+    const { first_name, last_name, email, location } = req.body;
+    const token = req.headers.authorization?.split('Bearer ')[1];
+    
+    if (!token) {
+        return res.status(400).send('Missng auth token');
+    }
     try {
-        const docRef = await db.collection('authors').add({first_name, last_name, email, location});
-        res.status(201).json({ id: docRef.id, first_name, last_name, email, location});
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+
+        // Add author data to Firestore with UID as the document ID
+        const newAuthor = {
+            first_name,
+            last_name,
+            email,
+            location,
+            bio: '',
+            books_as_author: [],
+            favorited_books: [], 
+            following: [], 
+            //CHANGE THIS, using the discord one for now
+            profile_pic_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
+        };
+
+        await db.collection('authors').doc(uid).set(newAuthor);
+
+        // Respond with the created author data
+        res.status(201).json({ id: uid, first_name, last_name, email, location });
     } catch (error) {
+        console.error('Error creating author:', error);
         res.status(500).send('Error creating author');
     }
 });

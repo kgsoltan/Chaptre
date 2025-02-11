@@ -8,8 +8,8 @@ function Home() {
   useEffect(() => {
     const loadBooks = async () => {
       try {
-        const response = await getPublishedBooks(10); // Get 10 published books
-        setBooks(response.books); 
+        const response = await getPublishedBooks(25);
+        setBooks(response);
       } catch (error) {
         alert('FAILED TO LOAD BOOKS');
       }
@@ -20,7 +20,7 @@ function Home() {
   return (
     <div className="home">
       <h1>Welcome to Chaptre</h1>
-      <BookGrid books={books} showEditLink={false} />
+      {books ? <BookGrid books={books} showEditLink={false} /> : <p>Theres no books on the website...</p>}
     </div>
   );
 }
