@@ -1,78 +1,4 @@
-export const getAllBooks = async () => {
 
-    // mock book database
-    return (
-        {
-            "books" : [
-                { "authorID" : "92OCa3p6pLNIap93D5mLced4DrJ2" ,"bookId": 1, "title": "John's Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/24/600/900"},
-                { "authorID" : "111" ,"bookId": 2, "title": "Another Story", "author": "David", "coverImage" : "https://picsum.photos/id/25/600/900" },
-                { "authorID" : "92OCa3p6pLNIap93D5mLced4DrJ2" ,"bookId": 3, "title": "John's Alternative Story", "author": "John Smith", "coverImage" : "https://picsum.photos/id/27/600/900" }
-            ]
-        }
-    )
-    //delete code above after adding filling out the API stuff below
-
-    try {
-        const response = await fetch(""); //Add the url later
-        if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
-        }
-        const data = await response.json();
-        return data.response;
-    } catch (error) {
-        console.error(error.message);
-        throw error;
-    }
-};
-
-export const getAuthorProfileByID = async (ID) => {
-
-    // mock book database
-    return (
-          { "authorID" : "92OCa3p6pLNIap93D5mLced4DrJ2" ,
-            "name" : "John Smith",
-            "listOfBookIDs": [1, 3],
-            "bio" : "John's Bio John's Bio John's Bio John's Bio John's Bio John's Bio John's Bio",
-            "profilePicture" : "https://picsum.photos/id/27/1200/900"}
-    )
-    //delete code above after adding filling out the API stuff below
-
-    try {
-        const response = await fetch(""); //Add the url later
-        if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
-        }
-        const data = await response.json();
-        return data.response;
-    } catch (error) {
-        console.error(error.message);
-        throw error;
-    }
-};
-
-export const getBookContentByBookID = async (ID) => {
-
-    // mock book database
-    return (
-            { "id": "92OCa3p6pLNIap93D5mLced4DrJ2", 
-             "title": "John's Story",
-             "author": "John Smith",
-             "content" : "Hello this is the entire book. Hello this is the entire book. Hello this is the entire book. "}
-    )
-    //delete code above after adding filling out the API stuff below
-
-    try {
-        const response = await fetch(""); //Add the url later
-        if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
-        }
-        const data = await response.json();
-        return data.response;
-    } catch (error) {
-        console.error(error.message);
-        throw error;
-    }
-};
 
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
@@ -94,6 +20,7 @@ const getAuthToken = async () => {
 
 // Get author profile
 export const getAuthorDetails = async (authorId) => {
+    /*
                 return(
                     {
                         "id": "43252",
@@ -105,6 +32,7 @@ export const getAuthorDetails = async (authorId) => {
                         "profile_pic_url": "exampleurl"
                     }
                 )
+                    */
   const response = await api.get(`/authors/${authorId}`);
   return response.data;
 };
@@ -123,36 +51,6 @@ export const getChapterDetails = async (bookId, chapterNum) => {
 
 // Get x number of published books
 export const getPublishedBooks = async (count) => {
-                    //MOCK DATA
-                    return(
-                        {
-                            "books": [
-                                        {
-                                            "id": "2432",
-                                            "title": "johns book",
-                                            "author": "John Smith",
-                                            "author_id": "43242",
-                                            "genre_tags": ["horror", "action"],
-                                            "num_chapters": 10,
-                                            "date": "datetime",
-                                            "cover_image_url": "https://picsum.photos/id/24/600/900"
-                                    },
-                                    {
-                                            "id": "53453",
-                                            "title": "david's book",
-                                            "author": "David",
-                                            "author_id": "242",
-                                            "genre_tags": ["action"],
-                                            "num_chapters": 4,
-                                            "date": "datetime",
-                                            "cover_image_url": "https://picsum.photos/id/25/600/900"
-                                    }
-                
-                                    ]
-                        }
-                    )
-
-
     const response = await api.get(`/books?count=${count}`);
     return response.data;
 
@@ -160,31 +58,7 @@ export const getPublishedBooks = async (count) => {
 
 // Get all published books associated with an author
 export const getAuthorBooks = async (authorId) => {
-            return({
-                "books": [
-                            {
-                                "id": "2432",
-                                "title": "johns book",
-                                "author": "John Smith",
-                                "author_id": "43242",
-                                "genre_tags": ["horror", "action"],
-                                "num_chapters": 10,
-                                "date": "datetime",
-                                "cover_image_url": "coverurl"
-                        },
-                        {
-                                "id": "534453",
-                                "title": "johns second book",
-                                "author": "John Smith",
-                                "author_id": "43242",
-                                "genre_tags": ["action"],
-                                "num_chapters": 5,
-                                "date": "datetime",
-                                "cover_image_url": "coverurl"
-                        }
-                        ]
-            })
-  const response = await api.get(`/books/${authorId}`);
+  const response = await api.get(`/authors/${authorId}/books`);
   return response.data;
 };
 

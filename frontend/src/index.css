@@ -60,6 +60,7 @@ body {
   align-items: center;
 }
 
+
 .nav-item {
   text-decoration: none;
   padding: 10px 15px;
@@ -67,19 +68,121 @@ body {
   color: #d32f2f;
   font-weight: bold;
   transition: background 0.3s ease-in-out;
+  display: inline-block;
 }
 
 .nav-item:hover {
   background: rgba(211, 47, 47, 0.2);
 }
 
+.nav-item:focus {
+  outline: none; 
+}
+
+button.nav-item {
+  background-color: transparent;
+  border: none;
+  color: #d32f2f;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+button.nav-item:hover {
+  background: rgba(211, 47, 47, 0.2);
+}
+
 .login-btn {
   border: 2px solid #d32f2f;
-  border-radius: 8px;
   padding: 10px 15px;
 }
 
 .login-btn:hover {
   background: #d32f2f;
   color: white;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: none;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: rgba(211, 47, 47, 0.2);
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 40px; /* Increased padding for more space inside */
+  border-radius: 8px;
+  width: 600px; /* Increased width for a larger modal */
+  max-width: 90%; /* Ensure it doesn't overflow on smaller screens */
+  height: auto; /* Let the content determine the height */
+  max-height: 80vh; /* Limit the height to 80% of the viewport */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  position: relative; /* Ensure positioning for the close button */
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #4b4242;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  color: #141212;
+}
+
+.input-group {
+  margin-bottom: 20px; /* Increased margin for more spacing between fields */
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px; /* Increased margin for better spacing */
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px; /* Increased padding for larger input fields */
+  border: 1px solid #ccc;
+  border-radius: 6px; /* Slightly larger border radius */
+}
+
+.primary-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px; /* Increased padding for a bigger button */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px; /* Slightly larger font size */
+}
+
+.primary-button:hover {
+  background-color: #45a049;
 }
