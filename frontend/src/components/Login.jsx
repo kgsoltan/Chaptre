@@ -1,4 +1,3 @@
-// In your Login.js (no changes needed in the React component)
 import React, { useState } from "react";
 import { auth } from "../services/firebaseConfig";
 import {
@@ -7,12 +6,16 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import '../Login.css'; // Ensure correct path
+import '../Login.css'; 
 import googleLogo from "../assets/google_logo.png";
+import { createAuthor } from '../services/api';
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [location, setLocation] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState(null);
 
@@ -23,8 +26,18 @@ function Login() {
     setError(null);
     try {
       if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully!");
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        const authorData = {
+          email: user.email,
+          first_name: firstName,
+          last_name: lastName,
+          location: location,
+        };
+        await createAuthor(authorData);
+
+        alert("Account created and author profile successfully!");
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         alert("Logged in successfully!");
@@ -38,8 +51,18 @@ function Login() {
   const handleGoogleSignIn = async () => {
     setError(null);
     try {
-      await signInWithPopup(auth, provider);
-      alert("Google sign-in successful!");
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      const authorData = {
+        email: user.email,
+        first_name: firstName,
+        last_name: lastName,
+        location: location,
+      };
+      await createAuthor(authorData);
+
+      alert("Google sign-in successful and author profile created!");
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -60,6 +83,37 @@ function Login() {
           </span>
         </p>
         <form onSubmit={handleEmailPasswordAuth}>
+          {isSignUp && (
+            <>
+              <div className="input-group">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label>Location</label>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          )}
           <div className="input-group">
             <label>Email Address</label>
             <input

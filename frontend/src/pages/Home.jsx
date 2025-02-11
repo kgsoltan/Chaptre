@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import BookGrid from '../components/BookGrid';
-import { getAllBooks } from '../services/api';
+import { getPublishedBooks } from '../services/api';
 
 function Home() {
   const [books, setBooks] = useState([]);
+
   useEffect(() => {
-    const loadAllBooks = async () => {
+    const loadBooks = async () => {
       try {
-        const allBooks = await getAllBooks()
-        setBooks(allBooks.books)
-      } catch(e){
-        alert("FAILED TO LOAD BOOKS")
+        const response = await getPublishedBooks(10); // Get 10 published books
+        setBooks(response.books); 
+      } catch (error) {
+        alert('FAILED TO LOAD BOOKS');
       }
-    }
-    loadAllBooks()
-  }, [])
+    };
+    loadBooks();
+  }, []);
 
   return (
     <div className="home">

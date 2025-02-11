@@ -160,7 +160,6 @@ Example/format:
   "last_name": "Smith",
   "email": "jsmith@email.email",
   "location": "California",
-  "profile_pic_url": "url"
 }
 
 
