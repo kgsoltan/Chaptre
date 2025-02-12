@@ -7,6 +7,13 @@ function BookCard({ book, showEditLink }) {
       <img src={book.cover_image_url} alt="Cover Not Found" />
       <h3>{book.book_title}</h3>
       <p>By {book.author}</p>
+      <div className="genre-container">
+        {book.genre_tags.map((genre, index) => (
+          <span key={index} className="genre-bubble">
+            {genre}
+          </span>
+        ))}
+      </div>
       <Link to={`/book/${book.id}`}>Read Book</Link>
       <br />
       {showEditLink ? (
