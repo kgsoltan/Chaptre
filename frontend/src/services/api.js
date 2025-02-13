@@ -44,8 +44,8 @@ export const getBookDetails = async (bookId) => {
 };
 
 // Get a non-draft chapter from a published book
-export const getChapterDetails = async (bookId, chapterNum) => {
-  const response = await api.get(`/books/${bookId}/${chapterNum}`);
+export const getChapterDetails = async (bookId, chapterId) => {
+  const response = await api.get(`/books/${bookId}/chapters/${chapterId}`);
   return response.data;
 };
 

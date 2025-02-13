@@ -89,7 +89,7 @@ the firestore database.
 app.get('/books', async (req, res) => {
     const count = parseInt(req.query.count);
     try {
-        let query = db.collection('books');
+        let query = db.collection('books').where('is_published', '==', true);
         if (!isNaN(count) && count > 0) {
             query = query.limit(count);
         }

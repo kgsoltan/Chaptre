@@ -1,89 +1,34 @@
-import React, { useRef, useState, useEffect, useCallback} from 'react';
-import TextEditor from '../components/TextEditor';
-import { getChapters, getChapterDetails, updateChapterDetails, createChapter, deleteChapter } from '../services/api';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { getChapters, createChapter, deleteChapter } from '../services/api';
 
 function EditBook() {
-  const editorRef = useRef(null);
   const [chapters, setChapters] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState(null);
-  const { bookId } = useParams(); 
-  const [text, setText] = useState('');
   const [newChapterTitle, setNewChapterTitle] = useState('');
+  const { bookId } = useParams();
 
   useEffect(() => {
-    const fetchChapters = async () => {
-      try {
-        const chaptersData = await getChapters(bookId);
-        setChapters(chaptersData);
-      } catch (error) {
-        console.error('Error fetching chapters:', error);
-      }
-    };
-
     fetchChapters();
   }, [bookId]);
 
-  useEffect(() => {
-    const fetchChapterContent = async () => {
-      if (selectedChapter) {
-        try {
-          const chapterContent = await getChapterDetails(bookId, selectedChapter.id);
-          if (editorRef.current && chapterContent) {
-            setText(chapterContent.text)
-          }
-        } catch (error) {
-          console.error('Error fetching chapter content:', error);
-        }
-      }
-      };
-
-      fetchChapterContent();
-  }, [selectedChapter, bookId]);
-
-  const handleChapterClick = (chapter) => {
-    setSelectedChapter(chapter);
-  };
-
-  const handleSaveChapter = async () => {
-    if (selectedChapter) {
-      try {
-        // Get the content from the editor
-        const htmlContent = editorRef.current.getHTML();
-
-        // Prepare updates
-        const updates = {
-            text: htmlContent,
-        };
-
-        // Call the API to update the chapter
-        await updateChapterDetails(bookId, selectedChapter.id, updates);
-
-        alert('Chapter saved successfully!');
-      } catch (error) {
-        console.error('Error saving chapter:', error);
-        alert('Failed to save chapter.');
-      }
-    } else {
-        alert('No chapter selected.');
+  const fetchChapters = async () => {
+    try {
+      const chaptersData = await getChapters(bookId);
+      setChapters(chaptersData);
+    } catch (error) {
+      console.error('Error fetching chapters:', error);
     }
   };
-
-  const handleChange = useCallback((value) => {
-    setText(value);
-  }, []);
 
   const handleAddChapter = async () => {
     try {
       const newChapter = {
         title: newChapterTitle,
-        text: '', // Initial content
+        text: '',
       };
       await createChapter(bookId, newChapter);
       setNewChapterTitle('');
-      // After successfully adding a chapter, re-fetch the chapters
-      const updatedChapters = await getChapters(bookId);
-      setChapters(updatedChapters);
+      fetchChapters();
     } catch (error) {
       console.error('Error adding chapter:', error);
     }
@@ -92,13 +37,27 @@ function EditBook() {
   const handleDeleteChapter = async (chapterId) => {
     try {
       await deleteChapter(bookId, chapterId);
-      // After successfully deleting a chapter, re-fetch the chapters
-      const updatedChapters = await getChapters(bookId);
-      setChapters(updatedChapters);
-      setSelectedChapter(null); // Clear selected chapter after deletion
-      setText(''); // Clear editor content
+      fetchChapters();
     } catch (error) {
       console.error('Error deleting chapter:', error);
+    }
+  };
+
+  const handleToggleBookPublish = async () => {
+    try {
+      await updateBookPublishStatus(bookId, !bookPublished);
+      setBookPublished(!bookPublished);
+    } catch (error) {
+      console.error('Error toggling book publish status:', error);
+    }
+  };
+
+  const handleToggleChapterPublish = async (chapterId, currentStatus) => {
+    try {
+      await updateChapterPublishStatus(bookId, chapterId, !currentStatus);
+      fetchChapters();
+    } catch (error) {
+      console.error('Error toggling chapter publish status:', error);
     }
   };
 
@@ -108,29 +67,17 @@ function EditBook() {
       <h3>Chapters:</h3>
       <ul>
         {chapters.map((chapter) => (
-          <li
-            key={chapter.id}
-            onClick={() => handleChapterClick(chapter)}
-          >
-            Chapter: {chapter.title}
+          <li key={chapter.id}>
+            <Link to={`/book/${bookId}/chapter/${chapter.id}/editor`}>
+              Chapter: {chapter.title}
+            </Link>
             <button onClick={() => handleDeleteChapter(chapter.id)}>
               Delete
             </button>
           </li>
         ))}
       </ul>
-      {selectedChapter && (
-        <h2>
-          Editing Chapter: {selectedChapter.title} {selectedChapter.text}
-        </h2>
-      )}
-      <TextEditor
-        ref={editorRef}
-        value={text}
-        onChange={handleChange}
-      />
-      <button onClick={handleSaveChapter}>Save Chapter</button>
-  
+
       <div>
         <input
           type="text"
@@ -142,7 +89,6 @@ function EditBook() {
       </div>
     </div>
   );
-  
-  }
+}
 
-  export default EditBook;
+export default EditBook;
