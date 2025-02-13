@@ -44,9 +44,20 @@ export const getBookDetails = async (bookId) => {
 };
 
 // Get a non-draft chapter from a published book
-export const getChapterDetails = async (bookId, chapterNum) => {
-  const response = await api.get(`/books/${bookId}/${chapterNum}`);
+export const getChapterDetails = async (bookId, chapterId) => {
+  const response = await api.get(`/books/${bookId}/chapters/${chapterId}`);
   return response.data;
+};
+
+// Get all chapters for a book
+export const getChapters = async (bookId) => {
+  try {
+    const response = await api.get(`/books/${bookId}/chapters`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching chapters:", error);
+    throw error;
+  }
 };
 
 // Get x number of published books
@@ -105,22 +116,52 @@ export const createBook = async (bookData) => {
   return response.data;
 };
 
-// Create a new chapter in a book
+// Create a new chapter
 export const createChapter = async (bookId, chapterData) => {
-  const token = await getAuthToken();
-  const response = await api.post(`/books/${bookId}/newChapter`, chapterData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data;
+  try {
+      const token = await getAuthToken();
+      const response = await api.post(`/books/${bookId}/chapters`, chapterData, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Error creating chapter:", error);
+      throw error;
+  }
 };
 
-// Modify an existing chapter
-export const updateChapter = async (bookId, chapterNum, updates) => {
-  const token = await getAuthToken();
-  const response = await api.patch(`/books/${bookId}/${chapterNum}`, updates, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data;
+// Delete a chapter
+export const deleteChapter = async (bookId, chapterId) => {
+  try {
+      const token = await getAuthToken();
+      const response = await api.delete(`/books/${bookId}/chapters/${chapterId}`, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Error deleting chapter:", error);
+      throw error;
+  }
+};
+
+// Update a specific chapter by chapter ID
+export const updateChapterDetails = async (bookId, chapterId, updates) => {
+  try {
+      const token = await getAuthToken();
+      const response = await api.patch(`/books/${bookId}/chapters/${chapterId}`, updates, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Error updating chapter details:", error);
+      throw error;
+  }
 };
 
 // Check if the user is authorized to edit the book

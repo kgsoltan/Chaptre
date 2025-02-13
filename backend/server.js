@@ -107,7 +107,7 @@ the firestore database.
 app.get('/books', async (req, res) => {
     const count = parseInt(req.query.count);
     try {
-        let query = db.collection('books');
+        let query = db.collection('books').where('is_published', '==', true);
         if (!isNaN(count) && count > 0) {
             query = query.limit(count);
         }
@@ -240,32 +240,19 @@ app.get('/books/:bookId/chapters', async (req, res) => {
 });
 
 //get a chapter by its chapter number from a specific book
-app.get('/books/:bookId/chapters/:chapterNum', async (req, res) => {
-    const { bookId, chapterNum } = req.params;
+app.get('/books/:bookId/chapters/:chapterId', async (req, res) => {
+    const { bookId, chapterId } = req.params;
     try {
-        const doc = await db.collection('books').doc(bookId).get();
+        const doc = await db.collection('books').doc(bookId).collection('chapters').doc(chapterId).get();
         if (!doc.exists) {
-            return res.status(404).json({ message: 'Book not found' });
+            return res.status(404).json({
+                message: 'Chapter not found'
+            });
         }
-
-        const bookData = doc.data();
-        if(!bookData.is_published) {
-            return res.status(403).json({ message: 'Book not published' });
-        }
-
-        //find the non draft chapter
-        const chapterQuery = await db.collection('books').doc(bookId).collection('chapters').where('chapter_num', '==', parseInt(chapterNum)).get();
-        if (chapterQuery.empty) {
-            return res.status(404).json({ message: 'Chapter not found' });
-        }
-        const chapterDoc = chapterQuery.docs[0] //should only be 1 matching chapter number
-
-        const chapterData = chapterDoc.data();
-        if(chapterData.is_draft) {
-            return res.status(403).json({ message: 'Chapter not published' });
-        }
-
-        res.json({ id: chapterDoc.id, ...chapterDoc.data() });
+        res.json({
+            id: doc.id,
+            ...doc.data()
+        });
     } catch (error) {
         res.status(500).send('Error fetching chapter');
     }
@@ -276,7 +263,7 @@ app.post('/books/:bookId/chapters', async (req, res) => {
     const { bookId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body;
     try {
-        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ parent_id, is_draft, title, chapter_num, text });
+        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ title, text });
         res.status(201).json({ id: docRef.id, parent_id, is_draft, title, chapter_num, text });
     } catch (error) {
         res.status(500).send('Error creating chapter');
