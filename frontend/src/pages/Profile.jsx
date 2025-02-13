@@ -38,10 +38,10 @@ function Profile() {
 
   return (
     <div className="profile">
-      <img src={author.profile_pic_url} alt="Cover Not Found" />
-      <h1>{author.first_name} {author.last_name}'s Profile</h1>
-      <p>{author.bio}</p>
-      <h3>{author.first_name}'s books:</h3>
+      <img  className="profile-img" src={author.profile_pic_url} alt="Cover Not Found" />
+      <h1 className="profile-name">{author.first_name} {author.last_name}'s Profile</h1>
+      <p className="profile-bio">{author.bio}</p>
+      <h3 className="profile-books-title">{author.first_name}'s books:</h3>
 
       {books ? <BookGrid books={books} showEditLink={user} /> : <p>You don't have any books!</p>}
     </div>
