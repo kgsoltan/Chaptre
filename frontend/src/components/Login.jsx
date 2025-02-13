@@ -137,9 +137,9 @@ function Login() {
           </button>
         </form>
         <button className="google-button" onClick={handleGoogleSignIn}>
-          <img src={googleLogo} alt="Google logo" />
-          Sign up with Google
-        </button>
+         <img src={googleLogo} alt="Google logo" />
+         {isSignUp ? "Sign up with Google" : "Log in with Google"}
+         </button>
         {error && <p className="error-message">{error}</p>}
       </div>
     </div>

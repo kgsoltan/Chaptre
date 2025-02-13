@@ -53,6 +53,24 @@ app.post('/verify-token', async (req, res) => {
 //DATABASE STUFF ----------------------------
 const db = admin.firestore();
 
+app.patch('/authors/:authorId', async (req, res) => {
+    const { authorId } = req.params;
+    const { profile_pic_url } = req.body; // Allow updating profile picture
+
+    const updatedData = {};
+
+    if (profile_pic_url) updatedData.profile_pic_url = profile_pic_url;
+
+    try {
+        const docRef = db.collection('authors').doc(authorId);
+        await docRef.update(updatedData);
+
+        res.status(200).json({ id: authorId, ...updatedData });
+    } catch (error) {
+        res.status(500).send('Error updating author');
+    }
+});
+
 //temp firestore test
 //this is only in place to make sure that our firestore properly interacts with-
 //the express server
@@ -363,7 +381,7 @@ app.post('/authors', async (req, res) => {
             favorited_books: [], 
             following: [], 
             //CHANGE THIS, using the discord one for now
-            profile_pic_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
+            profile_pic_url,
         };
 
         await db.collection('authors').doc(uid).set(newAuthor);
