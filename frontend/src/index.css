@@ -212,6 +212,26 @@ button.nav-item:hover {
   background-color: #45a049;
 }
 
+.genre-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center; /* Centers the tags horizontally */
+  align-items: center; /* Centers the tags vertically if needed */
+  margin: 8px 0;
+}
+
+.genre-bubble {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+}
+
 .profile {
   max-width: 800px;
   margin: 40px auto;

@@ -8,6 +8,13 @@ function ReadBook() {
     <div className="read-book">
       <h1>{book.title}</h1>
       <h2>By {book.author}</h2>
+      <div className="genre-container">
+        {book.genre_tags.map((genre, index) => (
+          <span key={index} className="genre-bubble">
+            {genre}
+          </span>
+        ))}
+      </div>
       <div className="book-content">
         {<p>TO DO</p>}
       </div>
