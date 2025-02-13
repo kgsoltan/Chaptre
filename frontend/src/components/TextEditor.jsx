@@ -12,17 +12,19 @@ const TextEditor = forwardRef((props, ref) => {
   const quillRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    getContents: () => quillRef.current.getEditor().getContents(), // Get Delta format
-    getHTML: () => quillRef.current.getEditor().root.innerHTML, // Get HTML content
+    getContents: () => quillRef.current.getEditor().getContents(),
+    getHTML: () => quillRef.current.getEditor().root.innerHTML,
   }));
 
   return (
     <div>
-    <ReactQuill
-      ref={quillRef}
-      theme="snow"
-      modules={modules}
-    />
+      <ReactQuill
+        ref={quillRef}
+        theme="snow"
+        modules={modules}
+        value={props.value}
+        onChange={props.onChange}
+      />
     </div>
   );
 });
