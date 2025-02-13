@@ -85,7 +85,6 @@ body {
   align-items: center;
 }
 
-
 .nav-item {
   text-decoration: none;
   padding: 10px 15px;
@@ -139,7 +138,6 @@ button.nav-item:hover {
 .logout-btn:hover {
   background: rgba(211, 47, 47, 0.2);
 }
-
 
 .modal-overlay {
   position: fixed;
@@ -249,6 +247,7 @@ button.nav-item:hover {
   object-fit: cover;
   margin-bottom: 20px;
   border: 3px solid #ddd;
+  cursor: pointer; /* Makes the image appear clickable */
 }
 
 .profile h1 {

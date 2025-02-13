@@ -83,6 +83,19 @@ export const updateAuthor = async (authorId, updates) => {
   return response.data;
 };
 
+
+// Update an author's profile
+export const updateAuthorProfilePic = async (authorId, profilePicUrl) => {
+  try {
+    const response = await firestore.collection('authors').doc(authorId).update({
+      profile_pic_url: profilePicUrl,
+    });
+    return response;
+  } catch (error) {
+    throw new Error('Failed to update profile picture');
+  }
+};
+
 // Create a new book
 export const createBook = async (bookData) => {
   const token = await getAuthToken();
