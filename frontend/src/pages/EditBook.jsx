@@ -5,6 +5,7 @@ import { getChapters, createChapter, deleteChapter } from '../services/api';
 function EditBook() {
   const [chapters, setChapters] = useState([]);
   const [newChapterTitle, setNewChapterTitle] = useState('');
+  const [newChapterNumber, SetNewChapterNumber] = useState(0);
   const { bookId } = useParams();
 
   useEffect(() => {
@@ -23,6 +24,7 @@ function EditBook() {
   const handleAddChapter = async () => {
     try {
       const newChapter = {
+        chapter_num: newChapterNumber,
         title: newChapterTitle,
         text: '',
       };
@@ -84,6 +86,12 @@ function EditBook() {
           placeholder="New chapter title"
           value={newChapterTitle}
           onChange={(e) => setNewChapterTitle(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Chapter Number"
+          value={newChapterNumber}
+          onChange={(e) => SetNewChapterNumber(e.target.value)}
         />
         <button onClick={handleAddChapter}>Add Chapter</button>
       </div>
