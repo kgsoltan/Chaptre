@@ -231,7 +231,7 @@ app.delete("/books/:bookId", async (req, res) => {
 app.get('/books/:bookId/chapters', async (req, res) => {
     const { bookId } = req.params;
     try {
-        const snapshot = await db.collection('books').doc(bookId).collection('chapters').get();
+        const snapshot = await db.collection('books').doc(bookId).collection('chapters').orderBy("chapter_num").get();
         const chapters = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(chapters);
     } catch (error) {
@@ -260,10 +260,28 @@ app.get('/books/:bookId/chapters/:chapterId', async (req, res) => {
 
 //add a new chapter for a specified book
 app.post('/books/:bookId/chapters', async (req, res) => {
+    const token = req.headers.authorization?.split('Bearer ')[1];
+    if (!token) {
+        return res.status(400).send('Missing auth token');
+    }
+
+
     const { bookId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body;
     try {
-        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ title, text });
+
+        decodedToken = await admin.auth().verifyIdToken(token);
+        userID = decodedToken.uid;
+    
+        const doc = await db.collection('books').doc(bookId).get()
+        const owner_author_id = doc.data().author_id
+    
+        if(owner_author_id !== userID){
+            return res.status(401).send('Not allowed');
+        }
+
+
+        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ title, text, chapter_num});
         res.status(201).json({ id: docRef.id, parent_id, is_draft, title, chapter_num, text });
     } catch (error) {
         res.status(500).send('Error creating chapter');
@@ -272,6 +290,13 @@ app.post('/books/:bookId/chapters', async (req, res) => {
 
 //edit an already existing chapter in a specified book
 app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
+
+    const token = req.headers.authorization?.split('Bearer ')[1];
+    if (!token) {
+        return res.status(400).send('Missing auth token');
+    }
+
+
     const { bookId, chapterId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body; 
 
@@ -284,6 +309,17 @@ app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
     if (text) updatedData.text = text
 
     try {
+
+        decodedToken = await admin.auth().verifyIdToken(token);
+        userID = decodedToken.uid;
+    
+        const doc = await db.collection('books').doc(bookId).get()
+        const owner_author_id = doc.data().author_id
+    
+        if(owner_author_id !== userID){
+            return res.status(401).send('Not allowed');
+        }
+
         const docRef = db.collection('books').doc(bookId).collection('chapters').doc(chapterId);
         await docRef.update(updatedData);
 

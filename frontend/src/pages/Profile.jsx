@@ -71,9 +71,9 @@ function Profile() {
 
       <h1 className="profile-name">{author.first_name} {author.last_name}'s Profile</h1>
       <p className="profile-bio">{author.bio}</p>
-      <h3 className="profile-books-title">{author.first_name}'s books:</h3>
+      {/*<h3 className="profile-books-title">{author.first_name}'s books:</h3>*/}
 
-      {books.length > 0 ? <BookGrid books={books} showEditLink={user} /> : <p>No books available.</p>}
+      {/*books.length > 0 ? <BookGrid books={books} showEditLink={user} /> : <p>No books available.</p>*/}
       
       <h3 className="profile-books-title">Published Books:</h3>
       {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No published books yet.</p>}
