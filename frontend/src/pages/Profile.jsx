@@ -52,6 +52,9 @@ function Profile() {
 
   if (!author) return <div>Loading...</div>;
 
+  const publishedBooks = books.filter(book => book.is_published === true);
+  const draftBooks = books.filter(book => book.is_published === false);
+
   return (
     <div className="profile">
       <label htmlFor="file-upload" className="profile-img-label">
@@ -71,6 +74,17 @@ function Profile() {
       <h3 className="profile-books-title">{author.first_name}'s books:</h3>
 
       {books.length > 0 ? <BookGrid books={books} showEditLink={user} /> : <p>No books available.</p>}
+      
+      <h3 className="profile-books-title">Published Books:</h3>
+      {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No published books yet.</p>}
+      
+      <h3 className="profile-books-title">Draft Books:</h3>
+      {draftBooks.length > 0 ? (
+        <BookGrid 
+          books={draftBooks} 
+          showEditLink={user} 
+        />
+      ) : <p>No draft books.</p>}
     </div>
   );
 }
