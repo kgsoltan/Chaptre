@@ -383,7 +383,7 @@ app.get('/authors/:authorId/books', async (req, res) => {
 
 //add a new author to the database
 app.post('/authors', async (req, res) => {
-    const { first_name, last_name, email, location } = req.body;
+    const { first_name, last_name, email, location} = req.body;
     const token = req.headers.authorization?.split('Bearer ')[1];
     
     if (!token) {
@@ -404,7 +404,7 @@ app.post('/authors', async (req, res) => {
             favorited_books: [], 
             following: [], 
             //CHANGE THIS, using the discord one for now
-            profile_pic_url,
+            profile_pic_url : "https://cdn.discordapp.com/attachments/1329527771168374890/1339748135957827685/file-LKDvfnHdmAnP55WdDj8jvM.png?ex=67afd92e&is=67ae87ae&hm=f3cfe98aafaa3870099d092e30bd3a297aa32c6ac1501b9600ae59197a057b29&"
         };
 
         await db.collection('authors').doc(uid).set(newAuthor);

@@ -33,7 +33,7 @@ function Login() {
           email: user.email,
           first_name: firstName,
           last_name: lastName,
-          location: location,
+          location: location
         };
         await createAuthor(authorData);
 
