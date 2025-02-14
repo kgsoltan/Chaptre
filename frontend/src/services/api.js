@@ -95,6 +95,8 @@ export const updateAuthor = async (authorId, updates) => {
 
 // Update an author's profile
 export const updateAuthorProfilePic = async (authorId, profilePicUrl) => {
+
+  console.log("AAAAA", profilePicUrl)
   try {
     const response = await firestore.collection('authors').doc(authorId).update({
       profile_pic_url: profilePicUrl,
