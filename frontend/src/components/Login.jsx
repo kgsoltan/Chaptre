@@ -53,21 +53,32 @@ function Login() {
     try {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
-
+  
+      // Extract first and last name from displayName
+      let firstName = "";
+      let lastName = "";
+      if (user.displayName) {
+        const nameParts = user.displayName.split(" ");
+        firstName = nameParts[0];
+        lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+      }
+  
       const authorData = {
         email: user.email,
         first_name: firstName,
         last_name: lastName,
-        location: location,
+        location: "",
       };
+  
       await createAuthor(authorData);
-
+  
       alert("Google sign-in successful and author profile created!");
     } catch (err) {
       console.error(err);
       setError(err.message);
     }
   };
+  
 
   return (
     <div className="login-container">
