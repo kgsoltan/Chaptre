@@ -27,6 +27,7 @@ function EditBook() {
         chapter_num: newChapterNumber,
         title: newChapterTitle,
         text: '',
+        is_published: false,
       };
       await createChapter(bookId, newChapter);
       setNewChapterTitle('');
@@ -54,24 +55,15 @@ function EditBook() {
     }
   };
 
-  const handleToggleChapterPublish = async (chapterId, currentStatus) => {
-    try {
-      await updateChapterPublishStatus(bookId, chapterId, !currentStatus);
-      fetchChapters();
-    } catch (error) {
-      console.error('Error toggling chapter publish status:', error);
-    }
-  };
-
-  return (
-    <div>
+ return (
+    <div className="edit-container">
       <h2>Edit Book</h2>
       <h3>Chapters:</h3>
-      <ul>
+      <ul className="chapter-list">
         {chapters.map((chapter) => (
-          <li key={chapter.id}>
+          <li key={chapter.id} className="chapter-item">
             <Link to={`/book/${bookId}/chapter/${chapter.id}/editor`}>
-              Chapter: {chapter.title}
+              Chapter {chapter.chapter_num}: {chapter.title}
             </Link>
             <button onClick={() => handleDeleteChapter(chapter.id)}>
               Delete
@@ -80,7 +72,7 @@ function EditBook() {
         ))}
       </ul>
 
-      <div>
+      <div className="add-chapter-form">
         <input
           type="text"
           placeholder="New chapter title"

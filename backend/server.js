@@ -183,7 +183,7 @@ app.patch('/books/:bookId', async (req, res) => {
     const updatedData = {};
 
     if (book_title) updatedData.book_title = book_title;
-    if (is_published) updatedData.is_published = is_published;
+    if (is_published || !is_published) updatedData.is_published = is_published;
     if (author) updatedData.author = author;
     if (author_id) updatedData.author_id = author_id
     if (num_chapters) updatedData.num_chapters = num_chapters;
@@ -290,26 +290,22 @@ app.post('/books/:bookId/chapters', async (req, res) => {
 
 //edit an already existing chapter in a specified book
 app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
-
     const token = req.headers.authorization?.split('Bearer ')[1];
     if (!token) {
         return res.status(400).send('Missing auth token');
     }
 
-
     const { bookId, chapterId } = req.params;
-    const { parent_id, is_draft, title, chapter_num, text } = req.body; 
-
+    const { parent_id, is_published, title, chapter_num, text } = req.body; 
     const updatedData = {};
 
     if (parent_id) updatedData.parent_id = parent_id;
-    if (is_draft) updatedData.is_draft = is_draft;
+    if (is_published || !is_published) updatedData.is_published = is_published;
     if (title) updatedData.title = title;
     if (chapter_num) updatedData.chapter_num = chapter_num;
     if (text) updatedData.text = text
 
     try {
-
         decodedToken = await admin.auth().verifyIdToken(token);
         userID = decodedToken.uid;
     

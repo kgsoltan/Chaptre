@@ -149,7 +149,7 @@ export const deleteChapter = async (bookId, chapterId) => {
 };
 
 // Update a specific chapter by chapter ID
-export const updateChapterDetails = async (bookId, chapterId, updates) => {
+export const updateChapter = async (bookId, chapterId, updates) => {
   try {
       const token = await getAuthToken();
       const response = await api.patch(`/books/${bookId}/chapters/${chapterId}`, updates, {

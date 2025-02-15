@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import TextEditor from '../components/TextEditor';
-import { getChapterDetails, updateChapterDetails } from '../services/api';
+import { getChapterDetails, updateChapter } from '../services/api';
 
 function EditChapter() {
   const editorRef = useRef(null);
   const [chapterTitle, setChapterTitle] = useState('');
   const [text, setText] = useState('');
+  const [published, setPublished] = useState(false);
   const { bookId, chapterId } = useParams();
   const navigate = useNavigate();
 
@@ -17,6 +18,7 @@ function EditChapter() {
         if (chapterContent) {
           setChapterTitle(chapterContent.title);
           setText(chapterContent.text);
+          setPublished(chapterContent.is_published);
         }
       } catch (error) {
         console.error('Error fetching chapter content:', error);
@@ -30,14 +32,15 @@ function EditChapter() {
     setText(value);
   }, []);
 
-  const handleSaveChapter = async () => {
+  const handleSaveChapter = async (newPublishedState = published) => {
     try {
       const htmlContent = editorRef.current.getHTML();
       const updates = {
         title: chapterTitle,
         text: htmlContent,
+        is_published: newPublishedState,
       };
-      await updateChapterDetails(bookId, chapterId, updates);
+      await updateChapter(bookId, chapterId, updates);
       alert('Chapter saved successfully!');
       navigate(`/book/${bookId}/editor`);
     } catch (error) {
@@ -45,6 +48,12 @@ function EditChapter() {
       alert('Failed to save chapter.');
     }
   };
+
+  const togglePublish = () => {
+    const newPublishedState = !published;
+    setPublished(newPublishedState);
+    handleSaveChapter(newPublishedState);
+  };  
 
   return (
     <div>
@@ -60,7 +69,8 @@ function EditChapter() {
         value={text}
         onChange={handleChange}
       />
-      <button onClick={handleSaveChapter}>Save Chapter</button>
+      <button onClick={togglePublish}>{published ? 'Unpublish' : 'Publish'}</button>
+      <button onClick={() => handleSaveChapter()}>Save Chapter</button>
       <button onClick={() => navigate(`/book/${bookId}/editor`)}>Back to Book</button>
     </div>
   );

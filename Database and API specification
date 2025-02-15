@@ -31,7 +31,7 @@ books
         │         ├── TEXT: string
         │     └── chapter_2: 
         |         ├── PARENT_ID : string
-        |         ├── IS_DRAFT : bool
+        |         ├── IS_PUBLISHED : bool
         │         ├── TITLE: string
         |         ├── CHAPTER_NUM: int
         │         ├── TEXT: string
