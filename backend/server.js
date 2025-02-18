@@ -8,7 +8,8 @@ readability purposes. For now just dump code in here if you need the backend cha
 we will fix it later.
 */
 
-// Impoorting required modules
+// Importing required modules
+const { generateUploadURL } = require('./s3.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -23,9 +24,47 @@ app.use(bodyParser.json());
 
 // Firebase Admin SDK setup
 const serviceAccount = require('./serviceAccountKey.json');
+
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://chaptre-b7fcb-default-rtdb.firebaseio.com",
+});
+
+// Get Firestore reference
+const firestore = admin.firestore();
+
+// Image handling endpoint
+app.get('/s3Url', async (req, res) => {
+    try {
+        const url = await generateUploadURL();
+        res.json({ url }); 
+    } catch (error) {
+        console.error("Error generating S3 URL:", error);
+        res.status(500).json({ error: 'Failed to generate signed URL' }); 
+    }
+});
+
+// Update profile picture URL endpoint
+app.patch('/author/:authorId/profile_pic_url', async (req, res) => {
+    try {
+        const { authorId } = req.params;
+        const { profilePicUrl } = req.body;
+
+        if (!authorId || !profilePicUrl) {
+            console.error("Missing authorId or profilePicUrl");
+            return res.status(400).send('Missing authorId or profilePicUrl');
+        }
+
+        // Firestore update
+        const authorRef = firestore.collection('authors').doc(authorId);
+        await authorRef.update({ profile_pic_url: profilePicUrl });
+
+        console.log("Profile picture updated successfully");
+        return res.status(200).send('Profile picture updated successfully');
+    } catch (error) {
+        console.error('Error updating profile picture:', error);
+        return res.status(500).send('Internal Server Error');
+    }
 });
 
 // Test route
@@ -52,24 +91,6 @@ app.post('/verify-token', async (req, res) => {
 
 //DATABASE STUFF ----------------------------
 const db = admin.firestore();
-
-app.patch('/authors/:authorId', async (req, res) => {
-    const { authorId } = req.params;
-    const { profile_pic_url } = req.body; // Allow updating profile picture
-
-    const updatedData = {};
-
-    if (profile_pic_url) updatedData.profile_pic_url = profile_pic_url;
-
-    try {
-        const docRef = db.collection('authors').doc(authorId);
-        await docRef.update(updatedData);
-
-        res.status(200).json({ id: authorId, ...updatedData });
-    } catch (error) {
-        res.status(500).send('Error updating author');
-    }
-});
 
 //temp firestore test
 //this is only in place to make sure that our firestore properly interacts with-
@@ -107,7 +128,7 @@ the firestore database.
 app.get('/books', async (req, res) => {
     const count = parseInt(req.query.count);
     try {
-        let query = db.collection('books').where('is_published', '==', true);
+        let query = db.collection('books');
         if (!isNaN(count) && count > 0) {
             query = query.limit(count);
         }
@@ -231,7 +252,7 @@ app.delete("/books/:bookId", async (req, res) => {
 app.get('/books/:bookId/chapters', async (req, res) => {
     const { bookId } = req.params;
     try {
-        const snapshot = await db.collection('books').doc(bookId).collection('chapters').orderBy("chapter_num").get();
+        const snapshot = await db.collection('books').doc(bookId).collection('chapters').get();
         const chapters = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(chapters);
     } catch (error) {
@@ -240,19 +261,32 @@ app.get('/books/:bookId/chapters', async (req, res) => {
 });
 
 //get a chapter by its chapter number from a specific book
-app.get('/books/:bookId/chapters/:chapterId', async (req, res) => {
-    const { bookId, chapterId } = req.params;
+app.get('/books/:bookId/chapters/:chapterNum', async (req, res) => {
+    const { bookId, chapterNum } = req.params;
     try {
-        const doc = await db.collection('books').doc(bookId).collection('chapters').doc(chapterId).get();
+        const doc = await db.collection('books').doc(bookId).get();
         if (!doc.exists) {
-            return res.status(404).json({
-                message: 'Chapter not found'
-            });
+            return res.status(404).json({ message: 'Book not found' });
         }
-        res.json({
-            id: doc.id,
-            ...doc.data()
-        });
+
+        const bookData = doc.data();
+        if(!bookData.is_published) {
+            return res.status(403).json({ message: 'Book not published' });
+        }
+
+        //find the non draft chapter
+        const chapterQuery = await db.collection('books').doc(bookId).collection('chapters').where('chapter_num', '==', parseInt(chapterNum)).get();
+        if (chapterQuery.empty) {
+            return res.status(404).json({ message: 'Chapter not found' });
+        }
+        const chapterDoc = chapterQuery.docs[0] //should only be 1 matching chapter number
+
+        const chapterData = chapterDoc.data();
+        if(chapterData.is_draft) {
+            return res.status(403).json({ message: 'Chapter not published' });
+        }
+
+        res.json({ id: chapterDoc.id, ...chapterDoc.data() });
     } catch (error) {
         res.status(500).send('Error fetching chapter');
     }
@@ -260,28 +294,10 @@ app.get('/books/:bookId/chapters/:chapterId', async (req, res) => {
 
 //add a new chapter for a specified book
 app.post('/books/:bookId/chapters', async (req, res) => {
-    const token = req.headers.authorization?.split('Bearer ')[1];
-    if (!token) {
-        return res.status(400).send('Missing auth token');
-    }
-
-
     const { bookId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body;
     try {
-
-        decodedToken = await admin.auth().verifyIdToken(token);
-        userID = decodedToken.uid;
-    
-        const doc = await db.collection('books').doc(bookId).get()
-        const owner_author_id = doc.data().author_id
-    
-        if(owner_author_id !== userID){
-            return res.status(401).send('Not allowed');
-        }
-
-
-        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ title, text, chapter_num});
+        const docRef = await db.collection('books').doc(bookId).collection('chapters').add({ parent_id, is_draft, title, chapter_num, text });
         res.status(201).json({ id: docRef.id, parent_id, is_draft, title, chapter_num, text });
     } catch (error) {
         res.status(500).send('Error creating chapter');
@@ -290,13 +306,6 @@ app.post('/books/:bookId/chapters', async (req, res) => {
 
 //edit an already existing chapter in a specified book
 app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
-
-    const token = req.headers.authorization?.split('Bearer ')[1];
-    if (!token) {
-        return res.status(400).send('Missing auth token');
-    }
-
-
     const { bookId, chapterId } = req.params;
     const { parent_id, is_draft, title, chapter_num, text } = req.body; 
 
@@ -309,17 +318,6 @@ app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
     if (text) updatedData.text = text
 
     try {
-
-        decodedToken = await admin.auth().verifyIdToken(token);
-        userID = decodedToken.uid;
-    
-        const doc = await db.collection('books').doc(bookId).get()
-        const owner_author_id = doc.data().author_id
-    
-        if(owner_author_id !== userID){
-            return res.status(401).send('Not allowed');
-        }
-
         const docRef = db.collection('books').doc(bookId).collection('chapters').doc(chapterId);
         await docRef.update(updatedData);
 
@@ -383,7 +381,7 @@ app.get('/authors/:authorId/books', async (req, res) => {
 
 //add a new author to the database
 app.post('/authors', async (req, res) => {
-    const { first_name, last_name, email, location} = req.body;
+    const { first_name, last_name, email, location } = req.body;
     const token = req.headers.authorization?.split('Bearer ')[1];
     
     if (!token) {
@@ -404,7 +402,7 @@ app.post('/authors', async (req, res) => {
             favorited_books: [], 
             following: [], 
             //CHANGE THIS, using the discord one for now
-            profile_pic_url : "https://cdn.discordapp.com/attachments/1329527771168374890/1339748135957827685/file-LKDvfnHdmAnP55WdDj8jvM.png?ex=67afd92e&is=67ae87ae&hm=f3cfe98aafaa3870099d092e30bd3a297aa32c6ac1501b9600ae59197a057b29&"
+            profile_pic_url: 'https://cdn.discordapp.com/embed/avatars/4.png',
         };
 
         await db.collection('authors').doc(uid).set(newAuthor);

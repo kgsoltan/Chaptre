@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getAuthorDetails, getAuthorBooks, updateAuthorProfilePic } from '../services/api';
-import { uploadProfilePicture } from '../services/firebaseStorage';
+import { getAuthorDetails, getAuthorBooks, updateProfilePic } from '../services/api';
 import { auth } from '../services/firebaseConfig';
+import { getS3UploadUrl } from '../services/api';
 
 function Profile() {
   const { authorId } = useParams();
@@ -39,14 +39,52 @@ function Profile() {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
+    // Check file type and size
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+  
+    const maxFileSize = 5 * 1024 * 1024; // 5MB limit
+    if (file.size > maxFileSize) {
+      alert("File size is too large. Please upload a file smaller than 5MB.");
+      return;
+    }
+  
     try {
-      const downloadURL = await uploadProfilePicture(file, authorId);
-      await updateAuthorProfilePic(authorId, downloadURL);
-      setAuthor((prev) => ({ ...prev, profile_pic_url: downloadURL }));
+      // Step 1: Get signed URL
+      const { uploadURL, imageName } = await getS3UploadUrl();
+  
+      if (!uploadURL || !imageName) {
+        throw new Error('Missing upload URL or image name');
+      }
+  
+      console.log("Uploading to S3:", uploadURL);
+  
+      // Step 2: Upload the image to S3
+      const s3Response = await fetch(uploadURL, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+        },
+        body: file,
+      });
+  
+      if (!s3Response.ok) {
+        throw new Error('Failed to upload image');
+      }
+    
+      // Step 3: Construct the correct S3 URL
+      const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;
+
+  
+      // Step 4: Update Firestore with the new profile picture URL
+      await updateProfilePic(authorId, s3ImageUrl);
+  
     } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed to upload image.");
+      console.error('Error during image upload:', error);
+      alert('Failed to upload image.');
     }
   };
 
@@ -90,3 +128,4 @@ function Profile() {
 }
 
 export default Profile;
+

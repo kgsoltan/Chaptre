@@ -9,10 +9,16 @@ const api = axios.create({
 
 // Function to get the Firebase authentication token
 const getAuthToken = async () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  return user ? await user.getIdToken() : null;
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    return user ? await user.getIdToken() : null;
+  } catch (error) {
+    console.error("Error fetching auth token:", error);
+    return null;
+  }
 };
+
 
 // -------------------------------- Unprotected Endpoints -------------------------------- //
 
@@ -58,6 +64,17 @@ export const getChapters = async (bookId) => {
   }
 };
 
+export const getS3UploadUrl = async () => {
+  try {
+    const response = await api.get('/s3Url'); // This is the route in your backend
+    return response.data.url; // The pre-signed URL returned from the backend
+  } catch (error) {
+    console.error("Error fetching S3 URL:", error);
+    throw error;
+  }
+};
+
+
 // Get x number of published books
 export const getPublishedBooks = async (count) => {
     const response = await api.get(`/books?count=${count}`);
@@ -93,19 +110,31 @@ export const updateAuthor = async (authorId, updates) => {
 };
 
 
-// Update an author's profile
-export const updateAuthorProfilePic = async (authorId, profilePicUrl) => {
-
-  console.log("AAAAA", profilePicUrl)
+// Update an author's profile picture
+export const updateProfilePic = async (authorId, profilePicUrl) => {
   try {
-    const response = await firestore.collection('authors').doc(authorId).update({
-      profile_pic_url: profilePicUrl,
+    const token = await getAuthToken();  // Assuming getAuthToken() is a function to retrieve the token
+    const response = await api.patch(`/author/${authorId}/profile_pic_url`, 
+    {
+      profilePicUrl: profilePicUrl
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     });
-    return response;
+
+    if (response.status === 200) {
+      alert('Profile picture updated successfully!');
+    } else {
+      throw new Error('Failed to update profile picture');
+    }
   } catch (error) {
-    throw new Error('Failed to update profile picture');
+    console.error('Error updating profile picture:', error);
+    alert('Failed to update profile picture.');
   }
 };
+
 
 // Create a new book
 export const createBook = async (bookData) => {
