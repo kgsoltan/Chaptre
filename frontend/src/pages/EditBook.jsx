@@ -101,6 +101,10 @@ function EditBook() {
     }
   };
 
+  const togglePublished = () => {
+    setIsPublished(!isPublished);
+  }
+
   return (
     <div className="edit-book-container">
       <h2>Edit Book</h2>
@@ -112,14 +116,6 @@ function EditBook() {
           onChange={(e) => setBookTitle(e.target.value)}
           placeholder="Book Title"
         />
-        <label>
-          <input
-            type="checkbox"
-            checked={isPublished}
-            onChange={(e) => setIsPublished(e.target.checked)}
-          />
-          Published
-        </label>
         <input
           type="text"
           value={author}
@@ -177,7 +173,15 @@ function EditBook() {
         />
         <button className='save-button' onClick={handleAddChapter}>Add Chapter</button>
       </div>
+      <div className="chapter-buttons">
+      <button 
+          className={`${isPublished ? 'unpublish-button' : 'publish-button'}`} 
+          onClick={togglePublished}
+        >
+          {isPublished ? 'Unpublish' : 'Publish'}
+      </button>
       <button className='save-button' onClick={handleSaveBook}>Save Book</button>
+      </div>
     </div>
   );
 }

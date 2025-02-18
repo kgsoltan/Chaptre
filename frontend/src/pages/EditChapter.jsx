@@ -49,13 +49,13 @@ function EditChapter() {
     }
   };
 
-  const handleSaveChapter = async (newPublishedState = published) => {
+  const handleSaveChapter = async () => {
     try {
       const htmlContent = editorRef.current.getHTML();
       const updates = {
         title: chapterTitle,
         text: htmlContent,
-        is_published: newPublishedState,
+        is_published: published,
         chapter_num: chapterNum,
       };
       await updateChapter(bookId, chapterId, updates);
@@ -68,8 +68,7 @@ function EditChapter() {
   };
 
   const togglePublish = () => {
-    const newPublishedState = !published;
-    setPublished(newPublishedState);
+    setPublished(!published);
   };  
 
   return (
