@@ -8,7 +8,8 @@ readability purposes. For now just dump code in here if you need the backend cha
 we will fix it later.
 */
 
-// Impoorting required modules
+// Importing required modules
+const { generateUploadURL } = require('./s3.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -23,9 +24,48 @@ app.use(bodyParser.json());
 
 // Firebase Admin SDK setup
 const serviceAccount = require('./serviceAccountKey.json');
+
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://chaptre-b7fcb-default-rtdb.firebaseio.com",
+});
+
+// Get Firestore reference
+const firestore = admin.firestore();
+
+// Image handling endpoint
+app.get('/s3Url', async (req, res) => {
+    try {
+        const url = await generateUploadURL();
+        res.json({ url });
+    } catch (error) {
+        console.error("Error generating S3 URL:", error);
+        res.status(500).json({ error: 'Failed to generate signed URL' });
+    }
+ });
+ 
+
+// Update profile picture URL endpoint
+app.patch('/author/:authorId/profile_pic_url', async (req, res) => {
+    try {
+        const { authorId } = req.params;
+        const { profilePicUrl } = req.body;
+
+        if (!authorId || !profilePicUrl) {
+            console.error("Missing authorId or profilePicUrl");
+            return res.status(400).send('Missing authorId or profilePicUrl');
+        }
+
+        // Firestore update
+        const authorRef = firestore.collection('authors').doc(authorId);
+        await authorRef.update({ profile_pic_url: profilePicUrl });
+
+        console.log("Profile picture updated successfully");
+        return res.status(200).send('Profile picture updated successfully');
+    } catch (error) {
+        console.error('Error updating profile picture:', error);
+        return res.status(500).send('Internal Server Error');
+    }
 });
 
 // Test route
@@ -97,6 +137,13 @@ I sent one POST request manually through the authors route and it showed up on
 the firestore database.
 */
 
+//GET doesn't have any json requirements
+//POST needs json containing all fields in req.body
+//PATCH only needs json containing the fields being updated in req.body
+//DELETE doesn't have any json requirements
+
+//BOOKS POST GET PATCH DELETE -----------------------------
+//use to return a list of all books, optional to limit the amount returned
 //GET doesn't have any json requirements
 //POST needs json containing all fields in req.body
 //PATCH only needs json containing the fields being updated in req.body
