@@ -348,22 +348,12 @@ app.patch('/books/:bookId/chapters/:chapterId', async (req, res) => {
     const updatedData = {};
 
     if (parent_id) updatedData.parent_id = parent_id;
-    if (is_published || !is_published) updatedData.is_published = is_published;
+    if (is_published != null) updatedData.is_published = is_published;
     if (title) updatedData.title = title;
     if (chapter_num) updatedData.chapter_num = chapter_num;
     if (text) updatedData.text = text
 
     try {
-        decodedToken = await admin.auth().verifyIdToken(token);
-        userID = decodedToken.uid;
-    
-        const doc = await db.collection('books').doc(bookId).get()
-        const owner_author_id = doc.data().author_id
-    
-        if(owner_author_id !== userID){
-            return res.status(401).send('Not allowed');
-        }
-
         const docRef = db.collection('books').doc(bookId).collection('chapters').doc(chapterId);
         await docRef.update(updatedData);
 

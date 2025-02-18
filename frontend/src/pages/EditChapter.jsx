@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import TextEditor from '../components/TextEditor';
 import { getChapterDetails, updateChapter } from '../services/api';
+import '../EditBook.css';
 
 function EditChapter() {
   const editorRef = useRef(null);
@@ -32,7 +33,21 @@ function EditChapter() {
 
   const handleChange = useCallback((value) => {
     setText(value);
+    // handleSaveText();
   }, []);
+
+  const handleSaveText = async () => {
+    try {
+      const htmlContent = editorRef.current.getHTML();
+      const updates = {
+        text: htmlContent,
+      };
+      await updateChapter(bookId, chapterId, updates);
+    } catch (error) {
+      console.error('Error saving chapter:', error);
+      alert('Failed to save chapter.');
+    }
+  };
 
   const handleSaveChapter = async (newPublishedState = published) => {
     try {
@@ -55,32 +70,36 @@ function EditChapter() {
   const togglePublish = () => {
     const newPublishedState = !published;
     setPublished(newPublishedState);
-    handleSaveChapter(newPublishedState);
   };  
 
   return (
-    <div>
-      <h2>Edit Chapter</h2>
-      <input
-        type="text"
-        value={chapterTitle}
-        onChange={(e) => setChapterTitle(e.target.value)}
-        placeholder="Chapter Title"
-      />
-      <input
-        type="number"
-        value={chapterNum}
-        onChange={(e) => setChapterNum(parseInt(e.target.value) || 0)}
-        placeholder="0"
-      />
-      <TextEditor
-        ref={editorRef}
-        value={text}
-        onChange={handleChange}
-      />
-      <button onClick={togglePublish}>{published ? 'Unpublish' : 'Publish'}</button>
-      <button onClick={() => handleSaveChapter()}>Save Chapter</button>
-      <button onClick={() => navigate(`/book/${bookId}/editor`)}>Back to Book</button>
+    <div className="edit-chapter-container">
+        <button className="back-button" onClick={() => navigate(`/book/${bookId}/editor`)}> Back to Book</button>
+        <h2>Edit Chapter</h2>
+        <div className='chapter-details-form'>
+          <input
+            className='chapter-number'
+            type="number"
+            value={chapterNum}
+            onChange={(e) => setChapterNum(parseInt(e.target.value) || 0)}
+            placeholder="0"
+          />
+          <input
+            type="text"
+            value={chapterTitle}
+            onChange={(e) => setChapterTitle(e.target.value)}
+            placeholder="Chapter Title"
+          />
+        <TextEditor
+          ref={editorRef}
+          value={text}
+          onChange={handleChange}
+        />
+        <div className='chapter-buttons'>
+          <button className={`${published ? 'unpublish-button' : 'publish-button'}`} onClick={togglePublish}>{published ? 'Unpublish' : 'Publish'}</button>
+          <button className='save-button' onClick={() => handleSaveChapter()}>Save Chapter</button>
+        </div>
+        </div>
     </div>
   );
 }

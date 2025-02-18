@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook } from '../services/api';
+import '../EditBook.css'; 
+import { useNavigate } from 'react-router-dom';
 
 function EditBook() {
   const [bookTitle, setBookTitle] = useState('');
@@ -11,8 +13,9 @@ function EditBook() {
   const [genreTags, setGenreTags] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [newChapterTitle, setNewChapterTitle] = useState('');
-  const [newChapterNumber, setNewChapterNumber] = useState(0);
+  const [newChapterNumber, setNewChapterNumber] = useState(1);
   const { bookId } = useParams();
+  const navigate = useNavigate();
 
   const genreOptions = [
     { value: "Fantasy", label: "Fantasy" },
@@ -99,7 +102,7 @@ function EditBook() {
   };
 
   return (
-    <div className="edit-container">
+    <div className="edit-book-container">
       <h2>Edit Book</h2>
       
       <div className="book-details-form">
@@ -136,38 +139,45 @@ function EditBook() {
           value={genreOptions.filter(option => genreTags.includes(option.value))}
           onChange={(selectedOptions) => setGenreTags(selectedOptions.map(option => option.value))}
         />
-        <button onClick={handleSaveBook}>Save Book</button>
       </div>
 
       <h3>Chapters:</h3>
       <ul className="chapter-list">
         {chapters.map((chapter) => (
           <li key={chapter.id} className="chapter-item">
-            <Link to={`/book/${bookId}/chapter/${chapter.id}/editor`}>
-              Chapter {chapter.chapter_num}: {chapter.title}
-            </Link>
-            <button onClick={() => handleDeleteChapter(chapter.id)}>
+            Chapter {chapter.chapter_num}: {chapter.title}
+            <div className="chapter-buttons">
+            <button onClick={() => handleDeleteChapter(chapter.id)} className="delete-button">
               Delete
             </button>
+            <button
+              onClick={() => navigate(`/book/${bookId}/chapter/${chapter.id}/editor`)}
+              className="chapter-button"
+            >
+              Edit Chapter
+            </button>
+            </div>
           </li>
         ))}
-      </ul>
+        </ul>
 
       <div className="add-chapter-form">
+        <input
+          type="number"
+          className='chapter-number'
+          placeholder="Chapter Number"
+          value={newChapterNumber}
+          onChange={(e) => setNewChapterNumber(parseInt(e.target.value))}
+        />
         <input
           type="text"
           placeholder="New chapter title"
           value={newChapterTitle}
           onChange={(e) => setNewChapterTitle(e.target.value)}
         />
-        <input
-          type="number"
-          placeholder="Chapter Number"
-          value={newChapterNumber}
-          onChange={(e) => setNewChapterNumber(parseInt(e.target.value))}
-        />
-        <button onClick={handleAddChapter}>Add Chapter</button>
+        <button className='save-button' onClick={handleAddChapter}>Add Chapter</button>
       </div>
+      <button className='save-button' onClick={handleSaveBook}>Save Book</button>
     </div>
   );
 }

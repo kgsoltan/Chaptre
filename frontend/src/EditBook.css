@@ -1,0 +1,141 @@
+.edit-chapter-container,
+.edit-book-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2,
+h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.book-details-form,
+.chapter-details-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="number"],
+.chapter-input,
+.chapter-number {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.chapter-number {
+  width: 80px;
+}
+
+.chapter-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.chapter-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.chapter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button,
+.chapter-button,
+.delete-button,
+.back-button,
+.publish-button,
+.unpublish-button,
+.save-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.chapter-button,
+.save-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.delete-button,
+.unpublish-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.unpublish-button {
+  background-color: white;
+  color: #007bff;
+  border: 2px solid #007bff;
+}
+
+.publish-button {
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+}
+
+button:hover,
+.chapter-button:hover,
+.delete-button:hover,
+.back-button:hover,
+.publish-button:hover,
+.unpublish-button:hover,
+.save-button:hover {
+  opacity: 0.8;
+}
+
+.add-chapter-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-chapter-form input {
+  flex: 1;
+}
+
+.chapter-number {
+  max-width: 40px;
+}
+
+.add-chapter-form button {
+  height: 40px;
+}
+
+.editor-container {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
