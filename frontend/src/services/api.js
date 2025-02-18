@@ -58,6 +58,16 @@ export const getChapters = async (bookId) => {
   }
 };
 
+export const getPublishedChapters = async (bookId) => {
+  try {
+    const response = await api.get(`/books/${bookId}/chapters`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching chapters:", error);
+    throw error;
+  }
+};
+
 // Get x number of published books
 export const getPublishedBooks = async (count) => {
     const response = await api.get(`/books?count=${count}`);
@@ -189,8 +199,15 @@ export const canEditBook = async (bookId) => {
   }
 };
 
-
-
-
-
-
+export const updateBook = async (bookId, updates) => {
+  try {
+    const token = await getAuthToken();
+    const response = await api.patch(`/books/${bookId}`, updates, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating book:", error);
+    throw error;
+  }
+};

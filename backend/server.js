@@ -129,10 +129,11 @@ app.get('/books/:bookId', async (req, res) => {
             return res.status(404).json({ message: 'Book not found' });
         }
 
-        const bookData = doc.data();
-        if(!bookData.is_published) {
-            return res.status(403).json({ message: 'Book not published' });
-        }
+        // NOTE: Need to create seeprate api call for getting book details from pulished and non published books? Or need to figure out how security works here
+        // const bookData = doc.data();
+        // if(!bookData.is_published) {
+        //     return res.status(403).json({ message: 'Book not published' });
+        // }
 
         res.json({ id: doc.id, ...doc.data() });
     } catch (error) {

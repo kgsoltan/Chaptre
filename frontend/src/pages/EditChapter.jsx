@@ -8,6 +8,7 @@ function EditChapter() {
   const [chapterTitle, setChapterTitle] = useState('');
   const [text, setText] = useState('');
   const [published, setPublished] = useState(false);
+  const [chapterNum, setChapterNum] = useState(0);
   const { bookId, chapterId } = useParams();
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function EditChapter() {
           setChapterTitle(chapterContent.title);
           setText(chapterContent.text);
           setPublished(chapterContent.is_published);
+          setChapterNum(chapterContent.chapter_num)
         }
       } catch (error) {
         console.error('Error fetching chapter content:', error);
@@ -39,6 +41,7 @@ function EditChapter() {
         title: chapterTitle,
         text: htmlContent,
         is_published: newPublishedState,
+        chapter_num: chapterNum,
       };
       await updateChapter(bookId, chapterId, updates);
       alert('Chapter saved successfully!');
@@ -63,6 +66,12 @@ function EditChapter() {
         value={chapterTitle}
         onChange={(e) => setChapterTitle(e.target.value)}
         placeholder="Chapter Title"
+      />
+      <input
+        type="number"
+        value={chapterNum}
+        onChange={(e) => setChapterNum(parseInt(e.target.value) || 0)}
+        placeholder="0"
       />
       <TextEditor
         ref={editorRef}
