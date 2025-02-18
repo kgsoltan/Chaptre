@@ -64,6 +64,16 @@ export const getChapters = async (bookId) => {
   }
 };
 
+export const getPublishedChapters = async (bookId) => {
+  try {
+    const response = await api.get(`/books/${bookId}/chapters`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching chapters:", error);
+    throw error;
+  }
+};
+
 export const getS3UploadUrl = async () => {
   try {
     const response = await api.get('/s3Url');
@@ -73,7 +83,6 @@ export const getS3UploadUrl = async () => {
     throw error;
   }
  };
- 
 
 // Get x number of published books
 export const getPublishedBooks = async (count) => {
@@ -179,7 +188,7 @@ export const deleteChapter = async (bookId, chapterId) => {
 };
 
 // Update a specific chapter by chapter ID
-export const updateChapterDetails = async (bookId, chapterId, updates) => {
+export const updateChapter = async (bookId, chapterId, updates) => {
   try {
       const token = await getAuthToken();
       const response = await api.patch(`/books/${bookId}/chapters/${chapterId}`, updates, {
@@ -219,8 +228,15 @@ export const canEditBook = async (bookId) => {
   }
 };
 
-
-
-
-
-
+export const updateBook = async (bookId, updates) => {
+  try {
+    const token = await getAuthToken();
+    const response = await api.patch(`/books/${bookId}`, updates, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating book:", error);
+    throw error;
+  }
+};

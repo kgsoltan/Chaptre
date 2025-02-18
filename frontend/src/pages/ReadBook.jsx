@@ -14,10 +14,12 @@ function ReadBook() {
     const fetchChapters = async () => {
       try {
         const chapterList = await getChapters(bookId);
-        setChapters(chapterList);
-        console.log(chapterList);
-        if (chapterList.length > 0) {
-          fetchChapterContent(chapterList[0].id); 
+        const publishedChapterList = chapterList.filter(chapter => chapter.is_published);
+        console.log(publishedChapterList)
+        setChapters(publishedChapterList);
+        console.log(publishedChapterList);
+        if (publishedChapterList.length > 0) {
+          fetchChapterContent(publishedChapterList[0].id); 
         }
       } catch (error) {
         console.error("Failed to fetch chapters:", error);
