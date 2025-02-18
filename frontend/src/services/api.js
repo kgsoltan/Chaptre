@@ -66,14 +66,14 @@ export const getChapters = async (bookId) => {
 
 export const getS3UploadUrl = async () => {
   try {
-    const response = await api.get('/s3Url'); // This is the route in your backend
-    return response.data.url; // The pre-signed URL returned from the backend
+    const response = await api.get('/s3Url');
+    return response.data.url;
   } catch (error) {
     console.error("Error fetching S3 URL:", error);
     throw error;
   }
-};
-
+ };
+ 
 
 // Get x number of published books
 export const getPublishedBooks = async (count) => {
@@ -114,7 +114,7 @@ export const updateAuthor = async (authorId, updates) => {
 export const updateProfilePic = async (authorId, profilePicUrl) => {
   try {
     const token = await getAuthToken();  // Assuming getAuthToken() is a function to retrieve the token
-    const response = await api.patch(`/author/${authorId}/profile_pic_url`, 
+    const response = await api.patch(`/author/${authorId}/profile_pic_url`,
     {
       profilePicUrl: profilePicUrl
     }, {
@@ -123,7 +123,8 @@ export const updateProfilePic = async (authorId, profilePicUrl) => {
         'Content-Type': 'application/json',
       },
     });
-
+ 
+ 
     if (response.status === 200) {
       alert('Profile picture updated successfully!');
     } else {
@@ -133,8 +134,8 @@ export const updateProfilePic = async (authorId, profilePicUrl) => {
     console.error('Error updating profile picture:', error);
     alert('Failed to update profile picture.');
   }
-};
-
+ };
+ 
 
 // Create a new book
 export const createBook = async (bookData) => {

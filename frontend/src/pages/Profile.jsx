@@ -39,30 +39,24 @@ function Profile() {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
-    // Check file type and size
+     // Check file type and size
     if (!file.type.startsWith("image/")) {
       alert("Please select an image file.");
       return;
     }
-  
-    const maxFileSize = 5 * 1024 * 1024; // 5MB limit
+     const maxFileSize = 5 * 1024 * 1024; // 5MB limit
     if (file.size > maxFileSize) {
       alert("File size is too large. Please upload a file smaller than 5MB.");
       return;
     }
-  
-    try {
+     try {
       // Step 1: Get signed URL
       const { uploadURL, imageName } = await getS3UploadUrl();
-  
-      if (!uploadURL || !imageName) {
+       if (!uploadURL || !imageName) {
         throw new Error('Missing upload URL or image name');
       }
-  
-      console.log("Uploading to S3:", uploadURL);
-  
-      // Step 2: Upload the image to S3
+       console.log("Uploading to S3:", uploadURL);
+       // Step 2: Upload the image to S3
       const s3Response = await fetch(uploadURL, {
         method: 'PUT',
         headers: {
@@ -70,23 +64,21 @@ function Profile() {
         },
         body: file,
       });
-  
-      if (!s3Response.ok) {
+       if (!s3Response.ok) {
         throw new Error('Failed to upload image');
       }
-    
-      // Step 3: Construct the correct S3 URL
+       console.log("Image successfully uploaded to S3");
+       // Step 3: Construct the correct S3 URL
       const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;
-
-  
-      // Step 4: Update Firestore with the new profile picture URL
+ 
+ 
+       // Step 4: Update Firestore with the new profile picture URL
       await updateProfilePic(authorId, s3ImageUrl);
-  
     } catch (error) {
       console.error('Error during image upload:', error);
       alert('Failed to upload image.');
     }
-  };
+  }; 
 
   if (!author) return <div>Loading...</div>;
 

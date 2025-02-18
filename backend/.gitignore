@@ -1,0 +1,8 @@
+.env
+node_modules/
+*.log
+serviceAccountKey.json
+dist/
+*.tmp
+.vscode/
+.idea/
