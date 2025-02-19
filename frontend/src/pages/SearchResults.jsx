@@ -16,7 +16,7 @@ function SearchResults() {
 
     const loadBooks = async () => {
       if (!searchQuery && genreFilter.length === 0) {
-        return <p>No search was entered, enter a book title, author name, or select a genre</p>
+        return;
       } 
 
       try {
