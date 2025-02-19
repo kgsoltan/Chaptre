@@ -503,6 +503,56 @@ app.delete("/authors/:authorId", async (req, res) => {
 });
 
 
+//search book route
+app.get('/search', async (req, res) => {
+    const { q, genre } = req.query;  // Get search term and genre
+  
+    try {
+        const booksRef = db.collection('books').where('is_published', '==', true);
+  
+        // Handle multiple genres and ensure array
+        let genresArray = [];
+        if (genre) {
+            genresArray = Array.isArray(genre) ? genre : [genre];
+        }
+
+        let books = [];
+
+        //2 seperate queries for authors and title
+        if (q) {
+            const authorQuery = booksRef.where('author', '==', q);
+            const titleQuery = booksRef.where('book_title', '==', q);
+        
+            const [authorSnapshot, titleSnapshot] = await Promise.all([
+                authorQuery.get(),
+                titleQuery.get()
+            ]);
+
+            books = [...authorSnapshot.docs, ...titleSnapshot.docs].map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        } else { //if no search term
+            const allBooksSnapshot = await booksRef.get();
+            books = allBooksSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        }
+
+        //filter selected books with genres
+        if (genresArray.length > 0) {
+            books = books.filter(book => book.genre_tags.some(tag => genresArray.includes(tag)));
+        }
+  
+        res.json(books);
+    } catch (error) {
+        console.error("Error during search:", error);
+        res.status(500).json({ error: 'Failed to fetch books' });
+    }
+});
+
+
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

@@ -88,6 +88,32 @@ export const getAuthorBooks = async (authorId) => {
   return response.data;
 };
 
+//search books route
+export const searchBooks = async (searchTerm, genres) => {
+  try {
+    const searchParams = new URLSearchParams();
+
+    //add search terms and genres
+    if (searchTerm) {
+      searchParams.append("q", searchTerm);
+    }
+
+    if (genres && genres.length > 0) {
+      genres.forEach((genre) => searchParams.append("genre", genre));
+    }
+
+    const url = `/search?${searchParams.toString()}`;
+
+    // Make the API request and return response
+    const response = await api.get(url);
+    const books = await response.data;
+    return books; 
+  } catch (error) {
+    console.error("Error during search:", error);
+    return [];
+  }
+};
+
 // -------------------------------- Protected Endpoints -------------------------------- //
 // Must include Firebase ID token in the Authorization header
 
