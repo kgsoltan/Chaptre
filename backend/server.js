@@ -505,10 +505,10 @@ app.get('/search', async (req, res) => {
         }
 
         let books = [];
-
-        //query for authors and titles
         const allBooksSnapshot = await booksRef.get();
         books = allBooksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        //filter for author and title
         if (q) {
             books = books.filter(book => book.book_title.toLowerCase() === q || book.author.toLowerCase() === q);
         }
