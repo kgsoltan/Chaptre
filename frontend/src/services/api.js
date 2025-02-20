@@ -22,38 +22,21 @@ const getAuthToken = async () => {
 
 // -------------------------------- Unprotected Endpoints -------------------------------- //
 
-// Get author profile
 export const getAuthorDetails = async (authorId) => {
-    /*
-                return(
-                    {
-                        "id": "43252",
-                        "first_name": "John",
-                        "bio": "John's Bio",
-                        "location": "California",
-                        "books_as_author": ["64353", "845"],
-                        "following": ["5434", "345"],
-                        "profile_pic_url": "exampleurl"
-                    }
-                )
-                    */
   const response = await api.get(`/authors/${authorId}`);
   return response.data;
 };
 
-// Get book details if published
 export const getBookDetails = async (bookId) => {
   const response = await api.get(`/books/${bookId}`);
   return response.data;
 };
 
-// Get a non-draft chapter from a published book
 export const getChapterDetails = async (bookId, chapterId) => {
   const response = await api.get(`/books/${bookId}/chapters/${chapterId}`);
   return response.data;
 };
 
-// Get all chapters for a book
 export const getChapters = async (bookId) => {
   try {
     const response = await api.get(`/books/${bookId}/chapters`);
@@ -84,14 +67,12 @@ export const getS3UploadUrl = async () => {
   }
  };
 
-// Get x number of published books
 export const getPublishedBooks = async (count) => {
     const response = await api.get(`/books?count=${count}`);
     return response.data;
 
 };
 
-// Get all published books associated with an author
 export const getAuthorBooks = async (authorId) => {
   const response = await api.get(`/authors/${authorId}/books`);
   return response.data;
