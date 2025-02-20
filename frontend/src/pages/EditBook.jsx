@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook } from '../services/api';
 import '../EditBook.css'; 

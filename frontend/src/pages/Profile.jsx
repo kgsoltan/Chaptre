@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { getAuthorDetails, getAuthorBooks, updateProfilePic } from '../services/api';
 import { auth } from '../services/firebaseConfig';
 import { getS3UploadUrl } from '../services/api';
@@ -22,8 +22,8 @@ function Profile() {
         const authorBooks = await getAuthorBooks(authorId);
         setBooks(authorBooks);
         console.log('Books:', authorBooks);
-      } catch (e) {
-        alert('Failed to load author data.');
+      } catch (err) {
+        alert('Failed to load author data: ', err);
       }
     };
 
@@ -96,14 +96,11 @@ function Profile() {
         accept="image/*"
         className="file-upload"
         onChange={handleImageUpload}
-        style={{ display: 'none' }} // Hides the file input
+        style={{ display: 'none' }}
       />
 
-      <h1 className="profile-name">{author.first_name} {author.last_name}'s Profile</h1>
+      <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
       <p className="profile-bio">{author.bio}</p>
-      {/*<h3 className="profile-books-title">{author.first_name}'s books:</h3>*/}
-
-      {/*books.length > 0 ? <BookGrid books={books} showEditLink={user} /> : <p>No books available.</p>*/}
       
       <h3 className="profile-books-title">Published Books:</h3>
       {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No published books yet.</p>}

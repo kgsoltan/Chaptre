@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getPublishedBooks, searchBooks } from '../services/api';
@@ -16,15 +16,15 @@ function Home() {
         try {
           const response = await getPublishedBooks(15);
           setBooks(response);
-        } catch (error) {
-          alert('FAILED TO LOAD BOOKS');
+        } catch (err) {
+          alert('FAILED TO LOAD BOOKS: ', err);
         }
       } else {
         try {
           const response = await searchBooks(searchQuery, genreFilter);
           setBooks(response);
-        } catch (error) {
-          alert('FAILED TO LOAD SEARCH RESULTS');
+        } catch (err) {
+          alert('FAILED TO LOAD SEARCH RESULTS ', err);
         }
       }
     };
