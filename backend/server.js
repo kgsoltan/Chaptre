@@ -492,7 +492,8 @@ app.delete("/authors/:authorId", async (req, res) => {
 
 //search book route
 app.get('/search', async (req, res) => {
-    const { q, genre } = req.query;  // Get search term and genre
+    let { q, genre } = req.query;  // Get search term and genre
+    q = q?.toLowerCase();
   
     try {
         const booksRef = db.collection('books').where('is_published', '==', true);
@@ -505,26 +506,11 @@ app.get('/search', async (req, res) => {
 
         let books = [];
 
-        //2 seperate queries for authors and title
+        //query for authors and titles
+        const allBooksSnapshot = await booksRef.get();
+        books = allBooksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         if (q) {
-            const authorQuery = booksRef.where('author', '==', q);
-            const titleQuery = booksRef.where('book_title', '==', q);
-        
-            const [authorSnapshot, titleSnapshot] = await Promise.all([
-                authorQuery.get(),
-                titleQuery.get()
-            ]);
-
-            books = [...authorSnapshot.docs, ...titleSnapshot.docs].map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-        } else { //if no search term
-            const allBooksSnapshot = await booksRef.get();
-            books = allBooksSnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
+            books = books.filter(book => book.book_title.toLowerCase() === q || book.author.toLowerCase() === q);
         }
 
         //filter selected books with genres
