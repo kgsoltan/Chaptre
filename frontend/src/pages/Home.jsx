@@ -1,26 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
-import { getPublishedBooks } from '../services/api';
+import { getPublishedBooks, searchBooks } from '../services/api';
 
 function Home() {
   const [books, setBooks] = useState([]);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get('q');
+  const genreFilter = useMemo(() => searchParams.getAll('genre'), [location.search]);
 
   useEffect(() => {
     const loadBooks = async () => {
-      try {
-        const response = await getPublishedBooks(25);
-        setBooks(response);
-      } catch (error) {
-        alert('FAILED TO LOAD BOOKS');
+      if (!searchQuery && genreFilter.length === 0) {
+        try {
+          const response = await getPublishedBooks(15);
+          setBooks(response);
+        } catch (error) {
+          alert('FAILED TO LOAD BOOKS');
+        }
+      } else {
+        try {
+          const response = await searchBooks(searchQuery, genreFilter);
+          setBooks(response);
+        } catch (error) {
+          alert('FAILED TO LOAD SEARCH RESULTS');
+        }
       }
     };
+
     loadBooks();
-  }, []);
+  }, [searchQuery, genreFilter]);
 
   return (
     <div className="home">
-      <h1>Welcome to Chaptre</h1>
-      {books ? <BookGrid books={books} showEditLink={false} /> : <p>Theres no books on the website...</p>}
+      <h1>
+        {searchQuery || genreFilter.length > 0
+          ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
+          : 'Welcome to Chaptre'}
+      </h1>
+      {books.length > 0 ? (
+        <BookGrid books={books} showEditLink={false} />
+      ) : (
+        <p>{searchQuery || genreFilter.length > 0 ? 'No books match your search...' : 'There are no books on the website...'}</p>
+      )}
     </div>
   );
 }

@@ -8,7 +8,6 @@ import ReadBook from './pages/ReadBook';
 import LoginPage from './pages/LoginPage';
 import EditBook from './pages/EditBook';
 import EditChapter from './pages/EditChapter';
-import SearchResults from './pages/SearchResults';
 
 function App() {
   return (
@@ -23,7 +22,7 @@ function App() {
           <Route path="/book/:bookId" element={<ReadBook />} />
           <Route path="/book/:bookId/editor" element={<EditBook />} />
           <Route path="/book/:bookId/chapter/:chapterId/editor" element={<EditChapter />} />
-          <Route path="/search" element={<SearchResults />} />
+          <Route path="/search" element={<Home />} />
         </Routes>
         <Footer />
       </div>
