@@ -11,10 +11,9 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    max-height: 350px;
+    max-height: 400px;
     width: 200px;
     height: 350px;
-    max-height: 350px;
     max-width: 200px;
   }
   

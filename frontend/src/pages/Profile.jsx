@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { getAuthorDetails, getAuthorBooks, updateProfilePic } from '../services/api';
 import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
+import '../Profile.css';
 
 
 function Profile() {
