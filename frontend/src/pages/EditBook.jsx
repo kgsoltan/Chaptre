@@ -4,8 +4,7 @@ import Select from 'react-select';
 import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage } from '../services/api';
 import '../EditBook.css'; 
 import { useNavigate } from 'react-router-dom';
-import { getS3UploadUrl } from '../services/api';
-
+import { validateFile, uploadToS3 } from "../services/imageUpload";
 
 function EditBook() {
   const [bookTitle, setBookTitle] = useState('');
@@ -107,59 +106,20 @@ function EditBook() {
     setIsPublished(!isPublished);
   }
   
-  const handleCoverImageUpload = async (event) => {
+  const handleCoverImage = async (event, bookId, updateCoverImage, setCoverImageUrl) => {
     const file = event.target.files[0];
-    if (!file) return;
-  
-    // Check file type and size
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file.");
-      return;
-    }
-  
-    const maxFileSize = 5 * 1024 * 1024; // 5MB limit
-    if (file.size > maxFileSize) {
-      alert("File size is too large. Please upload a file smaller than 5MB.");
-      return;
-    }
+    if (!validateFile(file)) return;
   
     try {
-      const { uploadURL, imageName } = await getS3UploadUrl();
-      console.log(uploadURL)
-      if (!uploadURL || !imageName) {
-        throw new Error('Missing upload URL or image name');
-      }
-  
-      console.log("Uploading cover image to S3:", uploadURL);
-  
-      const s3Response = await fetch(uploadURL, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': file.type,
-        },
-        body: file,
-      });
-  
-      if (!s3Response.ok) {
-        throw new Error('Failed to upload cover image');
-      }
-  
-      console.log("Cover image successfully uploaded to S3");
-  
-      // Step 3: Construct the correct S3 URL
-      const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;
-
+      const s3ImageUrl = await uploadToS3(file);
       setCoverImageUrl(s3ImageUrl);
-
-      // Step 4: Update Firestore with the new cover image URL
-      await updateCoverImage(bookId, s3ImageUrl); // Make sure you have bookId in scope
-  
+      await updateCoverImage(bookId, s3ImageUrl);
+      console.log("Cover image updated in Firestore:", s3ImageUrl);
     } catch (error) {
-      console.error('Error during cover image upload:', error);
-      alert('Failed to upload cover image.');
+      console.error("Error during cover image upload:", error);
+      alert("Failed to upload cover image.");
     }
   };
-  
 
   return (
     <div className="edit-book-container">
@@ -186,7 +146,7 @@ function EditBook() {
         type="file"
         accept="image/*"
         className="file-upload"
-        onChange={handleCoverImageUpload}
+        onChange={(event) => handleCoverImage(event, bookId, updateCoverImage, setCoverImageUrl)} 
         style={{ display: 'none' }}
       />
         <label>Genre</label>

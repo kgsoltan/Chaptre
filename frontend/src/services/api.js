@@ -133,7 +133,7 @@ export const updateAuthor = async (authorId, updates) => {
 export const updateProfilePic = async (authorId, profilePicUrl) => {
   try {
 
-    const token = await getAuthToken();  // Assuming getAuthToken() is a function to retrieve the token
+    const token = await getAuthToken();
     const response = await api.patch(`/authors/${authorId}/profile_pic_url`,
 
     {
@@ -173,7 +173,6 @@ export const updateCoverImage = async (bookId, coverImageUrl) => {
           'Content-Type': 'application/json',
         },
       });
-    console.log("hellloooooo")
     if (response.status === 200) {
       alert('Cover photo updated successfully!');
     } else {

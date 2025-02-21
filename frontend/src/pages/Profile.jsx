@@ -4,7 +4,8 @@ import BookGrid from '../components/BookGrid';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuthorDetails, getAuthorBooks, updateProfilePic } from '../services/api';
 import { auth } from '../services/firebaseConfig';
-import { getS3UploadUrl } from '../services/api';
+import { validateFile, uploadToS3 } from "../services/imageUpload";
+
 
 function Profile() {
   const { authorId } = useParams();
@@ -36,49 +37,19 @@ function Profile() {
     return () => unsubscribe();
   }, [authorId]);
 
-  const handleImageUpload = async (event) => {
+  const handleProfileImage = async (event, authorId, updateProfilePic) => {
     const file = event.target.files[0];
-    if (!file) return;
-     // Check file type and size
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file.");
-      return;
-    }
-     const maxFileSize = 5 * 1024 * 1024; // 5MB limit
-    if (file.size > maxFileSize) {
-      alert("File size is too large. Please upload a file smaller than 5MB.");
-      return;
-    }
-     try {
-      // Step 1: Get signed URL
-      const { uploadURL, imageName } = await getS3UploadUrl();
-       if (!uploadURL || !imageName) {
-        throw new Error('Missing upload URL or image name');
-      }
-       console.log("Uploading to S3:", uploadURL);
-       // Step 2: Upload the image to S3
-      const s3Response = await fetch(uploadURL, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': file.type,
-        },
-        body: file,
-      });
-       if (!s3Response.ok) {
-        throw new Error('Failed to upload image');
-      }
-       console.log("Image successfully uploaded to S3");
-       // Step 3: Construct the correct S3 URL
-      const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;
- 
- 
-       // Step 4: Update Firestore with the new profile picture URL
+    if (!validateFile(file)) return;
+  
+    try {
+      const s3ImageUrl = await uploadToS3(file);
       await updateProfilePic(authorId, s3ImageUrl);
+      console.log("Profile image updated in Firestore:", s3ImageUrl);
     } catch (error) {
-      console.error('Error during image upload:', error);
-      alert('Failed to upload image.');
+      console.error("Error during profile image upload:", error);
+      alert("Failed to upload profile image.");
     }
-  }; 
+  };
 
   if (!author) return <div>Loading...</div>;
 
@@ -95,7 +66,7 @@ function Profile() {
         type="file"
         accept="image/*"
         className="file-upload"
-        onChange={handleImageUpload}
+        onChange={(event) => handleProfileImage(event, authorId, updateProfilePic)} 
         style={{ display: 'none' }}
       />
 
