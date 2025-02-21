@@ -124,7 +124,6 @@ function EditBook() {
     }
   
     try {
-      // Step 1: Get signed URL
       const { uploadURL, imageName } = await getS3UploadUrl();
       console.log(uploadURL)
       if (!uploadURL || !imageName) {
@@ -133,7 +132,6 @@ function EditBook() {
   
       console.log("Uploading cover image to S3:", uploadURL);
   
-      // Step 2: Upload the image to S3
       const s3Response = await fetch(uploadURL, {
         method: 'PUT',
         headers: {
@@ -148,12 +146,8 @@ function EditBook() {
   
       console.log("Cover image successfully uploaded to S3");
   
-      // Step 3: Construct the correct S3 URL
-      const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;
-
-  
-      // Step 4: Update Firestore with the new cover image URL
-      await updateCoverImage(bookId, s3ImageUrl); // Make sure you have bookId in scope
+      const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;  
+      await updateCoverImage(bookId, s3ImageUrl); 
   
     } catch (error) {
       console.error('Error during cover image upload:', error);
