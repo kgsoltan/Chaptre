@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage } from '../services/api';
-import '../EditBook.css'; 
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
+import '../EditBook.css'; 
 
 function EditBook() {
   const [bookTitle, setBookTitle] = useState('');
@@ -80,7 +80,7 @@ function EditBook() {
   const handleAddChapter = async () => {
     try {
       const newChapter = {
-        chapter_num: newChapterNumber,
+        chapter_num: chapters.length + 1,
         title: newChapterTitle,
         text: '',
         is_published: false,
@@ -91,6 +91,21 @@ function EditBook() {
     } catch (error) {
       console.error('Error adding chapter:', error);
     }
+  };
+
+  const moveChapter = async (index, direction) => {
+    const newChapters = [...chapters];
+    if (direction === 'up' && index > 0) {
+      [newChapters[index], newChapters[index - 1]] = [newChapters[index - 1], newChapters[index]];
+    } else if (direction === 'down' && index < newChapters.length - 1) {
+      [newChapters[index], newChapters[index + 1]] = [newChapters[index + 1], newChapters[index]];
+    }
+
+    newChapters.forEach((chapter, idx) => {
+      chapter.chapter_num = idx + 1;
+    });
+
+    setChapters(newChapters);
   };
 
   const handleDeleteChapter = async (chapterId) => {
@@ -157,35 +172,42 @@ function EditBook() {
           onChange={(selectedOptions) => setGenreTags(selectedOptions.map(option => option.value))}
         />
       </div>
-
       <h3>Chapters:</h3>
       <ul className="chapter-list">
-        {chapters.map((chapter) => (
+        {chapters.map((chapter, index) => (
           <li key={chapter.id} className="chapter-item">
-            Chapter {chapter.chapter_num}: {chapter.title}
+             Chapter {chapter.chapter_num}: {chapter.title}
             <div className="chapter-buttons">
-            <button onClick={() => handleDeleteChapter(chapter.id)} className="delete-button">
-              Delete
-            </button>
-            <button
-              onClick={() => navigate(`/book/${bookId}/chapter/${chapter.id}/editor`)}
-              className="chapter-button"
-            >
-              Edit Chapter
-            </button>
+            <div className="chapter-order-buttons">
+              <button 
+                onClick={() => moveChapter(index, 'up')} 
+                disabled={index === 0}
+                className="order-button"
+              >
+                ▲
+              </button>
+              <button 
+                onClick={() => moveChapter(index, 'down')} 
+                disabled={index === chapters.length - 1}
+                className="order-button"
+              >
+                ▼
+              </button>
+            </div>
+              <button
+                onClick={() => navigate(`/book/${bookId}/chapter/${chapter.id}/editor`)}
+                className="chapter-button"
+              >
+                Edit Chapter
+              </button>
+              <button onClick={() => handleDeleteChapter(chapter.id)} className="delete-button">
+                Delete
+              </button>
             </div>
           </li>
         ))}
-        </ul>
-
+      </ul>
       <div className="add-chapter-form">
-        <input
-          type="number"
-          className='chapter-number'
-          placeholder="Chapter Number"
-          value={newChapterNumber}
-          onChange={(e) => setNewChapterNumber(parseInt(e.target.value))}
-        />
         <input
           type="text"
           placeholder="New chapter title"
