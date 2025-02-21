@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../index.css';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";

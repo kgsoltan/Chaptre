@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import TextEditor from '../components/TextEditor';
 import { getChapterDetails, updateChapter } from '../services/api';
@@ -33,21 +33,7 @@ function EditChapter() {
 
   const handleChange = useCallback((value) => {
     setText(value);
-    // handleSaveText();
   }, []);
-
-  const handleSaveText = async () => {
-    try {
-      const htmlContent = editorRef.current.getHTML();
-      const updates = {
-        text: htmlContent,
-      };
-      await updateChapter(bookId, chapterId, updates);
-    } catch (error) {
-      console.error('Error saving chapter:', error);
-      alert('Failed to save chapter.');
-    }
-  };
 
   const handleSaveChapter = async () => {
     try {

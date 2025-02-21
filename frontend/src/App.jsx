@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -8,7 +7,6 @@ import ReadBook from './pages/ReadBook';
 import LoginPage from './pages/LoginPage';
 import EditBook from './pages/EditBook';
 import EditChapter from './pages/EditChapter';
-import SearchResults from './pages/SearchResults';
 
 function App() {
   return (
@@ -23,9 +21,8 @@ function App() {
           <Route path="/book/:bookId" element={<ReadBook />} />
           <Route path="/book/:bookId/editor" element={<EditBook />} />
           <Route path="/book/:bookId/chapter/:chapterId/editor" element={<EditChapter />} />
-          <Route path="/search" element={<SearchResults />} />
+          <Route path="/search" element={<Home />} />
         </Routes>
-        <Footer />
       </div>
     </Router>
   );

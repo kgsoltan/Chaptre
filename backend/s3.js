@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
-const aws = require('aws-sdk');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const crypto = require('crypto');
 const { promisify } = require('util');
 
@@ -12,35 +13,32 @@ const bucketName = "chaptre-app";
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
-const s3 = new aws.S3({
+// Initialize the S3 Client
+const s3 = new S3Client({
   region,
-  accessKeyId,
-  secretAccessKey,
-  signatureVersion: 'v4'
+  credentials: { accessKeyId, secretAccessKey },
+  signatureVersion: 'v4', // Optional in v3 but added here for clarity
 });
 
-//Randomly generate unique ID for image
+// Randomly generate unique ID for image and generate signed URL
 async function generateUploadURL() {
+  try {
     const rawBytes = await randomBytes(16);
     const imageName = rawBytes.toString('hex');
-    
-    const params = {
+
+    const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: imageName,
-      Expires: 60  
-    };
-  
-    console.log('S3 params:', params);
-  
-    try {
-      const uploadURL = await s3.getSignedUrlPromise('putObject', params);
-      return { uploadURL, imageName };
-    } catch (error) {
-      console.error("Error generating signed URL:", error);
-      throw new Error('Failed to generate signed URL');
-    }
-  }
-  
+    });
 
+    const uploadURL = await getSignedUrl(s3, command, { expiresIn: 60 });
+    console.log('S3 params:', { Bucket: bucketName, Key: imageName });
+
+    return { uploadURL, imageName };
+  } catch (error) {
+    console.error("Error generating signed URL:", error);
+    throw new Error('Failed to generate signed URL');
+  }
+}
 
 module.exports = { generateUploadURL };

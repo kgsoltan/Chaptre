@@ -1,4 +1,4 @@
-import React, {useRef, forwardRef, useImperativeHandle } from "react";
+import {useRef, forwardRef, useImperativeHandle } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -29,4 +29,5 @@ const TextEditor = forwardRef((props, ref) => {
   );
 });
 
+TextEditor.displayName = 'TextEditor';
 export default TextEditor;
