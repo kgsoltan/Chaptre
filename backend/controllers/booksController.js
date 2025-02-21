@@ -194,3 +194,63 @@ exports.deleteChapter = async (req, res) => {
     res.status(500).send(`Error deleting chapter '${chapterId}'`);
   }
 };
+
+// Update cover image URL for a specific book
+exports.updateBookCover = async (req, res) => {
+  try {
+      const { bookId } = req.params;
+      const { coverImageUrl } = req.body;
+      if (!bookId || !coverImageUrl) {
+          console.error("Missing bookId, or coverImageUrl");
+          return res.status(400).send('Missing authorId, bookId, or coverImageUrl');
+      }
+
+      // Firestore update
+      const bookRef = db.collection('books').doc(bookId);
+      await bookRef.update({ cover_image_url: coverImageUrl });
+
+      console.log("Cover image updated successfully");
+      return res.status(200).send('Cover image updated successfully');
+  } catch (error) {
+      console.error('Error updating cover image:', error);
+      return res.status(500).send('Internal Server Error');
+  }
+};
+
+//search book route
+exports.search = async (req, res) => {
+  console.log("ASDASDSA")
+  let { q, genre } = req.query;  // Get search term and genre
+  q = q?.toLowerCase();
+
+  try {
+      const booksRef = db.collection('books').where('is_published', '==', true);
+
+      // Handle multiple genres and ensure array
+      let genresArray = [];
+      if (genre) {
+          genresArray = Array.isArray(genre) ? genre : [genre];
+      }
+
+      let books = [];
+
+      //query for authors and titles
+      const allBooksSnapshot = await booksRef.get();
+      books = allBooksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      //filter for author and title
+      if (q) {
+          books = books.filter(book => book.book_title.toLowerCase().includes(q) || book.author.toLowerCase().includes(q));
+      }
+
+      //filter selected books with genres
+      if (genresArray.length > 0) {
+          books = books.filter(book => book.genre_tags.some(tag => genresArray.includes(tag)));
+      }
+
+      res.json(books);
+  } catch (error) {
+      console.error("Error during search:", error);
+      res.status(500).json({ error: 'Failed to fetch books' });
+  }
+};
