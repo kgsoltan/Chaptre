@@ -59,7 +59,10 @@ export const getPublishedChapters = async (bookId) => {
 
 export const getS3UploadUrl = async () => {
   try {
+    console.log("Sending request to get S3 upload URL...");
     const response = await api.get('/s3Url');
+    console.log("poop");
+    console.log(response);
     return response.data.url;
   } catch (error) {
     console.error("Error fetching S3 URL:", error);
@@ -129,7 +132,7 @@ export const updateAuthor = async (authorId, updates) => {
 // Update an author's profile picture
 export const updateProfilePic = async (authorId, profilePicUrl) => {
   try {
-    const token = await getAuthToken();  // Assuming getAuthToken() is a function to retrieve the token
+    const token = await getAuthToken();
     const response = await api.patch(`/author/${authorId}/profile_pic_url`,
     {
       profilePicUrl: profilePicUrl
@@ -152,6 +155,33 @@ export const updateProfilePic = async (authorId, profilePicUrl) => {
   }
  };
  
+// Update a book's cover image
+export const updateCoverImage = async (bookId, coverImageUrl) => {
+  try {
+    const token = await getAuthToken();
+    console.log('bookId:', bookId); 
+  console.log('coverImageUrl:', coverImageUrl); 
+    const response = await api.patch(`/books/${bookId}/cover_image_url`, 
+      {
+        coverImageUrl: coverImageUrl
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    console.log("hellloooooo")
+    if (response.status === 200) {
+      alert('Cover photo updated successfully!');
+    } else {
+      throw new Error('Failed to update cover photo');
+    }
+  } catch (error) {
+    console.error('Error updating cover photo:', error);
+    alert('Failed to update cover photo.');
+  }
+};
 
 // Create a new book
 export const createBook = async (bookData) => {

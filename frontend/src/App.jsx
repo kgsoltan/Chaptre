@@ -23,7 +23,6 @@ function App() {
           <Route path="/book/:bookId/chapter/:chapterId/editor" element={<EditChapter />} />
           <Route path="/search" element={<Home />} />
         </Routes>
-        <Footer />
       </div>
     </Router>
   );

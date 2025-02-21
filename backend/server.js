@@ -37,6 +37,8 @@ const firestore = admin.firestore();
 app.get('/s3Url', async (req, res) => {
     try {
         const url = await generateUploadURL();
+        console.log("hello this is it");
+        console.log(url);
         res.json({ url });
     } catch (error) {
         console.error("Error generating S3 URL:", error);
@@ -67,6 +69,31 @@ app.patch('/author/:authorId/profile_pic_url', async (req, res) => {
         return res.status(500).send('Internal Server Error');
     }
 });
+
+// Update cover image URL for a specific book
+app.patch("/books/:bookId/cover_image_url", async (req, res) => {
+    try {
+        const { bookId } = req.params;
+        const { coverImageUrl } = req.body;
+        console.log(bookId);
+        console.log(coverImageUrl);
+        if (!bookId || !coverImageUrl) {
+            console.error("Missing bookId, or coverImageUrl");
+            return res.status(400).send('Missing authorId, bookId, or coverImageUrl');
+        }
+
+        // Firestore update
+        const bookRef = firestore.collection('books').doc(bookId);
+        await bookRef.update({ cover_image_url: coverImageUrl });
+
+        console.log("Cover image updated successfully");
+        return res.status(200).send('Cover image updated successfully');
+    } catch (error) {
+        console.error('Error updating cover image:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+});
+
 
 // Test route
 app.get('/', (req, res) => {
@@ -486,42 +513,6 @@ app.delete("/authors/:authorId", async (req, res) => {
         res.status(200).send(`Author '${authorId}' deleted`);
     } catch (error) {
         res.status(500).send(`Error deleting author '${authorId}'`);
-    }
-});
-
-
-//search book route
-app.get('/search', async (req, res) => {
-    let { q, genre } = req.query;  // Get search term and genre
-    q = q?.toLowerCase();
-  
-    try {
-        const booksRef = db.collection('books').where('is_published', '==', true);
-  
-        // Handle multiple genres and ensure array
-        let genresArray = [];
-        if (genre) {
-            genresArray = Array.isArray(genre) ? genre : [genre];
-        }
-
-        let books = [];
-        const allBooksSnapshot = await booksRef.get();
-        books = allBooksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        //filter for author and title
-        if (q) {
-            books = books.filter(book => book.book_title.toLowerCase() === q || book.author.toLowerCase() === q);
-        }
-
-        //filter selected books with genres
-        if (genresArray.length > 0) {
-            books = books.filter(book => book.genre_tags.some(tag => genresArray.includes(tag)));
-        }
-  
-        res.json(books);
-    } catch (error) {
-        console.error("Error during search:", error);
-        res.status(500).json({ error: 'Failed to fetch books' });
     }
 });
 
