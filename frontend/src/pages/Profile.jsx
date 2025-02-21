@@ -74,16 +74,16 @@ function Profile() {
       <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
       <p className="profile-bio">{author.bio}</p>
       
-      <h3 className="profile-books-title">Published Books:</h3>
-      {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No published books yet.</p>}
+      <h3 className="profile-books-title">Public Books:</h3>
+      {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No public books yet.</p>}
       
-      <h3 className="profile-books-title">Draft Books:</h3>
+      <h3 className="profile-books-title">Drafts:</h3>
       {draftBooks.length > 0 ? (
         <BookGrid 
           books={draftBooks} 
           showEditLink={user} 
         />
-      ) : <p>No draft books.</p>}
+      ) : <p>No draft books yet.</p>}
     </div>
   );
 }
