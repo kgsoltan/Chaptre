@@ -4,10 +4,13 @@ const booksController = require('../controllers/booksController');
 
 // Book endpoints
 router.get('/', booksController.getBooks);
+router.get('/search', booksController.search);
 router.get('/:bookId', booksController.getBookById);
 router.post('/', booksController.createBook);
 router.patch('/:bookId', booksController.updateBook);
 router.delete('/:bookId', booksController.deleteBook);
+router.patch('/:bookId/cover_image_url', booksController.updateBookCover);
+
 
 // Chapter endpoints under /books/:bookId
 router.get('/:bookId/chapters', booksController.getChapters);

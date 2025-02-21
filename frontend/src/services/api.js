@@ -95,8 +95,8 @@ export const searchBooks = async (searchTerm, genres) => {
       genres.forEach((genre) => searchParams.append("genre", genre));
     }
 
-    const url = `/search?${searchParams.toString()}`;
-
+    const url = `/books/search?${searchParams.toString()}`;
+  
     // Make the API request and return response
     const response = await api.get(url);
     const books = await response.data;

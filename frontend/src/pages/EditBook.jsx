@@ -151,7 +151,8 @@ function EditBook() {
       // Step 3: Construct the correct S3 URL
       const s3ImageUrl = `https://chaptre-app.s3.us-east-2.amazonaws.com/${imageName}`;
 
-  
+      setCoverImageUrl(s3ImageUrl);
+
       // Step 4: Update Firestore with the new cover image URL
       await updateCoverImage(bookId, s3ImageUrl); // Make sure you have bookId in scope
   
