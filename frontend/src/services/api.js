@@ -132,8 +132,10 @@ export const updateAuthor = async (authorId, updates) => {
 // Update an author's profile picture
 export const updateProfilePic = async (authorId, profilePicUrl) => {
   try {
-    const token = await getAuthToken();
-    const response = await api.patch(`/author/${authorId}/profile_pic_url`,
+
+    const token = await getAuthToken();  // Assuming getAuthToken() is a function to retrieve the token
+    const response = await api.patch(`/authors/${authorId}/profile_pic_url`,
+
     {
       profilePicUrl: profilePicUrl
     }, {
