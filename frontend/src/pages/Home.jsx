@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getPublishedBooks, searchBooks } from '../services/api';
+import SearchBar from '../components/SearchBar'
 
 function Home() {
   const [books, setBooks] = useState([]);
@@ -34,11 +35,18 @@ function Home() {
 
   return (
     <div className="home">
-      <h1>
-        {searchQuery || genreFilter.length > 0
-          ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
-          : 'Welcome to Chaptre'}
-      </h1>
+      <div className='home-header'>
+        <h1 style={{ margin: '20px 0' }}>
+          {searchQuery || genreFilter.length > 0
+            ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
+            : 'Welcome to Chaptre'}
+        </h1>
+
+        <div className="search-bar">
+          <SearchBar />
+        </div>
+      </div>
+
       {books.length > 0 ? (
         <BookGrid books={books} showEditLink={false} />
       ) : (

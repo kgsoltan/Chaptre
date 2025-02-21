@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import '../index.css';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal'
-import SearchBar from '../components/SearchBar'
 
 function Header() {
   const [showModal, setShowModal] = useState(false);
@@ -25,10 +24,6 @@ function Header() {
   return (
     <header className="header">
       <Link to="/" className="nav-item">Chaptre</Link>
-
-      <div className="search-bar">
-        <SearchBar />
-      </div>
 
       <nav className="nav-container">
         <ul className="nav-list">

@@ -69,44 +69,58 @@ body {
   width: 100%;
 }
 
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
 .search-bar {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
+  justify-content: flex-end; /* Align elements to the right */
+  align-items: center; /* Vertically center all items */
+  gap: 10px; /* Space between elements */
   max-width: 600px;
-  padding-left: 105px;
+  width: 100%;
+}
+
+.search-input,
+.search-btn {
+  height: 40px; /* Consistent height */
+  padding: 8px 12px; /* Consistent padding */
+  border-radius: 8px; /* Rounded corners */
+  box-sizing: border-box; /* Include padding in height */
+  font-family: inherit;
+  font-size: inherit;
+  border: 1px solid #ccc; /* Add a border for consistency */
 }
 
 .search-input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #d32f2f;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.search-select {
-  flex: 1;
-  border: 1px solid #d32f2f;
-  border-radius: 8px;
-  min-width: 150px;
-  appearance: none;
+  width: 500px !important; /* Override width */
+  padding: 8px 12px !important; /* Override padding */
+  margin-bottom: 0 !important; /* Remove margin-bottom */
+  border: 1px solid #ccc !important; /* Ensure consistent border */
+  border-radius: 8px !important; /* Ensure consistent border radius */
+  font-size: inherit !important; /* Ensure consistent font size */
+  height: 40px !important; /* Ensure consistent height */
+  box-sizing: border-box !important; /* Include padding in height */
 }
 
 .search-btn {
   background-color: transparent;
   border: none;
   color: #d32f2f;
-  font-family: inherit;
-  font-size: inherit;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
 }
 
 .search-btn:hover {
   background: rgba(211, 47, 47, 0.2);
+}
+
+.search-select {
+  width: 500px;
 }
 
 .nav-container {

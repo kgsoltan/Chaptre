@@ -42,14 +42,14 @@ function SearchBar() {
     <form onSubmit={handleSearch} className="search-bar">
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Search by title or author..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="search-input"
       />
       <Select
         options={genreOptions}
-        placeholder="Genres"
+        placeholder="Select genres"
         isMulti
         isClearable
         value={selectedGenres}
