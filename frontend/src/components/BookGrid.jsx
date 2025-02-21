@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BookCard from './BookCard';
-import '../EditBook.css';
+import '../BookCard.css';
 
 
 function BookGrid({ books, showEditLink }) {

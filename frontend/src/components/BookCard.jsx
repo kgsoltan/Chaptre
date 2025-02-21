@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import '../EditBook.css';
+import '../BookCard.css';
 
 function BookCard({ book, showEditLink }) {
   const maxVisibleTags = 2;

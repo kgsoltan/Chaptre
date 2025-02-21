@@ -11,10 +11,10 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    max-height: 400px;
     width: 200px;
-    height: 350px;
+    max-height: 370px;
     max-width: 200px;
+    min-height: 370px;
   }
   
   .book-card {
@@ -59,7 +59,7 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: auto;
-    max-height: 50px;
+    max-height: 90px;
     overflow: hidden;
   }
   
