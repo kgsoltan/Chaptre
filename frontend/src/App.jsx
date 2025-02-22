@@ -24,6 +24,7 @@ function App() {
           <Route path="/search" element={<Home />} />
         </Routes>
       </div>
+      <div id="modal-root"></div>
     </Router>
   );
 }
