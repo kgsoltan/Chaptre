@@ -1,6 +1,6 @@
 .edit-chapter-container,
 .edit-book-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -29,16 +29,12 @@ input[type="text"],
 input[type="number"],
 .chapter-input,
 .chapter-number {
-  width: 100%;
+  width: 97.5%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
   margin-bottom: 15px;
-}
-
-.chapter-number {
-  width: 80px;
 }
 
 .chapter-list {
