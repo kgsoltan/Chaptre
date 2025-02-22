@@ -119,14 +119,18 @@ function EditBook() {
   };
 
   const handleDeleteChapter = async (chapterId) => {
-    try {
-      await deleteChapter(bookId, chapterId);
-      const updatedChapters = chapters.filter(chapter => chapter.id !== chapterId);
-      setChapters(updatedChapters);
-      await updateChapterNumbers(updatedChapters);
-      fetchChapters();
-    } catch (error) {
-      console.error('Error deleting chapter:', error);
+    const isConfirmed = window.confirm("Are you sure you want to delete this chapter? This action cannot be undone.");
+  
+    if (isConfirmed) {
+      try {
+        await deleteChapter(bookId, chapterId);
+        const updatedChapters = chapters.filter(chapter => chapter.id !== chapterId);
+        setChapters(updatedChapters);
+        await updateChapterNumbers(updatedChapters);
+        fetchChapters();
+      } catch (error) {
+        console.error('Error deleting chapter:', error);
+      }
     }
   };
  
