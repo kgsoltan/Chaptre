@@ -219,7 +219,6 @@ exports.updateBookCover = async (req, res) => {
 
 //search book route
 exports.search = async (req, res) => {
-  console.log("ASDASDSA")
   let { q, genre } = req.query;  // Get search term and genre
   q = q?.toLowerCase();
 
