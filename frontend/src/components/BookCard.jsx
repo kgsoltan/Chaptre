@@ -19,7 +19,7 @@ function BookCard({ book, showEditLink }) {
         ))}
         {book.genre_tags.length > maxVisibleTags && (
           <span className="genre-overflow">
-            +{book.genre_tags.length - maxVisibleTags}
+            +{book.genre_tags.length - maxVisibleTags} more
           </span>
         )}
       </div>
