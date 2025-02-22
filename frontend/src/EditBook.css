@@ -11,6 +11,11 @@ h3 {
   color: #333;
   margin-bottom: 20px;
 }
+.published-icon {
+  color: #28a745;
+  height: 16px;
+  width: 16px;
+}
 
 .book-details-form,
 .chapter-details-form {

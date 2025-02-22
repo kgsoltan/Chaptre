@@ -5,6 +5,8 @@ import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, 
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import '../EditBook.css'; 
+import pubIcon from "../assets/published.png";
+import unpubIcon from "../assets/unpublished.png";
 
 function EditBook() {
   const [bookTitle, setBookTitle] = useState('');
@@ -206,24 +208,27 @@ function EditBook() {
       <ul className="chapter-list">
         {chapters.map((chapter, index) => (
           <li key={chapter.id} className="chapter-item">
-             Chapter {chapter.chapter_num}: {chapter.title}
             <div className="chapter-buttons">
-            <div className="chapter-order-buttons">
-              <button 
-                onClick={() => moveChapter(index, 'up')} 
-                disabled={index === 0}
-                className="order-button"
-              >
-                ▲
-              </button>
-              <button 
-                onClick={() => moveChapter(index, 'down')} 
-                disabled={index === chapters.length - 1}
-                className="order-button"
-              >
-                ▼
-              </button>
+              <img className="published-icon" src={chapter.is_published ? pubIcon : unpubIcon} alt="published" />
+              {chapter.chapter_num}: {chapter.title}
             </div>
+            <div className="chapter-buttons">
+              <div className="chapter-order-buttons">
+                <button 
+                  onClick={() => moveChapter(index, 'up')} 
+                  disabled={index === 0}
+                  className="order-button"
+                >
+                  ▲
+                </button>
+                <button 
+                  onClick={() => moveChapter(index, 'down')} 
+                  disabled={index === chapters.length - 1}
+                  className="order-button"
+                >
+                  ▼
+                </button>
+              </div>
               <button
                 onClick={() => navigate(`/book/${bookId}/chapter/${chapter.id}/editor`)}
                 className="chapter-button"
