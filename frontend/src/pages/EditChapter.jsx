@@ -62,13 +62,7 @@ function EditChapter() {
         <button className="back-button" onClick={() => navigate(`/book/${bookId}/editor`)}> Back to Book</button>
         <h2>Edit Chapter</h2>
         <div className='chapter-details-form'>
-          <input
-            className='chapter-number'
-            type="number"
-            value={chapterNum}
-            onChange={(e) => setChapterNum(parseInt(e.target.value) || 0)}
-            placeholder="0"
-          />
+          <label>Title</label>
           <input
             type="text"
             value={chapterTitle}

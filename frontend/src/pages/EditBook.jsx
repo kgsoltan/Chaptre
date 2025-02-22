@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
-import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage } from '../services/api';
+import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import '../EditBook.css'; 
@@ -80,10 +80,10 @@ function EditBook() {
   const handleAddChapter = async () => {
     try {
       const newChapter = {
-        chapter_num: chapters.length + 1,
-        title: newChapterTitle,
-        text: '',
-        is_published: false,
+          chapter_num: chapters.length > 0 ? Math.max(...chapters.map(c => c.chapter_num)) + 1 : 1,
+          title: newChapterTitle,
+          text: '',
+          is_published: false,
       };
       await createChapter(bookId, newChapter);
       setNewChapterTitle('');
@@ -101,19 +101,48 @@ function EditBook() {
       [newChapters[index], newChapters[index + 1]] = [newChapters[index + 1], newChapters[index]];
     }
 
-    newChapters.forEach((chapter, idx) => {
-      chapter.chapter_num = idx + 1;
-    });
+    const updatedChapters = newChapters.map((chapter, idx) => ({ ...chapter, chapter_num: idx + 1 }));
+    setChapters(updatedChapters);
 
-    setChapters(newChapters);
+    try {
+      for (const [idx, chapter] of updatedChapters.entries()) {
+        await updateChapter(bookId, chapter.id, { chapter_num: idx + 1 });
+      }
+      fetchChapters();
+    } catch (error) {
+      console.error('Error updating chapter numbers in backend:', error);
+      alert('Failed to update chapter order. Please try again.');
+      fetchChapters();
+    }
   };
 
   const handleDeleteChapter = async (chapterId) => {
     try {
       await deleteChapter(bookId, chapterId);
+      const updatedChapters = chapters.filter(chapter => chapter.id !== chapterId);
+      setChapters(updatedChapters);
+      await updateChapterNumbers(updatedChapters);
       fetchChapters();
     } catch (error) {
       console.error('Error deleting chapter:', error);
+    }
+  };
+ 
+  const updateChapterNumbers = async (chaptersToUpdate) => {
+    try {
+        const updatedChapters = chaptersToUpdate.map((chapter, index) => ({ ...chapter, chapter_num: index + 1 }));
+        setChapters(updatedChapters);
+
+        for (const [index, chapter] of updatedChapters.entries()) {
+            await updateChapter(bookId, chapter.id, { chapter_num: index + 1 });
+        }
+
+        fetchChapters();
+    } catch (error) {
+        console.error('Error updating chapter numbers:', error);
+        alert('Failed to update chapter numbers. Please try again.');
+
+        fetchChapters();
     }
   };
 
@@ -139,20 +168,21 @@ function EditBook() {
   return (
     <div className="edit-book-container">
       <h2>Edit Book</h2>
-      
       <div className="book-details-form">
+        <label>Title</label>
         <input
           type="text"
           value={bookTitle}
           onChange={(e) => setBookTitle(e.target.value)}
           placeholder="Book Title"
         />
-        <input
+        
+        {/* <input
           type="text"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
           placeholder="Author"
-        />
+        /> */}
         <button onClick={() => document.getElementById('cover-photo-upload').click()} className="cover-photo-upload-btn">
         Cover Photo Upload
         </button>
