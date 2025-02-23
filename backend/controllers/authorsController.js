@@ -46,7 +46,7 @@ exports.createAuthor = async (req, res) => {
       books_as_author: [],
       favorited_books: [],
       following: [],
-      profile_pic_url: 'some-default-url.png',
+      profile_pic_url: '',
     };
 
     await db.collection('authors').doc(uid).set(newAuthor);

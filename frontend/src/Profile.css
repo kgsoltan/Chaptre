@@ -6,17 +6,33 @@
     text-align: left;
   }
   
+  .profile-header {
+    display: flex; 
+    align-items: center;
+    gap: 20px;
+  }
+  
   .profile-img {
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 20px;
     border: 3px solid #ddd;
-    cursor: pointer; /* Makes the image appear clickable */
-  } */
-  
-  .profile .book-grid {
-    margin-top: 20px;
+    cursor: pointer;
   }
+  
+  .profile-info {
+    flex-grow: 1;
+  }
+  
+  .profile-name {
+    margin: 0;
+    font-size: 30px;
+  }
+  
+  .profile-bio {
+    margin: 5px 0;
+    color: gray;
+  }
+  
   

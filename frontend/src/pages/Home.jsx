@@ -39,19 +39,22 @@ function Home() {
         <h1 style={{ margin: '20px 0' }}>
           {searchQuery || genreFilter.length > 0
             ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
-            : 'Welcome to Chaptre'}
+            : 'Books: '}
         </h1>
 
         <div className="search-bar">
           <SearchBar />
         </div>
       </div>
-
+      
+      <div className="home-book-grid">
       {books.length > 0 ? (
         <BookGrid books={books} showEditLink={false} />
       ) : (
         <p>{searchQuery || genreFilter.length > 0 ? 'No books match your search...' : 'There are no books on the website...'}</p>
       )}
+      </div>
+
     </div>
   );
 }

@@ -1,9 +1,10 @@
 /* Add your global styles here */
 
-body {
+html, body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 .book-list {

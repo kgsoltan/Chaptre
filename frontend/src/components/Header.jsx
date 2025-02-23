@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import '../index.css';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal'
+import { useNavigate } from "react-router-dom"; 
 
 function Header() {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
   const auth = getAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
@@ -19,6 +21,7 @@ function Header() {
     } catch (error) {
       console.error("Error signing out:", error);
     }
+    navigate("/");
   };
 
   return (
@@ -42,7 +45,7 @@ function Header() {
                 Logout
               </button>
             ) : (
-              <Link to="/login" className="nav-item login-btn">Login</Link>
+              <Link to="/login" className="nav-item login-btn">Login / Sign up</Link>
             )}
           </li>
         </ul>

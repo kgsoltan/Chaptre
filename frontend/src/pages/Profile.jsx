@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { getAuthorDetails, getAuthorBooks, updateProfilePic } from '../services/api';
 import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
+import defaultProfilePic from "../assets/default-profile-pic.jpg";
 import '../Profile.css';
 
 
@@ -58,33 +59,42 @@ function Profile() {
   const draftBooks = books.filter(book => book.is_published === false);
 
   return (
-    <div className="profile">
+  <div className="profile">
+    <div className="profile-header">
       <label htmlFor="file-upload" className="profile-img-label">
-        <img className="profile-img" src={author.profile_pic_url || 'default-profile-pic.jpg'} alt="Profile" />
-      </label>
-      <input
-        id="file-upload"
-        type="file"
-        accept="image/*"
-        className="file-upload"
-        onChange={(event) => handleProfileImage(event, authorId, updateProfilePic)} 
-        style={{ display: 'none' }}
-      />
-
-      <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
-      <p className="profile-bio">{author.bio}</p>
-      
-      <h3 className="profile-books-title">Public Books:</h3>
-      {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No public books yet.</p>}
-      
-      <h3 className="profile-books-title">Drafts:</h3>
-      {draftBooks.length > 0 ? (
-        <BookGrid 
-          books={draftBooks} 
-          showEditLink={user} 
+        <img 
+          className="profile-img" 
+          src={author.profile_pic_url && author.profile_pic_url.trim() !== '' ? author.profile_pic_url : defaultProfilePic} 
+          alt="Profile" 
         />
-      ) : <p>No draft books yet.</p>}
+      </label>
+      <div className="profile-info">
+        <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
+        <p className="profile-bio">{author.bio}</p>
+      </div>
     </div>
+
+    <input
+      id="file-upload"
+      type="file"
+      accept="image/*"
+      className="file-upload"
+      onChange={(event) => handleProfileImage(event, authorId, updateProfilePic)} 
+      style={{ display: 'none' }}
+    />
+
+    <h3 className="profile-books-title">Public Books:</h3>
+    {publishedBooks.length > 0 ? <BookGrid books={publishedBooks} showEditLink={user} /> : <p>No public books yet.</p>}
+    
+    <h3 className="profile-books-title">Drafts:</h3>
+    {draftBooks.length > 0 ? (
+      <BookGrid 
+        books={draftBooks} 
+        showEditLink={user} 
+      />
+    ) : <p>No draft books yet.</p>}
+  </div>
+
   );
 }
 

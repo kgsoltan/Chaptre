@@ -9,6 +9,7 @@ import {
 import "../Login.css";
 import googleLogo from "../assets/google_logo.png";
 import { createAuthor } from "../services/api";
+import { useNavigate } from "react-router-dom"; 
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ function LoginPage() {
   const [error, setError] = useState(null);
 
   const provider = new GoogleAuthProvider();
+  const navigate = useNavigate();
 
   const handleEmailPasswordAuth = async (e) => {
     e.preventDefault();
@@ -37,11 +39,12 @@ function LoginPage() {
         };
         await createAuthor(authorData);
 
-        alert("Account created and author profile successfully!");
+        console.log("Account created and author profile successfully!");
       } else {
         await signInWithEmailAndPassword(auth, email, password);
-        alert("Logged in successfully!");
+        console.log("Logged in successfully!");
       }
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -71,7 +74,8 @@ function LoginPage() {
 
       await createAuthor(authorData);
 
-      alert("Google sign-in successful and author profile created!");
+      console.log("Google sign-in successful and author profile created!");
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError(err.message);

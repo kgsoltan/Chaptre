@@ -4,6 +4,19 @@
     gap: 20px;
     padding: 20px;
   }
+
+  .home-book-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .home-header{
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
   
   .book-card {
     display: flex;
