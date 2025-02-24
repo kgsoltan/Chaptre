@@ -119,69 +119,44 @@ export const createAuthor = async (authorData) => {
   return response.data;
 };
 
-// Update an author's profile
-export const updateAuthor = async (authorId, updates) => {
-  const token = await getAuthToken();
-  const response = await api.patch(`/authors/${authorId}`, updates, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data;
-};
 
-
-// Update an author's profile picture
-export const updateProfilePic = async (authorId, profilePicUrl) => {
+// Generic PATCH request function
+const patchRequest = async (endpoint, data, errorMessage) => {
   try {
-
     const token = await getAuthToken();
-    const response = await api.patch(`/authors/${authorId}/profile_pic_url`,
-
-    {
-      profilePicUrl: profilePicUrl
-    }, {
+    await api.patch(endpoint, data, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
- 
- 
-    if (response.status === 200) {
-      alert('Profile picture updated successfully!');
-    } else {
-      throw new Error('Failed to update profile picture');
-    }
   } catch (error) {
-    console.error('Error updating profile picture:', error);
-    alert('Failed to update profile picture.');
+    console.error(`${errorMessage}:`, error);
+    alert(errorMessage);
   }
- };
- 
+};
+
+// Update an author's profile
+export const updateAuthor = async (authorId, updates) => {
+  return await patchRequest(`/authors/${authorId}`, updates, "Error updating author");
+};
+
+// Update an author's profile picture
+export const updateProfilePic = async (authorId, profilePicUrl) => {
+  await patchRequest(
+    `/authors/${authorId}/profile_pic_url`,
+    { profilePicUrl },
+    'Failed to update profile picture'
+  );
+};
+
 // Update a book's cover image
 export const updateCoverImage = async (bookId, coverImageUrl) => {
-  try {
-    const token = await getAuthToken();
-    console.log('bookId:', bookId); 
-  console.log('coverImageUrl:', coverImageUrl); 
-    const response = await api.patch(`/books/${bookId}/cover_image_url`, 
-      {
-        coverImageUrl: coverImageUrl
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    if (response.status === 200) {
-      alert('Cover photo updated successfully!');
-    } else {
-      throw new Error('Failed to update cover photo');
-    }
-  } catch (error) {
-    console.error('Error updating cover photo:', error);
-    alert('Failed to update cover photo.');
-  }
+  await patchRequest(
+    `/books/${bookId}/cover_image_url`,
+    { coverImageUrl },
+    'Failed to update cover photo'
+  );
 };
 
 // Create a new book
@@ -227,18 +202,11 @@ export const deleteChapter = async (bookId, chapterId) => {
 
 // Update a specific chapter by chapter ID
 export const updateChapter = async (bookId, chapterId, updates) => {
-  try {
-      const token = await getAuthToken();
-      const response = await api.patch(`/books/${bookId}/chapters/${chapterId}`, updates, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      });
-      return response.data;
-  } catch (error) {
-      console.error("Error updating chapter details:", error);
-      throw error;
-  }
+  return await patchRequest(
+    `/books/${bookId}/chapters/${chapterId}`,
+    updates,
+    'Error updating chapter details'
+  );
 };
 
 // Check if the user is authorized to edit the book
@@ -265,16 +233,10 @@ export const canEditBook = async (bookId) => {
     return false;
   }
 };
-
 export const updateBook = async (bookId, updates) => {
-  try {
-    const token = await getAuthToken();
-    const response = await api.patch(`/books/${bookId}`, updates, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error updating book:", error);
-    throw error;
-  }
+  return await patchRequest(
+    `/books/${bookId}`,
+    updates,
+    'Error updating book'
+  );
 };

@@ -13,8 +13,8 @@
   }
   
   .profile-img {
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #ddd;

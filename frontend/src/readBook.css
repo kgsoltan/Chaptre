@@ -1,0 +1,65 @@
+.read-book-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .read-book-container .chapter-list {
+    width: 200px; /* Decrease the width of the chapter list */
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    min-width: 70px; /* Ensure it doesn't go below this width */
+  }
+  
+  .read-book-container .chapter-list h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .read-book-container .chapter-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .read-book-container .chapter-list li {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .read-book-container .chapter-list li:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .read-book-container .chapter-list li.active {
+    background-color: #d4d4d4;
+    font-weight: bold;
+  }
+  
+  .read-book-container .chapter-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    word-wrap: break-word;
+  }
+  
+  .read-book-container .chapter-content h2 {
+    display: flex;
+    margin-top: 0;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .read-book-container .content {
+    line-height: 1.6;
+    font-size: 1rem;
+    max-width: 95%;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+  

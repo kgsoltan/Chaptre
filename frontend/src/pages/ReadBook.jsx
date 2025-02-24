@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getChapterDetails, getChapters} from '../services/api';
+import { getChapterDetails, getChapters } from "../services/api";
+import "../ReadBook.css";
 
 function ReadBook() {
   const { bookId } = useParams();
   const [chapters, setChapters] = useState([]);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [chapterContent, setChapterContent] = useState("");
-  const [selectedChapterName, setselectedChapterName] = useState("Chapter Name")
-
+  const [selectedChapterName, setSelectedChapterName] = useState("Chapter Name");
 
   useEffect(() => {
     const fetchChapters = async () => {
       try {
         const chapterList = await getChapters(bookId);
-        const publishedChapterList = chapterList.filter(chapter => chapter.is_published);
-        console.log(publishedChapterList)
+        const publishedChapterList = chapterList.filter((chapter) => chapter.is_published);
         setChapters(publishedChapterList);
-        console.log(publishedChapterList);
         if (publishedChapterList.length > 0) {
-          fetchChapterContent(publishedChapterList[0].id); 
+          fetchChapterContent(publishedChapterList[0].id);
         }
       } catch (error) {
         console.error("Failed to fetch chapters:", error);
@@ -33,7 +31,7 @@ function ReadBook() {
     try {
       const chapterData = await getChapterDetails(bookId, chapterId);
       setSelectedChapter(chapterId);
-      setselectedChapterName(chapterData.title)
+      setSelectedChapterName(chapterData.title);
       setChapterContent(chapterData.text);
     } catch (error) {
       console.error("Failed to fetch chapter content:", error);
@@ -41,18 +39,14 @@ function ReadBook() {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <div style={{ width: "250px", borderRight: "1px solid #ccc", padding: "10px" }}>
+    <div className="read-book-container">
+      <div className="chapter-list">
         <h3>Chapters</h3>
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul>
           {chapters.map((chapter) => (
             <li
               key={chapter.id}
-              style={{
-                padding: "8px",
-                cursor: "pointer",
-                background: selectedChapter === chapter.id ? "#ddd" : "transparent",
-              }}
+              className={selectedChapter === chapter.id ? "active" : ""}
               onClick={() => fetchChapterContent(chapter.id)}
             >
               {chapter.title}
@@ -60,10 +54,10 @@ function ReadBook() {
           ))}
         </ul>
       </div>
-      
-      <div style={{ flex: 1, padding: "20px", overflowY: "auto" }}>
+
+      <div className="chapter-content">
         <h2>{selectedChapterName}</h2>
-        <div dangerouslySetInnerHTML={{ __html: chapterContent }} />
+        <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
       </div>
     </div>
   );

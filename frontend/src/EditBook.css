@@ -1,9 +1,9 @@
 .edit-chapter-container,
 .edit-book-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 900px; /* Set the container width */
+  padding: 30px;
   font-family: Arial, sans-serif;
+  box-sizing: border-box; /* Ensures padding/borders are included in the width */
 }
 
 h2,
@@ -11,6 +11,7 @@ h3 {
   color: #333;
   margin-bottom: 20px;
 }
+
 .published-icon {
   color: #28a745;
   height: 16px;
@@ -39,21 +40,42 @@ input[type="number"],
 
 .chapter-list {
   list-style-type: none;
+  width: 100%;
+  max-width: 1000px;
   padding: 0;
 }
 
 .chapter-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Distributes space between left and right */
   align-items: center;
   padding: 10px;
   border: 1px solid #eee;
   margin-bottom: 10px;
   border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding/borders are included in the width */
+}
+
+.chapter-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 60%; 
+}
+
+.chapter-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  width: 40%; 
 }
 
 .chapter-buttons {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
 }
 

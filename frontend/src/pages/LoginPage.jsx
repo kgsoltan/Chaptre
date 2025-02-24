@@ -56,7 +56,7 @@ function LoginPage() {
     try {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
-
+  
       let firstName = "";
       let lastName = "";
       if (user.displayName) {
@@ -64,24 +64,30 @@ function LoginPage() {
         firstName = nameParts[0];
         lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
       }
-
-      const authorData = {
-        email: user.email,
-        first_name: firstName,
-        last_name: lastName,
-        location: "",
-      };
-
-      await createAuthor(authorData);
-
-      console.log("Google sign-in successful and author profile created!");
-      navigate("/");
+  
+      if (isSignUp) {
+        // If user is signing up, create an account and the author profile
+        const authorData = {
+          email: user.email,
+          first_name: firstName,
+          last_name: lastName,
+          location: "",
+        };
+  
+        await createAuthor(authorData);
+        console.log("Google sign-up successful and author profile created!");
+      } else {
+        // If user is logging in, we just proceed to the homepage without signing in again
+        console.log("Logged in successfully!");
+      }
+  
+      navigate("/"); // Navigate to home after successful sign-in or sign-up
     } catch (err) {
       console.error(err);
-      setError(err.message);
+      setError(err.message); // Set error if any happens
     }
   };
-
+  
   return (
     <div className="bg login-container">
       <div className="login-box">

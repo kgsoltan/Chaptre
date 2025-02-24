@@ -46,7 +46,9 @@ function Profile() {
     try {
       const s3ImageUrl = await uploadToS3(file);
       await updateProfilePic(authorId, s3ImageUrl);
+      
       console.log("Profile image updated in Firestore:", s3ImageUrl);
+      alert("successfully uploaded profile image.");
     } catch (error) {
       console.error("Error during profile image upload:", error);
       alert("Failed to upload profile image.");
