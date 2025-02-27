@@ -200,12 +200,14 @@ button.nav-item:hover {
   left: 0;
   right: 0;
   bottom: 0;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
+
 
 .modal-content {
   background: white;

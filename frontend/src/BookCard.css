@@ -27,7 +27,7 @@
     width: 200px;
     max-height: 370px;
     max-width: 200px;
-    min-height: 370px;
+    min-height: 380px;
   }
   
   .book-card {
@@ -157,3 +157,17 @@
         max-width: 300px;
     }
   }
+  
+  .author-link {
+    color: #003771 !important;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .author-link:hover {
+    color: #0056b3 !important;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  

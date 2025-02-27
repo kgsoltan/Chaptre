@@ -5,7 +5,7 @@ import '../BookCard.css';
 
 function BookGrid({ books, showEditLink }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 5;
+  const booksPerPage = 15;
 
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../BookCard.css';
+import defaultBookCover from "../assets/default-book-cover.jpg";
 
 function BookCard({ book, showEditLink }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,9 +44,13 @@ function BookCard({ book, showEditLink }) {
     >
       <div className="book-card">
         <Link to={linkPath}>
-          <img src={book.cover_image_url} alt="Cover Not Found" />
+          <img src={book.cover_image_url || defaultBookCover} alt="Cover Not Found" />
           <h3>{book.book_title}</h3>
-          <p>By {book.author}</p>
+          <p>
+            By <Link to={`/profile/${book.author_id}`} className="author-link" title="View Author's Profile">
+              {book.author}
+            </Link>
+          </p>
           <div className="genre-container">
               {book.genre_tags.slice(0, maxVisibleTags).map((genre, index) => (
                 <span key={index} className="genre-bubble">
