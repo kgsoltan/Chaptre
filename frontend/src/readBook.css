@@ -1,153 +1,222 @@
 .read-book-container {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  .read-book-container .chapter-list {
-    width: 200px; /* Decrease the width of the chapter list */
-    border-right: 1px solid #ccc;
-    padding: 10px;
-    overflow-y: auto;
-    background-color: #f9f9f9;
-    min-width: 70px; /* Ensure it doesn't go below this width */
-  }
-  
-  .read-book-container .chapter-list h3 {
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-  }
-  
-  .read-book-container .chapter-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .read-book-container .chapter-list li {
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .read-book-container .chapter-list li:hover {
-    background-color: #e6e6e6;
-  }
-  
-  .read-book-container .chapter-list li.active {
-    background-color: #d4d4d4;
-    font-weight: bold;
-  }
-  
-  .read-book-container .chapter-content {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    word-wrap: break-word;
-  }
-  
-  .read-book-container .chapter-content h2 {
-    display: flex;
-    margin-top: 0;
-    justify-content: center;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-  
-  .read-book-container .content {
-    line-height: 1.6;
-    font-size: 1rem;
-    max-width: 95%;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-  }
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
 
-  .view-comments-button {
-    padding: 8px; 
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-    font-size: 1rem; 
-    background: none; 
-    border: none; 
-    width: 100%; 
-    text-align: left; 
-    margin-top: 20px; 
-    font-weight: bold;
-  }
-  
-  .view-comments-button:hover {
-    background-color: #e6e6e6; 
-  }
-  
-  .view-comments-button.active {
-    background-color: #d4d4d4;
-    font-weight: bold;
-  }
+.read-book-container .chapter-list {
+  width: 250px; /* Slightly larger for better usability */
+  border-right: 1px solid #e0e0e0;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f7f7f7;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
 
-  .comments-header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 60px;
-    position: relative;
-  }
+.read-book-container .chapter-list h3 {
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+}
 
-  .comments-header h2 {
-    position: absolute; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    margin-bottom: 0 !important;
-    text-align: center;
-  }
-  
-  .new-comment-button {
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    color: #d32f2f;
-    font-weight: bold;
-    transition: background 0.3s ease-in-out;
-    display: inline-block;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-  }
-  
-  .new-comment-button:hover {
-    background: rgba(211, 47, 47, 0.2);
-  }
-  
-  .comments-list li {
-    border-bottom: 1px solid #ddd;
-    padding: 15px 10px; 
-    margin-bottom: 15px; 
-    list-style-type: none;
-    background-color: #f9f9f9; 
-    border-radius: 4px; 
-    white-space: pre-wrap; 
-    word-wrap: break-word; 
-    overflow-wrap: break-word; 
-  }
-  
-  .comments-list li:hover {
-    background-color: #f0f0f0; 
-  }
-  
-  .comments-list strong {
-    font-size: 1.2em;
-    color: #333; 
-  }
-  
-  .comments-list div {
-    font-style: italic;
-    margin-top: 5px;
-    color: #777; 
-  }
-  
-  .comments-list p {
-    margin-top: 5px;
-    color: #555; 
-    line-height: 1.5;
-  }
+.read-book-container .chapter-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.read-book-container .chapter-list li {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+  font-size: 1rem;
+  color: #555;
+}
+
+.read-book-container .chapter-list li:hover {
+  background-color: #eaeaea;
+  padding-left: 15px;
+}
+
+.read-book-container .chapter-list li.active {
+  background-color: #d4d4d4;
+  font-weight: bold;
+  color: #333;
+}
+
+.read-book-container .chapter-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background-color: #fff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.read-book-container .chapter-content h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Add a styled box around the chapter text */
+.read-book-container .content-box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  margin: 0 auto;
+  word-wrap: break-word;
+}
+
+.read-book-container .content {
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: #444;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.view-comments-button {
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  background: #e0e0e0;
+  border: none;
+  width: 100%;
+  text-align: left;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.view-comments-button:hover {
+  background-color: #d5d5d5;
+}
+
+.view-comments-button.active {
+  background-color: #d0d0d0;
+  font-weight: bold;
+}
+
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.comments-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: #444;
+}
+
+.new-comment-button {
+  padding: 12px 18px;
+  border-radius: 6px;
+  background-color: #d32f2f;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.new-comment-button:hover {
+  background-color: #b71c1c;
+}
+
+.comments-list li {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 15px;
+  margin-bottom: 15px;
+  list-style-type: none;
+  background-color: #fafafa;
+  border-radius: 6px;
+  color: #444;
+}
+
+.comments-list li:hover {
+  background-color: #f1f1f1;
+}
+
+.comments-list strong {
+  font-size: 1.1em;
+  color: #333;
+}
+
+.comments-list div {
+  font-style: italic;
+  margin-top: 5px;
+  color: #888;
+}
+
+.comments-list p {
+  margin-top: 5px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Modal styling */
+.new-comment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-comment-modal .modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.new-comment-modal .modal-content h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.new-comment-modal .modal-content textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  color: #444;
+  resize: none;
+}
+
+.new-comment-modal .modal-content button {
+  padding: 10px 15px;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.new-comment-modal .modal-content button:hover {
+  background-color: #218838;
+}

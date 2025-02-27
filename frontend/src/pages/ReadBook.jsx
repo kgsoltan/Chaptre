@@ -81,7 +81,7 @@ function ReadBook() {
         </button>
       </div>
   
-      <div className="chapter-content">
+            <div className="chapter-content">
         {viewingComments ? (
           <>
             <div className="comments-header">
@@ -110,10 +110,13 @@ function ReadBook() {
         ) : (
           <>
             <h2>{selectedChapterName}</h2>
-            <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
+            <div className="content-box">
+              <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
+            </div>
           </>
         )}
       </div>
+
 
       {showCommentModal && (
         <NewCommentModal
