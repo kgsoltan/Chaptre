@@ -32,7 +32,7 @@ exports.getBookById = async (req, res) => {
 
 // Create a new book
 exports.createBook = async (req, res) => {
-  const { book_title, author, author_id, cover_image_url, genre_tags } = req.body;
+  const { book_title, author, author_id, cover_image_url, synopsis, genre_tags } = req.body;
   const token = req.headers.authorization?.split('Bearer ')[1];
 
   if (!token) {
@@ -46,6 +46,7 @@ exports.createBook = async (req, res) => {
       author,
       author_id,
       cover_image_url,
+      synopsis, 
       genre_tags,
       num_chapters: 0,
       num_drafts: 0,
@@ -192,6 +193,112 @@ exports.deleteChapter = async (req, res) => {
     res.status(200).send(`Chapter '${chapterId}' deleted`);
   } catch (error) {
     res.status(500).send(`Error deleting chapter '${chapterId}'`);
+  }
+};
+
+// ------- COMMENTS LOGIC -------
+
+// Get all comments for a book
+exports.getComments = async (req, res) => {
+  const { bookId } = req.params;
+  try {
+    const snapshot = await db
+      .collection('books')
+      .doc(bookId)
+      .collection('comments')
+      .get();
+    const comments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(comments);
+  } catch (error) {
+    res.status(500).send('Error fetching comments');
+  }
+};
+
+// Get a specific comment
+exports.getCommentById = async (req, res) => {
+  const { bookId, commentId } = req.params;
+  try {
+    const doc = await db
+      .collection('books')
+      .doc(bookId)
+      .collection('comments')
+      .doc(commentId)
+      .get();
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.json({ id: doc.id, ...doc.data() });
+  } catch (error) {
+    res.status(500).send('Error fetching comment');
+  }
+};
+
+// Create a new comment
+exports.createComment = async (req, res) => {
+  const token = req.headers.authorization?.split('Bearer ')[1];
+  if (!token) return res.status(400).send('Missing auth token');
+
+  const { bookId } = req.params;
+  const { good_rating, text } = req.body;
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const commentor_id = decodedToken.uid;
+
+    const commenterDoc = await db.collection('authors').doc(commentor_id).get();
+    if (!commenterDoc.exists) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
+    const { first_name, last_name } = commenterDoc.data();
+    const commentor_name = `${first_name} ${last_name}`;
+
+    const docRef = await db
+      .collection('books')
+      .doc(bookId)
+      .collection('comments')
+      .add({ commentor_id, commentor_name, good_rating, text });
+
+    res.status(201).json({ id: docRef.id, commentor_id, commentor_name, good_rating, text });
+  } catch (error) {
+    res.status(500).send('Error creating comment');
+  }
+};
+
+// Update a comment
+exports.updateComment = async (req, res) => {
+  const token = req.headers.authorization?.split('Bearer ')[1];
+  if (!token) return res.status(400).send('Missing auth token');
+
+  const { bookId, commentId } = req.params;
+  const updatedData = { ...req.body };
+
+  try {
+    await db
+      .collection('books')
+      .doc(bookId)
+      .collection('comments')
+      .doc(commentId)
+      .update(updatedData);
+    res.status(200).json({ id: commentId, ...updatedData });
+  } catch (error) {
+    res.status(500).send('Error updating comment');
+  }
+};
+
+// Delete a comment
+exports.deleteComment = async (req, res) => {
+  const { bookId, commentId } = req.params;
+  try {
+    await db
+      .collection('books')
+      .doc(bookId)
+      .collection('comments')
+      .doc(commentId)
+      .delete();
+    res.status(200).send(`Chapter '${commentId}' deleted`);
+  } catch (error) {
+    res.status(500).send(`Error deleting chapter '${commentId}'`);
   }
 };
 

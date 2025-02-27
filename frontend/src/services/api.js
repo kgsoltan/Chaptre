@@ -107,6 +107,16 @@ export const searchBooks = async (searchTerm, genres) => {
   }
 };
 
+export const getComments = async (bookId) => {
+  try {
+    const response = await api.get(`/books/${bookId}/comments`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
+
 // -------------------------------- Protected Endpoints -------------------------------- //
 // Must include Firebase ID token in the Authorization header
 
@@ -239,4 +249,20 @@ export const updateBook = async (bookId, updates) => {
     updates,
     'Error updating book'
   );
+};
+
+//create new comment
+export const createComment = async (bookId, commentData) => {
+  try {
+      const token = await getAuthToken();
+      const response = await api.post(`/books/${bookId}/comments`, commentData, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Error creating comment:", error);
+      throw error;
+  }
 };

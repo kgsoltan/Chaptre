@@ -22,6 +22,7 @@ books
         |── NUM_CHAPTERS: int
         ├── NUM_DRAFTS: int
         |── DATE: time
+        |── SYNOPSIS: string
         ├── CHAPTERS: 
         │     └── chapter_1:
         |         ├── PARENT_ID : string
@@ -36,6 +37,12 @@ books
         |         ├── CHAPTER_NUM: int
         │         ├── TEXT: string
         │     └── ... 
+        ├── COMMENTS: 
+        │     └── ├── PARENT_ID : string
+        │         ├── COMMENTOR_ID : string
+        |         ├── COMMENTOR_NAME : string
+        |         ├── GOOD_RATING : bool
+        │         ├── TEXT: string
         ├── COVER_IMAGE_URL: string (URL of the book cover)
 
 
