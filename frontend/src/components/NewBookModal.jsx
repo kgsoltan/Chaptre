@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { createBook } from '../services/api';
 import Select from 'react-select';
+import { getAuthorDetails } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 function CreateBookModal({ user, onClose }) {
   const [bookTitle, setBookTitle] = useState('');
   const [bookGenre, setBookGenre] = useState([]);
-  const [authorField, setAuthorField] = useState('');
+  const [bookSynopsis, setBookSynopsis] = useState('');
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate(); // Initialize the navigate function
 
   //genre/tags for the select at the bottom
   const genreOptions = [
@@ -23,26 +27,35 @@ function CreateBookModal({ user, onClose }) {
     { value: "Fiction", label: "Fiction" },
     { value: "Non-Fiction", label: "Non-Fiction" },
   ];
-
+ 
   const handleCreateBook = async (e) => {
     e.preventDefault();
-    const bookData = {
-      book_title: bookTitle,
-      author:  authorField,
-      author_id: user.uid,
-      genre_tags: bookGenre, //Change later when we add tags and stuff
-      cover_image_url: "https://picsum.photos/id/40/1000/1500", // Using a default img for now
-    };
-
     try {
+      const authorData = await getAuthorDetails(user.uid);
+      if (!authorData) {
+        setError("Could not retrieve author details.");
+        return;
+      }
+
+      const bookData = {
+        book_title: bookTitle,
+        author: authorData.first_name,
+        book_synopsis: bookSynopsis,
+        author_id: user.uid,
+        genre_tags: bookGenre,
+        cover_image_url: "https://picsum.photos/id/40/1000/1500", // Placeholder cover image
+      };
+
       await createBook(bookData);
-      alert('Book created successfully!');
       onClose();
+      navigate(`/profile/${user.uid}`);
+      window.location.reload();
     } catch (error) {
-      console.error('Error creating book:', error);
-      setError('Failed to create book.');
+      console.error("Error creating book:", error);
+      setError("Failed to create book.");
     }
   };
+
 
   return (
     <div className="modal-overlay">
@@ -61,11 +74,11 @@ function CreateBookModal({ user, onClose }) {
             />
           </div>
           <div className="input-group">
-            <label>Author Field</label>
+            <label>Book synopsis</label>
             <input
               type="text"
-              value={authorField}
-              onChange={(e) => setAuthorField(e.target.value)}
+              value={bookSynopsis}
+              onChange={(e) => setBookSynopsis(e.target.value)}
               required
             />
           </div>

@@ -213,8 +213,8 @@ button.nav-item:hover {
   background: white;
   padding: 40px; /* Increased padding for more space inside */
   border-radius: 8px;
-  width: 600px; /* Increased width for a larger modal */
-  max-width: 90%; /* Ensure it doesn't overflow on smaller screens */
+  width: 90%; /* Increased width for a larger modal */
+  min-width: 600px;
   height: auto; /* Let the content determine the height */
   max-height: 80vh; /* Limit the height to 80% of the viewport */
   overflow-y: auto; /* Allow scrolling if content overflows */
