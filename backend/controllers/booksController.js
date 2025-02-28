@@ -199,11 +199,13 @@ exports.deleteChapter = async (req, res) => {
 
 // Get all comments for a book
 exports.getComments = async (req, res) => {
-  const { bookId } = req.params;
+  const { bookId, chapterId } = req.params;
   try {
     const snapshot = await db
       .collection('books')
       .doc(bookId)
+      .collection('chapters')
+      .doc(chapterId)
       .collection('comments')
       .get();
     const comments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -213,31 +215,12 @@ exports.getComments = async (req, res) => {
   }
 };
 
-// Get a specific comment
-exports.getCommentById = async (req, res) => {
-  const { bookId, commentId } = req.params;
-  try {
-    const doc = await db
-      .collection('books')
-      .doc(bookId)
-      .collection('comments')
-      .doc(commentId)
-      .get();
-    if (!doc.exists) {
-      return res.status(404).json({ message: 'Comment not found' });
-    }
-    res.json({ id: doc.id, ...doc.data() });
-  } catch (error) {
-    res.status(500).send('Error fetching comment');
-  }
-};
-
 // Create a new comment
 exports.createComment = async (req, res) => {
   const token = req.headers.authorization?.split('Bearer ')[1];
   if (!token) return res.status(400).send('Missing auth token');
 
-  const { bookId } = req.params;
+  const { bookId, chapterId } = req.params;
   const { good_rating, text } = req.body;
 
   try {
@@ -249,12 +232,13 @@ exports.createComment = async (req, res) => {
       return res.status(404).json({ error: 'Author not found' });
     }
 
-    const { first_name, last_name } = commenterDoc.data();
-    const commentor_name = `${first_name} ${last_name}`;
+    const commentor_name = (({ first_name, last_name }) => `${first_name} ${last_name}`)(commenterDoc.data());
 
     const docRef = await db
       .collection('books')
       .doc(bookId)
+      .collection('chapters')
+      .doc(chapterId)
       .collection('comments')
       .add({ commentor_id, commentor_name, good_rating, text });
 
@@ -269,13 +253,15 @@ exports.updateComment = async (req, res) => {
   const token = req.headers.authorization?.split('Bearer ')[1];
   if (!token) return res.status(400).send('Missing auth token');
 
-  const { bookId, commentId } = req.params;
+  const { bookId, chapterId, commentId } = req.params;
   const updatedData = { ...req.body };
 
   try {
     await db
       .collection('books')
       .doc(bookId)
+      .collection('chapters')
+      .dec(chapterId)
       .collection('comments')
       .doc(commentId)
       .update(updatedData);
@@ -287,11 +273,13 @@ exports.updateComment = async (req, res) => {
 
 // Delete a comment
 exports.deleteComment = async (req, res) => {
-  const { bookId, commentId } = req.params;
+  const { bookId, chapterId, commentId } = req.params;
   try {
     await db
       .collection('books')
       .doc(bookId)
+      .collection('chapters')
+      .cos(chapterId)
       .collection('comments')
       .doc(commentId)
       .delete();

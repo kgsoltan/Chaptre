@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createComment } from "../services/api";
 
-function NewCommentModal({ bookId, onClose, onCommentAdded }) {
+function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
   const [commentText, setCommentText] = useState("");
   const [isPositive, setIsPositive] = useState(true); // Default to "Good Book"
 
@@ -14,7 +14,7 @@ function NewCommentModal({ bookId, onClose, onCommentAdded }) {
     }
 
     try {
-      const newComment = await createComment(bookId, {
+      const newComment = await createComment(bookId, chapterId, {
         text: commentText,
         good_rating: isPositive,
       });

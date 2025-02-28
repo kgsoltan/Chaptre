@@ -107,9 +107,9 @@ export const searchBooks = async (searchTerm, genres) => {
   }
 };
 
-export const getComments = async (bookId) => {
+export const getComments = async (bookId, chapterId) => {
   try {
-    const response = await api.get(`/books/${bookId}/comments`);
+    const response = await api.get(`/books/${bookId}/chapters/${chapterId}/comments`);
     return response.data;
   } catch (error) {
     console.error("Error fetching comments:", error);
@@ -252,10 +252,10 @@ export const updateBook = async (bookId, updates) => {
 };
 
 //create new comment
-export const createComment = async (bookId, commentData) => {
+export const createComment = async (bookId, chapterId, commentData) => {
   try {
       const token = await getAuthToken();
-      const response = await api.post(`/books/${bookId}/comments`, commentData, {
+      const response = await api.post(`/books/${bookId}/chapters/${chapterId}/comments`, commentData, {
           headers: {
               Authorization: `Bearer ${token}`,
           },

@@ -10,7 +10,6 @@ function ReadBook() {
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [chapterContent, setChapterContent] = useState("");
   const [selectedChapterName, setSelectedChapterName] = useState("Chapter Name");
-  const [viewingComments, setViewingComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [showCommentModal, setShowCommentModal] = useState(false);
 
@@ -37,18 +36,15 @@ function ReadBook() {
       setSelectedChapter(chapterId);
       setSelectedChapterName(chapterData.title);
       setChapterContent(chapterData.text);
-      setViewingComments(false);
     } catch (error) {
       console.error("Failed to fetch chapter content:", error);
     }
   };
 
-  const fetchComments = async () => {
+  const fetchComments = async (chapterId) => {
     try {
-      const commentsData = await getComments(bookId);
+      const commentsData = await getComments(bookId, chapterId);
       setComments(commentsData);
-      setViewingComments(true);
-      setSelectedChapter(null);
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     }
@@ -67,60 +63,54 @@ function ReadBook() {
             <li
               key={chapter.id}
               className={selectedChapter === chapter.id ? "active" : ""}
-              onClick={() => fetchChapterContent(chapter.id)}
+              onClick={() => {
+                fetchChapterContent(chapter.id);
+                fetchComments(chapter.id);
+              }}
             >
               {chapter.title}
             </li>
           ))}
         </ul>
-        <button 
-          onClick={fetchComments} 
-          className={`view-comments-button ${viewingComments ? "active" : ""}`}
-        >
-          View Comments
-        </button>
       </div>
   
-            <div className="chapter-content">
-        {viewingComments ? (
-          <>
-            <div className="comments-header">
-              <h2>Comments</h2>
-              <button 
-                className="new-comment-button"
-                onClick={() => setShowCommentModal(true)}
-              > 
-                Leave a Comment
-              </button>
-            </div>
-            <ul className="comments-list">
-              {comments.length > 0 ? (
-                comments.map((comment) => (
-                  <li key={comment.id}>
-                    <strong>{comment.commentor_name}</strong>
-                    <div>{comment.good_rating ? "Positive Review" : "Negative Review"}</div>
-                    <p>{comment.text}</p>
-                  </li>
-                ))
-              ) : (
-                <p>No comments yet.</p>
-              )}
-            </ul>
-          </>
-        ) : (
-          <>
-            <h2>{selectedChapterName}</h2>
-            <div className="content-box">
-              <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
-            </div>
-          </>
-        )}
+      <div className="chapter-content">
+        <>
+          <h2>{selectedChapterName}</h2>
+          <div className="content-box">
+            <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
+          </div>
+
+          <div className="comments-header">
+            <h2>Comments</h2>
+            <button 
+              className="new-comment-button"
+              onClick={() => setShowCommentModal(true)}
+            > 
+              Leave a Comment
+            </button>
+          </div>
+          <ul className="comments-list">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <li key={comment.id}>
+                  <strong>{comment.commentor_name}</strong>
+                  <div>{comment.good_rating ? "Positive Review" : "Negative Review"}</div>
+                  <p>{comment.text}</p>
+                </li>
+              ))
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </ul>
+        </>
       </div>
 
 
       {showCommentModal && (
         <NewCommentModal
           bookId={bookId}
+          chapterId={selectedChapter}
           onClose={() => setShowCommentModal(false)}
           onCommentAdded={handleNewComment}
         />
