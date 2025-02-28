@@ -116,7 +116,7 @@
 
 .comments-header h2 {
   font-size: 1.5rem;
-  margin: 0;
+  margin-bottom: 0 !important;
   color: #444;
 }
 
@@ -143,6 +143,9 @@
   background-color: #fafafa;
   border-radius: 6px;
   color: #444;
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
 }
 
 .comments-list li:hover {
