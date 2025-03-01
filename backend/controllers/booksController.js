@@ -221,7 +221,7 @@ exports.createComment = async (req, res) => {
   if (!token) return res.status(400).send('Missing auth token');
 
   const { bookId, chapterId } = req.params;
-  const { good_rating, text } = req.body;
+  const { rating, text } = req.body;
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
@@ -240,9 +240,9 @@ exports.createComment = async (req, res) => {
       .collection('chapters')
       .doc(chapterId)
       .collection('comments')
-      .add({ commentor_id, commentor_name, good_rating, text });
+      .add({ commentor_id, commentor_name, rating, text });
 
-    res.status(201).json({ id: docRef.id, commentor_id, commentor_name, good_rating, text });
+    res.status(201).json({ id: docRef.id, commentor_id, commentor_name, rating, text });
   } catch (error) {
     res.status(500).send('Error creating comment');
   }

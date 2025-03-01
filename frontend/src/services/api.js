@@ -266,3 +266,28 @@ export const createComment = async (bookId, chapterId, commentData) => {
       throw error;
   }
 };
+
+// Delete a comment
+export const deleteComment = async (bookId, chapterId, commentId) => {
+  try {
+      const token = await getAuthToken();
+      const response = await api.delete(`/books/${bookId}/chapters/${chapterId}/comments/${commentId}`, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Error deleting comment:", error);
+      throw error;
+  }
+};
+
+// Update a specific comment by comment ID
+export const updateComment = async (bookId, chapterId, commentId, updates) => {
+  return await patchRequest(
+    `/books/${bookId}/chapters/${chapterId}/comments/${commentId}`,
+    updates,
+    'Error updating chapter details'
+  );
+};

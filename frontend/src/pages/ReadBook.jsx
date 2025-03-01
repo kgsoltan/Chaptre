@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getChapterDetails, getChapters, getComments } from "../services/api";
+import { getChapterDetails, getChapters, getComments, deleteComment, updateComment } from "../services/api";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewCommentModal from '../components/NewCommentModal';
 import "../ReadBook.css";
 
@@ -12,6 +13,12 @@ function ReadBook() {
   const [selectedChapterName, setSelectedChapterName] = useState("Chapter Name");
   const [comments, setComments] = useState([]);
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, setUser);
+  }, []);
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -20,7 +27,9 @@ function ReadBook() {
         const publishedChapterList = chapterList.filter((chapter) => chapter.is_published);
         setChapters(publishedChapterList);
         if (publishedChapterList.length > 0) {
-          fetchChapterContent(publishedChapterList[0].id);
+          const firstChapterId = publishedChapterList[0].id;
+          fetchChapterContent(firstChapterId);
+          fetchComments(firstChapterId);
         }
       } catch (error) {
         console.error("Failed to fetch chapters:", error);
@@ -54,6 +63,28 @@ function ReadBook() {
     setComments((prevComments) => [newComment, ...prevComments]); // Update comment list
   };
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteComment(bookId, selectedChapter, commentId);
+      setComments(comments.filter((comment) => comment.id !== commentId)); // Remove deleted comment from state
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleUpdateComment = async (commentId, updatedText) => {
+    try {
+      const updatedComment = await updateComment(bookId, selectedChapter, commentId, { text: updatedText });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === commentId ? { ...comment, text: updatedComment.text } : comment
+        )
+      );
+    } catch (error) {
+      console.error("Error updating comment:", error);
+    }
+  };
+
   return (
     <div className="read-book-container">
       <div className="chapter-list">
@@ -83,19 +114,23 @@ function ReadBook() {
 
           <div className="comments-header">
             <h2>Comments</h2>
-            <button 
-              className="new-comment-button"
-              onClick={() => setShowCommentModal(true)}
-            > 
-              Leave a Comment
-            </button>
+            {user ? (
+              <button 
+                className="new-comment-button"
+                onClick={() => setShowCommentModal(true)}
+              > 
+                Leave a Comment
+              </button>
+            ) : (
+              <p className="login-message">Login to leave comment</p>
+            )}
           </div>
           <ul className="comments-list">
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <li key={comment.id}>
                   <strong>{comment.commentor_name}</strong>
-                  <div>{comment.good_rating ? "Positive Review" : "Negative Review"}</div>
+                  <div>{"★".repeat(comment.rating)}</div>
                   <p>{comment.text}</p>
                 </li>
               ))

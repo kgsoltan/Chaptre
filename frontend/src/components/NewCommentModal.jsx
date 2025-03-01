@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { createComment } from "../services/api";
+import TextEditor from '../components/TextEditor';
+import "../ReadBook.css";
 
 function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
   const [commentText, setCommentText] = useState("");
-  const [isPositive, setIsPositive] = useState(true); // Default to "Good Book"
+  const [rating, setRating] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,7 +18,7 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
     try {
       const newComment = await createComment(bookId, chapterId, {
         text: commentText,
-        good_rating: isPositive,
+        rating: rating,
       });
 
       onCommentAdded(newComment); // Pass the new comment to the parent or update state
@@ -26,32 +28,30 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
     }
   };
 
+  const handleStarClick = (value) => {
+    setRating(value);
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Leave a Comment</h2>
         <form onSubmit={handleSubmit}>
+          <div className="stars">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <span
+                key={value}
+                className={`star ${rating >= value ? "filled" : ""}`}
+                onClick={() => handleStarClick(value)}
+              >
+                ★
+              </span>
+            ))}
+          </div>        
           <div>
-            <button
-              type="button"
-              onClick={() => setIsPositive(true)} // Set to positive review
-              style={{ backgroundColor: isPositive === true ? "green" : "transparent" }}
-            >
-              Good Book
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsPositive(false)} // Set to negative review
-              style={{ backgroundColor: isPositive === false ? "red" : "transparent" }}
-            >
-              Bad Book
-            </button>
-          </div>
-          <div>
-            <textarea
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Write your comment..."
+            <TextEditor
+              value={commentText}
+              onChange={(content) => setCommentText(content)}
             />
           </div>
           <button type="submit">Submit</button>

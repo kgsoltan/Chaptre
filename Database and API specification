@@ -22,28 +22,22 @@ books
         |── NUM_CHAPTERS: int
         ├── NUM_DRAFTS: int
         |── DATE: time
+        ├── COVER_IMAGE_URL: string (URL of the book cover)
         |── SYNOPSIS: string
         ├── CHAPTERS: 
-        │     └── chapter_1:
+        │     └── CHAPTER_ID:
         |         ├── PARENT_ID : string
         |         ├── IS_DRAFT : bool
         │         ├── TITLE: string
         |         ├── CHAPTER_NUM: int
         │         ├── TEXT: string
-        │     └── chapter_2: 
-        |         ├── PARENT_ID : string
-        |         ├── IS_PUBLISHED : bool
-        │         ├── TITLE: string
-        |         ├── CHAPTER_NUM: int
-        │         ├── TEXT: string
-        │     └── ... 
-        ├── COMMENTS: 
-        │     └── ├── PARENT_ID : string
-        │         ├── COMMENTOR_ID : string
-        |         ├── COMMENTOR_NAME : string
-        |         ├── GOOD_RATING : bool
-        │         ├── TEXT: string
-        ├── COVER_IMAGE_URL: string (URL of the book cover)
+        |         ├── COMMENTS:
+        |               └── COMMENT_ID:
+        |                   ├── PARENT_ID : string
+        |                   ├── COMMENTOR_ID : string
+        |                   ├── COMMENTOR_NAME : string
+        |                   ├── GOOD_RATING : bool
+        |                   ├── TEXT: string
 
 
 

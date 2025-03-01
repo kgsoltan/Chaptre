@@ -83,30 +83,6 @@
   overflow-wrap: break-word;
 }
 
-.view-comments-button {
-  padding: 12px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
-  background: #e0e0e0;
-  border: none;
-  width: 100%;
-  text-align: left;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-.view-comments-button:hover {
-  background-color: #d5d5d5;
-}
-
-.view-comments-button.active {
-  background-color: #d0d0d0;
-  font-weight: bold;
-}
-
 .comments-header {
   display: flex;
   justify-content: space-between;
@@ -119,6 +95,15 @@
   font-size: 1.5rem;
   margin-bottom: 0 !important;
   color: #444;
+}
+
+.login-message {
+  padding: 12px 18px;
+  border-radius: 6px;
+  background-color: #d32f2f;
+  color: white;
+  font-weight: bold;
+  border: none;
 }
 
 .new-comment-button {
@@ -134,6 +119,10 @@
 
 .new-comment-button:hover {
   background-color: #b71c1c;
+}
+
+ul.comments-list {
+  padding-inline-end: 35px !important;
 }
 
 .comments-list li {
@@ -159,15 +148,29 @@
 }
 
 .comments-list div {
-  font-style: italic;
   margin-top: 5px;
-  color: #888;
+  color: gold;
 }
 
 .comments-list p {
   margin-top: 5px;
-  color: #666;
+  color: #444;
   line-height: 1.6;
+}
+
+.stars {
+  font-size: 30px;
+  color: #ccc; /* Light gray for unfilled stars */
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.star.filled {
+  color: gold; /* Gold color for filled stars */
+}
+
+.star:hover {
+  color: #ffcc00; /* Highlight color on hover */
 }
 
 /* Modal styling */
@@ -180,45 +183,38 @@
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Moves modal box down */
+  padding-top: 100px; /* Adds space from the top */
 }
 
 .new-comment-modal .modal-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  padding: 50px; /* More padding for a larger look */
+  border-radius: 10px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+  width: 700px; /* Increased width */
+  max-width: 95%;
+  height: auto; /* Adjusts height dynamically */
 }
 
 .new-comment-modal .modal-content h3 {
   margin-top: 0;
-  font-size: 1.5rem;
+  font-size: 2rem; /* Larger heading */
   color: #333;
-}
-
-.new-comment-modal .modal-content textarea {
-  width: 100%;
-  height: 150px;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 1rem;
-  color: #444;
-  resize: none;
+  margin-bottom: 25px;
 }
 
 .new-comment-modal .modal-content button {
-  padding: 10px 15px;
+  padding: 14px 18px; /* Bigger button */
   background-color: #28a745;
   border: none;
   color: white;
   font-weight: bold;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 25px; /* More space above button */
   width: 100%;
+  font-size: 1.1rem;
 }
 
 .new-comment-modal .modal-content button:hover {
