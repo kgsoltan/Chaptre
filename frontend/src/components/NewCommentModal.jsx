@@ -10,6 +10,11 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const plainText = document.createElement("div");
+    plainText.innerHTML = commentText; // Parse HTML content
+    const cleanedText = plainText.innerText.trim(); // Extract plain text
+
+
     if (!commentText) {
       alert("Please enter a comment");
       return;
@@ -17,7 +22,7 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
 
     try {
       const newComment = await createComment(bookId, chapterId, {
-        text: commentText,
+        text: cleanedText,
         rating: rating,
       });
 
