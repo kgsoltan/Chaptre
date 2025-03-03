@@ -257,15 +257,18 @@ exports.updateComment = async (req, res) => {
   const updatedData = { ...req.body };
 
   try {
-    await db
+    const commentRef = db
       .collection('books')
       .doc(bookId)
       .collection('chapters')
-      .dec(chapterId)
+      .doc(chapterId)
       .collection('comments')
-      .doc(commentId)
-      .update(updatedData);
-    res.status(200).json({ id: commentId, ...updatedData });
+      .doc(commentId);
+
+    await commentRef.update(updatedData);
+
+    const updatedCommentDoc = await commentRef.get();
+    res.status(200).json({ id: updatedCommentDoc.id, ...updatedCommentDoc.data() });
   } catch (error) {
     res.status(500).send('Error updating comment');
   }
@@ -279,7 +282,7 @@ exports.deleteComment = async (req, res) => {
       .collection('books')
       .doc(bookId)
       .collection('chapters')
-      .cos(chapterId)
+      .doc(chapterId)
       .collection('comments')
       .doc(commentId)
       .delete();

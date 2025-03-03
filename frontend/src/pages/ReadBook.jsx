@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getChapterDetails, getChapters, getComments, deleteComment, updateComment } from "../services/api";
+import { getChapterDetails, getChapters, getComments, deleteComment } from "../services/api";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewCommentModal from '../components/NewCommentModal';
 import "../ReadBook.css";
@@ -12,6 +12,7 @@ function ReadBook() {
   const [chapterContent, setChapterContent] = useState("");
   const [selectedChapterName, setSelectedChapterName] = useState("Chapter Name");
   const [comments, setComments] = useState([]);
+  const [selectedComment, setSelectedComment] = useState(null)
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [user, setUser] = useState(null);
   const auth = getAuth();
@@ -19,6 +20,10 @@ function ReadBook() {
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
   }, []);
+
+  useEffect(() => {
+    console.log("Comments:", comments);
+  }, [comments]);
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -60,29 +65,42 @@ function ReadBook() {
   };
 
   const handleNewComment = (newComment) => {
-    setComments((prevComments) => [newComment, ...prevComments]); // Update comment list
+    if (!newComment || !newComment.id) {
+      console.error("Invalid comment:", newComment);
+      return;
+    }
+  
+    setComments((prevComments) => {
+      const existingCommentIndex = prevComments.findIndex(
+        (comment) => comment.id === newComment.id
+      );
+  
+      if (existingCommentIndex !== -1) {
+        // Replace the old comment with the updated one
+        const updatedComments = [...prevComments];
+        updatedComments[existingCommentIndex] = newComment;
+        return updatedComments;
+      }
+  
+      // Add new comment to the top
+      return [newComment, ...prevComments];
+    });
   };
 
   const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) return;
+  
     try {
       await deleteComment(bookId, selectedChapter, commentId);
-      setComments(comments.filter((comment) => comment.id !== commentId)); // Remove deleted comment from state
+      setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
     } catch (error) {
-      console.error("Error deleting comment:", error);
+      console.error("Failed to delete comment:", error);
     }
   };
 
-  const handleUpdateComment = async (commentId, updatedText) => {
-    try {
-      const updatedComment = await updateComment(bookId, selectedChapter, commentId, { text: updatedText });
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === commentId ? { ...comment, text: updatedComment.text } : comment
-        )
-      );
-    } catch (error) {
-      console.error("Error updating comment:", error);
-    }
+  const handleUpdateComment = async (commentId) => {
+    setSelectedComment(commentId);
+    setShowCommentModal(true);
   };
 
   return (
@@ -117,7 +135,10 @@ function ReadBook() {
             {user ? (
               <button 
                 className="new-comment-button"
-                onClick={() => setShowCommentModal(true)}
+                onClick={() => {
+                  setSelectedComment(null);
+                  setShowCommentModal(true);
+                }}
               > 
                 Leave a Comment
               </button>
@@ -132,6 +153,23 @@ function ReadBook() {
                   <strong>{comment.commentor_name}</strong>
                   <div>{"★".repeat(comment.rating)}</div>
                   <p>{comment.text}</p>
+
+                  {user && user.uid === comment.commentor_id && (
+                    <div>
+                      <button 
+                        className="new-comment-button"
+                        onClick={() => handleUpdateComment(comment.id)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="new-comment-button"
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </li>
               ))
             ) : (
@@ -148,6 +186,7 @@ function ReadBook() {
           chapterId={selectedChapter}
           onClose={() => setShowCommentModal(false)}
           onCommentAdded={handleNewComment}
+          existingComment={comments.find(comment => comment.id === selectedComment)}
         />
       )}  
     </div>

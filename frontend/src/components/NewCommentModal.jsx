@@ -1,11 +1,18 @@
-import { useState } from "react";
-import { createComment } from "../services/api";
+import { useEffect, useState } from "react";
+import { createComment, updateComment } from "../services/api";
 import TextEditor from '../components/TextEditor';
 import "../ReadBook.css";
 
-function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
+function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingComment }) {
   const [commentText, setCommentText] = useState("");
   const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    if (existingComment) {
+        setCommentText(existingComment.text);
+        setRating(existingComment.rating);
+    }
+  }, [existingComment]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,30 +22,39 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
     const cleanedText = plainText.innerText.trim(); // Extract plain text
 
 
-    if (!commentText) {
+    if (!cleanedText) {
       alert("Please enter a comment");
       return;
     }
 
-    try {
-      const newComment = await createComment(bookId, chapterId, {
-        text: cleanedText,
-        rating: rating,
-      });
+    if(rating === 0) {
+        alert("Please leave a rating");
+        return;
+    }
 
-      onCommentAdded(newComment); // Pass the new comment to the parent or update state
+    try {
+      let response;
+      if (existingComment) {
+        response = await updateComment(bookId, chapterId, existingComment.id, {
+            text: cleanedText,
+            rating: rating
+        })
+        onCommentAdded({ ...existingComment, text: cleanedText, rating: rating }); // Ensure UI updates
+      } else {
+        response = await createComment(bookId, chapterId, {
+            text: cleanedText,
+            rating: rating,
+        });
+        onCommentAdded(response);
+      }
       onClose(); // Close the modal after submission
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
   };
 
-  const handleStarClick = (value) => {
-    setRating(value);
-  };
-
   return (
-    <div className="modal-overlay">
+    <div className="new-comment-modal">
       <div className="modal-content">
         <h2>Leave a Comment</h2>
         <form onSubmit={handleSubmit}>
@@ -47,7 +63,7 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
               <span
                 key={value}
                 className={`star ${rating >= value ? "filled" : ""}`}
-                onClick={() => handleStarClick(value)}
+                onClick={() => setRating(value)}
               >
                 ★
               </span>
@@ -59,8 +75,10 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded }) {
               onChange={(content) => setCommentText(content)}
             />
           </div>
-          <button type="submit">Submit</button>
-          <button onClick={onClose}>Close</button>
+          <div className="modal-buttons">
+            <button className="modal-button" type="submit">Submit</button>
+            <button className="modal-button" onClick={onClose}>Close</button>
+          </div>
         </form>
       </div>
     </div>

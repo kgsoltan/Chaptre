@@ -108,6 +108,7 @@
 
 .new-comment-button {
   padding: 12px 18px;
+  margin-right: 10px;
   border-radius: 6px;
   background-color: #d32f2f;
   color: white;
@@ -204,19 +205,28 @@ ul.comments-list {
   margin-bottom: 25px;
 }
 
-.new-comment-modal .modal-content button {
-  padding: 14px 18px; /* Bigger button */
-  background-color: #28a745;
+.modal-buttons {
+  display: flex;
+  justify-content: space-between; /* Keeps buttons side by side */
+  gap: 15px; /* Adds spacing between buttons */
+  margin-top: 25px;
+  width: 100%; /* Makes sure buttons stretch to fit the modal */
+}
+
+.modal-button {
+  flex: 1; /* Makes both buttons equal in width */
+  padding: 14px 18px; /* Keeps the larger padding */
+  font-size: 1.1rem; /* Keeps text readable */
+  background-color: #d32f2f;
   border: none;
   color: white;
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 25px; /* More space above button */
-  width: 100%;
-  font-size: 1.1rem;
+  width: 100%; /* Ensures buttons fit the modal */
 }
 
-.new-comment-modal .modal-content button:hover {
+.modal-button:hover {
   background-color: #218838;
 }
