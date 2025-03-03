@@ -22,10 +22,6 @@ function ReadBook() {
   }, []);
 
   useEffect(() => {
-    console.log("Comments:", comments);
-  }, [comments]);
-
-  useEffect(() => {
     const fetchChapters = async () => {
       try {
         const chapterList = await getChapters(bookId);
@@ -75,14 +71,14 @@ function ReadBook() {
         (comment) => comment.id === newComment.id
       );
   
+      // for updating a comment
       if (existingCommentIndex !== -1) {
-        // Replace the old comment with the updated one
         const updatedComments = [...prevComments];
         updatedComments[existingCommentIndex] = newComment;
         return updatedComments;
       }
   
-      // Add new comment to the top
+      // for new comments
       return [newComment, ...prevComments];
     });
   };

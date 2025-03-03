@@ -207,6 +207,7 @@ exports.getComments = async (req, res) => {
       .collection('chapters')
       .doc(chapterId)
       .collection('comments')
+      .orderBy('date', 'desc')
       .get();
     const comments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(comments);
@@ -233,6 +234,7 @@ exports.createComment = async (req, res) => {
     }
 
     const commentor_name = (({ first_name, last_name }) => `${first_name} ${last_name}`)(commenterDoc.data());
+    const date = admin.firestore.FieldValue.serverTimestamp();
 
     const docRef = await db
       .collection('books')
@@ -240,9 +242,9 @@ exports.createComment = async (req, res) => {
       .collection('chapters')
       .doc(chapterId)
       .collection('comments')
-      .add({ commentor_id, commentor_name, rating, text });
+      .add({ commentor_id, commentor_name, date, rating, text });
 
-    res.status(201).json({ id: docRef.id, commentor_id, commentor_name, rating, text });
+    res.status(201).json({ id: docRef.id, commentor_id, commentor_name, date, rating, text });
   } catch (error) {
     res.status(500).send('Error creating comment');
   }

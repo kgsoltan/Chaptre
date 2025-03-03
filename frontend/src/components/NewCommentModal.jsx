@@ -18,9 +18,8 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingC
     e.preventDefault();
 
     const plainText = document.createElement("div");
-    plainText.innerHTML = commentText; // Parse HTML content
-    const cleanedText = plainText.innerText.trim(); // Extract plain text
-
+    plainText.innerHTML = commentText;
+    const cleanedText = plainText.innerText.trim();
 
     if (!cleanedText) {
       alert("Please enter a comment");
@@ -39,7 +38,7 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingC
             text: cleanedText,
             rating: rating
         })
-        onCommentAdded({ ...existingComment, text: cleanedText, rating: rating }); // Ensure UI updates
+        onCommentAdded({ ...existingComment, text: cleanedText, rating: rating });
       } else {
         response = await createComment(bookId, chapterId, {
             text: cleanedText,
@@ -47,7 +46,7 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingC
         });
         onCommentAdded(response);
       }
-      onClose(); // Close the modal after submission
+      onClose();
     } catch (error) {
       console.error("Error submitting comment:", error);
     }

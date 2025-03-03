@@ -26,17 +26,15 @@ books
         |── SYNOPSIS: string
         ├── CHAPTERS: 
         │     └── CHAPTER_ID:
-        |         ├── PARENT_ID : string
-        |         ├── IS_DRAFT : bool
+        |         ├── IS_PUBLISHED : bool
         │         ├── TITLE: string
         |         ├── CHAPTER_NUM: int
         │         ├── TEXT: string
         |         ├── COMMENTS:
         |               └── COMMENT_ID:
-        |                   ├── PARENT_ID : string
         |                   ├── COMMENTOR_ID : string
         |                   ├── COMMENTOR_NAME : string
-        |                   ├── GOOD_RATING : bool
+        |                   ├── RATING : bool
         |                   ├── TEXT: string
 
 
