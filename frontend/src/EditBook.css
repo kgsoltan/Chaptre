@@ -101,8 +101,7 @@ button,
   color: white;
 }
 
-.delete-button,
-.unpublish-button {
+.delete-button {
   background-color: #f44336;
   color: white;
 }
@@ -156,6 +155,20 @@ button:hover,
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.synopsis-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  min-width: 820px;
+  height: 100px; /* Fixed height */
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none; /* Prevents manual resizing */
+  font-family: inherit; /* Ensures consistent font */
 }
 
 .button-group {
