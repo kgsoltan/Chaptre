@@ -19,14 +19,17 @@ function Header() {
 
       <nav className="nav-container">
         <ul className="nav-list">
-        {user && (
-            <li>
+          <li>
+            {user ? (
+              <li>
               <button onClick={() => setShowModal(true)} className="nav-item">
-                New Book
-              </button>
-            </li>
-          )}
-          {user && <li><Link to={`/profile/${user.uid}`} className="nav-item">Profile</Link></li>}
+              New Book
+            </button>
+              <Link to={`/profile/${user.uid}`} className="nav-item">Profile</Link></li>
+            ) : (
+              <Link to="/login" className="nav-item login-btn">Login / Sign up</Link>
+            )}
+          </li>
         </ul>
       </nav>
 
