@@ -74,10 +74,13 @@
   margin-top: auto;
   max-height: 90px;
   overflow: hidden;
+  justify-content: center; /* Centers the tags horizontally */
+  align-items: center; /* Centers the tags vertically if needed */
 }
 
 .genre-bubble {
   background-color: #f0f0f0;
+  color: #333;
   border-radius: 12px;
   padding: 2px 8px;
   margin: 2px;

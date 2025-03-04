@@ -123,7 +123,7 @@ function Profile() {
             {isCurrentUser ? (
               <div>
                 <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
-                <button onClick={handleFollowingModal} className="edit-button">Following</button>
+                <button onClick={handleFollowingModal} className="edit-button">Followed Authors</button>
                 <button onClick={handleLogout} className="edit-button logout-btn">Logout</button>
               </div>
             ) : (
