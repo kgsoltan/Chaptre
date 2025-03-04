@@ -73,34 +73,44 @@ function Profile() {
 
   const handleSubscribe = async () => {
     try {
-      const currentFollowing = user?.following || [];
+      if (!user || !user.uid) {
+        alert("User not found. Please log in.");
+        return;
+      }
+  
+      // Fetch the latest version of the user's following list to prevent overwrites
+      const userDetails = await getAuthorDetails(user.uid);
+      const currentFollowing = Array.isArray(userDetails.following) ? [...userDetails.following] : [];
+  
       if (currentFollowing.includes(authorId)) {
         alert("You are already following this author.");
         return;
       }
-
+  
       const updatedFollowing = [...currentFollowing, authorId];
-      await updateAuthor(user?.uid, { following: updatedFollowing });
-
-      setUser((prev) => ({ ...prev, following: updatedFollowing }));
+  
+      await updateAuthor(user.uid, { following: updatedFollowing });
+  
+      setUser((prev) => ({
+        ...prev,
+        following: updatedFollowing, // Ensure state update correctly reflects the new list
+      }));
+  
       alert("Successfully subscribed to the author.");
     } catch (error) {
       console.error("Error subscribing:", error);
       alert("Failed to subscribe.");
     }
   };
+  
 
   const handleFollowingModal = () => {
     setIsFollowingModalOpen((prev) => !prev);
   };
 
   const closeFollowingModal = () => {
-    setIsFollowingModalOpen((prev) => {
-      console.log("Closing modal. Previous state:", prev);
-      return false;
-    });
+    setIsFollowingModalOpen(false);
   };
-  
 
 
   if (!author) return <div>Loading...</div>;
