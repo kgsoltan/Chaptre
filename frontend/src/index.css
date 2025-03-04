@@ -84,7 +84,7 @@ html, body {
   justify-content: flex-end; /* Align elements to the right */
   align-items: center; /* Vertically center all items */
   gap: 10px; /* Space between elements */
-  max-width: 600px;
+  max-width: 1000px;
   width: 100%;
 }
 

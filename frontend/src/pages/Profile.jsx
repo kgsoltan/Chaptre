@@ -100,6 +100,18 @@ function Profile() {
     setIsFollowingModalOpen(false);
   };
 
+  const handleSaveBio = async () => {
+    try {
+      await updateAuthor(authorId, { bio: bioText });
+      setAuthor((prev) => ({ ...prev, bio: bioText }));
+      setIsEditingBio(false);
+      alert("Bio updated successfully!");
+    } catch (error) {
+      console.error("Error updating bio:", error);
+      alert("Failed to update bio.");
+    }
+  };
+
   if (!author) return <div>Loading...</div>;
 
   const publishedBooks = books.filter((book) => book.is_published);
@@ -119,18 +131,32 @@ function Profile() {
           <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
 
           <div className="bio-display">
-            <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
-            {isCurrentUser ? (
-              <div>
-                <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
-                <button onClick={handleFollowingModal} className="edit-button">View Followed Authors</button>
+            {isEditingBio ? (
+            <div className="bio-edit">
+              <textarea
+                value={bioText}
+                onChange={(e) => setBioText(e.target.value)}
+                className="bio-input"
+              />
+              <button onClick={handleSaveBio} className="save-button">Save</button>
+              <button onClick={() => setIsEditingBio(false)} className="cancel-button">Cancel</button>
+            </div>
+          ) : (
+            <div className="bio-display">
+              <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
+              {isCurrentUser ? (
+                <div>
+                  <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
+                  <button onClick={handleFollowingModal} className="edit-button">View Followed Authors</button>
                 <button onClick={handleLogout} className="edit-button logout-btn">Logout</button>
-              </div>
-            ) : (
-              <button onClick={handleSubscribe} className="edit-button">
+                </div>
+              ) : (
+                <button onClick={handleSubscribe} className="edit-button">
                 {isFollowing ? "Unsubscribe" : "Subscribe"}
               </button>
-            )}
+              )}
+            </div>
+          )}
           </div>
         </div>
       </div>
