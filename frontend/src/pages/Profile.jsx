@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
-import { onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getAuthorDetails, getAuthorBooks, updateProfilePic, updateAuthor } from '../services/api';
 import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
@@ -19,6 +19,17 @@ function Profile() {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const auth = getAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   useEffect(() => {
     const loadAuthorData = async () => {
@@ -113,6 +124,7 @@ function Profile() {
               <div>
                 <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
                 <button onClick={handleFollowingModal} className="edit-button">Following</button>
+                <button onClick={handleLogout} className="edit-button logout-btn">Logout</button>
               </div>
             ) : (
               <button onClick={handleSubscribe} className="edit-button">
