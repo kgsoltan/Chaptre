@@ -18,6 +18,7 @@ function Profile() {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const loadAuthorData = async () => {
@@ -36,73 +37,49 @@ function Profile() {
 
     loadAuthorData();
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setIsCurrentUser(currentUser?.uid === authorId);
+
+      if (currentUser) {
+        const userDetails = await getAuthorDetails(currentUser.uid);
+        setIsFollowing(userDetails.following?.includes(authorId) || false);
+      }
     });
 
     return () => unsubscribe();
   }, [authorId]);
 
-  const handleProfileImage = async (event) => {
-    const file = event.target.files[0];
-    if (!validateFile(file)) return;
-
-    try {
-      const s3ImageUrl = await uploadToS3(file);
-      await updateProfilePic(authorId, s3ImageUrl);
-      setAuthor((prev) => ({ ...prev, profile_pic_url: s3ImageUrl }));
-      alert("Successfully uploaded profile image.");
-    } catch (error) {
-      console.error("Error during profile image upload:", error);
-      alert("Failed to upload profile image.");
-    }
-  };
-
-  const handleSaveBio = async () => {
-    try {
-      await updateAuthor(authorId, { bio: bioText });
-      setAuthor((prev) => ({ ...prev, bio: bioText }));
-      setIsEditingBio(false);
-      alert("Bio updated successfully!");
-    } catch (error) {
-      console.error("Error updating bio:", error);
-      alert("Failed to update bio.");
-    }
-  };
-
   const handleSubscribe = async () => {
+    if (!user || !user.uid) {
+      alert("User not found. Please log in.");
+      return;
+    }
+
     try {
-      if (!user || !user.uid) {
-        alert("User not found. Please log in.");
-        return;
-      }
-  
-      // Fetch the latest version of the user's following list to prevent overwrites
       const userDetails = await getAuthorDetails(user.uid);
-      const currentFollowing = Array.isArray(userDetails.following) ? [...userDetails.following] : [];
-  
-      if (currentFollowing.includes(authorId)) {
-        alert("You are already following this author.");
-        return;
+      let currentFollowing = Array.isArray(userDetails.following) ? [...userDetails.following] : [];
+
+      let updatedFollowing;
+      if (isFollowing) {
+        // Unsubscribe
+        updatedFollowing = currentFollowing.filter(id => id !== authorId);
+        alert("Successfully unsubscribed from the author.");
+      } else {
+        // Subscribe
+        updatedFollowing = [...currentFollowing, authorId];
+        alert("Successfully subscribed to the author.");
       }
-  
-      const updatedFollowing = [...currentFollowing, authorId];
-  
+
       await updateAuthor(user.uid, { following: updatedFollowing });
-  
-      setUser((prev) => ({
-        ...prev,
-        following: updatedFollowing, // Ensure state update correctly reflects the new list
-      }));
-  
-      alert("Successfully subscribed to the author.");
+
+      // Update local state
+      setIsFollowing(!isFollowing);
     } catch (error) {
-      console.error("Error subscribing:", error);
-      alert("Failed to subscribe.");
+      console.error("Error subscribing/unsubscribing:", error);
+      alert("Failed to update subscription.");
     }
   };
-  
 
   const handleFollowingModal = () => {
     setIsFollowingModalOpen((prev) => !prev);
@@ -111,7 +88,6 @@ function Profile() {
   const closeFollowingModal = () => {
     setIsFollowingModalOpen(false);
   };
-
 
   if (!author) return <div>Loading...</div>;
 
@@ -131,29 +107,19 @@ function Profile() {
         <div className="profile-info">
           <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
 
-          {isEditingBio ? (
-            <div className="bio-edit">
-              <textarea
-                value={bioText}
-                onChange={(e) => setBioText(e.target.value)}
-                className="bio-input"
-              />
-              <button onClick={handleSaveBio} className="save-button">Save</button>
-              <button onClick={() => setIsEditingBio(false)} className="cancel-button">Cancel</button>
-            </div>
-          ) : (
-            <div className="bio-display">
-              <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
-              {isCurrentUser ? (
-                <div>
-                  <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
-                  <button onClick={handleFollowingModal} className="edit-button">Following</button>
-                </div>
-              ) : (
-                <button onClick={handleSubscribe} className="edit-button">Subscribe</button>
-              )}
-            </div>
-          )}
+          <div className="bio-display">
+            <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
+            {isCurrentUser ? (
+              <div>
+                <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
+                <button onClick={handleFollowingModal} className="edit-button">Following</button>
+              </div>
+            ) : (
+              <button onClick={handleSubscribe} className="edit-button">
+                {isFollowing ? "Unsubscribe" : "Subscribe"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
       {isCurrentUser && (
@@ -162,7 +128,6 @@ function Profile() {
           type="file"
           accept="image/*"
           className="file-upload"
-          onChange={handleProfileImage}
           style={{ display: 'none' }}
         />
       )}
@@ -186,9 +151,9 @@ function Profile() {
       )}
 
       {isFollowingModalOpen && (
-        <FollowingModal 
-          following={user?.following || []} 
-          onClose={closeFollowingModal} 
+        <FollowingModal
+          following={user?.following || []}
+          onClose={closeFollowingModal}
         />
       )}
     </div>

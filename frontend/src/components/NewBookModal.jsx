@@ -1,91 +1,104 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Import Link
-import { getAuthorDetails } from '../services/api'; // Your API function to fetch author details
-import '../Profile.css';  // Assuming your CSS file is named Modal.css
+import { useState } from 'react';
+import { createBook, getAuthorDetails } from '../services/api';
+import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
 
-const FollowingModal = () => {
-  const { authorId } = useParams();
-  const [followingList, setFollowingList] = useState([]);  // This will store the list of followed authors' details
-  const [loading, setLoading] = useState(true);
+function CreateBookModal({ user, onClose }) {
+  const [bookTitle, setBookTitle] = useState('');
+  const [bookGenre, setBookGenre] = useState([]);
+  const [bookSynopsis, setBookSynopsis] = useState('');
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal starts closed
 
-  useEffect(() => {
-    if (!authorId) {
-      setError('No authorId found in URL');
-      setLoading(false);
-      return;
-    }
+  const navigate = useNavigate();
 
-    const fetchFollowingList = async () => {
-      try {
-        const author = await getAuthorDetails(authorId); // Fetch the author details
-        console.log(author);
+  const genreOptions = [
+    { value: "Fantasy", label: "Fantasy" },
+    { value: "Sci-Fi", label: "Sci-Fi" },
+    { value: "Mystery", label: "Mystery" },
+    { value: "Romance", label: "Romance" },
+    { value: "Horror", label: "Horror" },
+    { value: "Comedy", label: "Comedy" },
+    { value: "Action", label: "Action" },
+    { value: "Adventure", label: "Adventure" },
+    { value: "Drama", label: "Drama" },
+    { value: "Coming of age", label: "Coming of age" },
+    { value: "Fiction", label: "Fiction" },
+    { value: "Non-Fiction", label: "Non-Fiction" },
+  ];
 
-        if (author && author.following && author.following.length > 0) {
-          // Fetch details for each followed author
-          const followingDetails = await Promise.all(
-            author.following.map(async (followedAuthorId) => {
-              const followedAuthorDetails = await getAuthorDetails(followedAuthorId);
-              return followedAuthorDetails;  // Return full details for each followed author
-            })
-          );
-          setFollowingList(followingDetails);  // Set the details in the state
-        } else {
-          setError('Author has no following list');
-        }
-      } catch (err) {
-        setError('Error fetching author data');
-      } finally {
-        setLoading(false);
+  const handleCreateBook = async (e) => {
+    e.preventDefault();
+
+    try {
+      const authorData = await getAuthorDetails(user.uid);
+      if (!authorData || !authorData.first_name) {
+        setError("Could not retrieve author details.");
+        return;
       }
-    };
 
-    fetchFollowingList();  // Trigger the fetching of data
-  }, [authorId]);  // Dependency on authorId to fetch when it changes
+      const bookData = {
+        book_title: bookTitle,
+        author: authorData.first_name,
+        author_id: user.uid,
+        book_synopsis: bookSynopsis,
+        genre_tags: bookGenre,
+        cover_image_url: "https://picsum.photos/id/40/1000/1500",
+      };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
-  const handleClose = () => {
-    setIsModalOpen(false); // Close the modal
-  };
-
-  const handleOpen = () => {
-    setIsModalOpen(true); // Open the modal
+      await createBook(bookData);
+      alert('Book created successfully!');
+      onClose();
+      navigate(`/profile/${user.uid}`);
+    } catch (error) {
+      console.error('Error creating book:', error);
+      setError('Failed to create book.');
+    }
   };
 
   return (
-    <div>
-      <button onClick={handleOpen} className="open-modal-button">View Following</button> {/* Button to open the modal */}
-
-      {isModalOpen && ( // Only render the modal when it is open
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button className="close-button" onClick={handleClose}>×</button> {/* Close button */}
-            <h3>Following List</h3>
-            {followingList.length > 0 ? (
-              <ul>
-                {followingList.map((followedAuthor, index) => (
-                  <li key={index}>
-                    <Link 
-                      to={`/profile/${followedAuthor.id}`} 
-                      className="author-link" 
-                      title="View Author's Profile"
-                    >
-                      {followedAuthor.first_name} {followedAuthor.last_name} {/* Display first and last name */}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No authors found in the following list</p>
-            )}
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {/* Close Button */}
+        <button className="close-button" onClick={onClose}>x</button>
+        
+        <h2>Create a New Book</h2>
+        {error && <p className="error">{error}</p>}
+        
+        <form onSubmit={handleCreateBook}>
+          <div className="input-group">
+            <label>Book Title</label>
+            <input
+              type="text"
+              value={bookTitle}
+              onChange={(e) => setBookTitle(e.target.value)}
+              required
+            />
           </div>
-        </div>
-      )}
+          <div className="input-group">
+            <label>Book Synopsis</label>
+            <input
+              type="text"
+              value={bookSynopsis}
+              onChange={(e) => setBookSynopsis(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Genre</label>
+            <Select
+              isMulti
+              options={genreOptions}
+              value={genreOptions.filter(option => bookGenre.includes(option.value))}
+              onChange={(selectedOptions) => setBookGenre(selectedOptions.map(option => option.value))}
+            />
+          </div>
+          <button className="primary-button" type="submit">
+            Create Book
+          </button>
+        </form>
+      </div>
     </div>
   );
-};
+}
 
-export default FollowingModal;
+export default CreateBookModal;
