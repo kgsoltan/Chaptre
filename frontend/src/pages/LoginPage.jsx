@@ -35,7 +35,6 @@ function LoginPage() {
           email: user.email,
           first_name: firstName,
           last_name: lastName,
-          location: location,
         };
         await createAuthor(authorData);
 
@@ -71,7 +70,6 @@ function LoginPage() {
           email: user.email,
           first_name: firstName,
           last_name: lastName,
-          location: "",
         };
   
         await createAuthor(authorData);

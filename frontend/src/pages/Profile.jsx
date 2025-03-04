@@ -6,6 +6,7 @@ import { getAuthorDetails, getAuthorBooks, updateProfilePic, updateAuthor } from
 import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import defaultProfilePic from "../assets/default-profile-pic.jpg";
+import FollowingModal from '../components/FollowingModal';
 import '../Profile.css';
 
 function Profile() {
@@ -13,9 +14,10 @@ function Profile() {
   const [author, setAuthor] = useState(null);
   const [books, setBooks] = useState([]);
   const [user, setUser] = useState(null);
-  const [isEditingBio, setIsEditingBio] = useState(false);
   const [bioText, setBioText] = useState("");
+  const [isEditingBio, setIsEditingBio] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
 
   useEffect(() => {
     const loadAuthorData = async () => {
@@ -27,7 +29,8 @@ function Profile() {
         const authorBooks = await getAuthorBooks(authorId);
         setBooks(authorBooks);
       } catch (err) {
-        alert('Failed to load author data:', err);
+        console.error('Failed to load author data:', err);
+        alert('Failed to load author data');
       }
     };
 
@@ -68,6 +71,38 @@ function Profile() {
     }
   };
 
+  const handleSubscribe = async () => {
+    try {
+      const currentFollowing = user?.following || [];
+      if (currentFollowing.includes(authorId)) {
+        alert("You are already following this author.");
+        return;
+      }
+
+      const updatedFollowing = [...currentFollowing, authorId];
+      await updateAuthor(user?.uid, { following: updatedFollowing });
+
+      setUser((prev) => ({ ...prev, following: updatedFollowing }));
+      alert("Successfully subscribed to the author.");
+    } catch (error) {
+      console.error("Error subscribing:", error);
+      alert("Failed to subscribe.");
+    }
+  };
+
+  const handleFollowingModal = () => {
+    setIsFollowingModalOpen((prev) => !prev);
+  };
+
+  const closeFollowingModal = () => {
+    setIsFollowingModalOpen((prev) => {
+      console.log("Closing modal. Previous state:", prev);
+      return false;
+    });
+  };
+  
+
+
   if (!author) return <div>Loading...</div>;
 
   const publishedBooks = books.filter((book) => book.is_published);
@@ -99,23 +134,28 @@ function Profile() {
           ) : (
             <div className="bio-display">
               <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
-              {isCurrentUser && (
-                <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
+              {isCurrentUser ? (
+                <div>
+                  <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
+                  <button onClick={handleFollowingModal} className="edit-button">Following</button>
+                </div>
+              ) : (
+                <button onClick={handleSubscribe} className="edit-button">Subscribe</button>
               )}
             </div>
           )}
         </div>
       </div>
       {isCurrentUser && (
-      <input
-        id="file-upload"
-        type="file"
-        accept="image/*"
-        className="file-upload"
-        onChange={handleProfileImage}
-        style={{ display: 'none' }}
-      />
-    )}
+        <input
+          id="file-upload"
+          type="file"
+          accept="image/*"
+          className="file-upload"
+          onChange={handleProfileImage}
+          style={{ display: 'none' }}
+        />
+      )}
 
       <h3 className="profile-books-title">Public Books:</h3>
       {publishedBooks.length > 0 ? (
@@ -133,6 +173,13 @@ function Profile() {
             <p>No draft books yet.</p>
           )}
         </>
+      )}
+
+      {isFollowingModalOpen && (
+        <FollowingModal 
+          following={user?.following || []} 
+          onClose={closeFollowingModal} 
+        />
       )}
     </div>
   );

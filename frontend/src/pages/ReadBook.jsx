@@ -13,6 +13,9 @@ function ReadBook() {
   const [viewingComments, setViewingComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [chapterPage, setChapterPage] = useState(1);
+
+  const wordsPerPage = 400;
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -37,6 +40,7 @@ function ReadBook() {
       setSelectedChapter(chapterId);
       setSelectedChapterName(chapterData.title);
       setChapterContent(chapterData.text);
+      setChapterPage(1);
       setViewingComments(false);
     } catch (error) {
       console.error("Failed to fetch chapter content:", error);
@@ -55,8 +59,21 @@ function ReadBook() {
   };
 
   const handleNewComment = (newComment) => {
-    setComments((prevComments) => [newComment, ...prevComments]); // Update comment list
+    setComments((prevComments) => [newComment, ...prevComments]);
   };
+
+  const paginateWords = (text, page) => {
+    const words = text.split(/\s+/);
+    const totalPages = Math.ceil(words.length / wordsPerPage);
+    const start = (page - 1) * wordsPerPage;
+    const end = start + wordsPerPage;
+    return {
+      text: words.slice(start, end).join(" "),
+      totalPages,
+    };
+  };
+
+  const { text: currentChapterText, totalPages: totalChapterPages } = paginateWords(chapterContent, chapterPage);
 
   return (
     <div className="read-book-container">
@@ -73,23 +90,16 @@ function ReadBook() {
             </li>
           ))}
         </ul>
-        <button 
-          onClick={fetchComments} 
-          className={`view-comments-button ${viewingComments ? "active" : ""}`}
-        >
+        <button onClick={fetchComments} className={`view-comments-button ${viewingComments ? "active" : ""}`}>
           View Comments
         </button>
       </div>
-  
-            <div className="chapter-content">
+      <div className="chapter-content">
         {viewingComments ? (
           <>
             <div className="comments-header">
               <h2>Comments</h2>
-              <button 
-                className="new-comment-button"
-                onClick={() => setShowCommentModal(true)}
-              > 
+              <button className="new-comment-button" onClick={() => setShowCommentModal(true)}>
                 Leave a Comment
               </button>
             </div>
@@ -111,22 +121,27 @@ function ReadBook() {
           <>
             <h2>{selectedChapterName}</h2>
             <div className="content-box">
-              <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
+              <div className="content" dangerouslySetInnerHTML={{ __html: currentChapterText }} />
             </div>
+            {totalChapterPages > 1 && (
+              <div className="chapter-pagination">
+                <button onClick={() => setChapterPage(chapterPage - 1)} disabled={chapterPage === 1}>
+                  Previous Page
+                </button>
+                <span>{`Page ${chapterPage} of ${totalChapterPages}`}</span>
+                <button onClick={() => setChapterPage(chapterPage + 1)} disabled={chapterPage === totalChapterPages}>
+                  Next Page
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
-
-
       {showCommentModal && (
-        <NewCommentModal
-          bookId={bookId}
-          onClose={() => setShowCommentModal(false)}
-          onCommentAdded={handleNewComment}
-        />
-      )}  
+        <NewCommentModal bookId={bookId} onClose={() => setShowCommentModal(false)} onCommentAdded={handleNewComment} />
+      )}
     </div>
   );
 }
 
-export default ReadBook;    
+export default ReadBook;

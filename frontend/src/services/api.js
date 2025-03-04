@@ -266,3 +266,15 @@ export const createComment = async (bookId, commentData) => {
       throw error;
   }
 };
+
+// api.js
+export const getFollowing = async (authorId) => {
+  try {
+    console.log(`Requesting following for ${authorId}`);  // Log to see if the request is triggered
+    const response = await api.get(`/authors/${authorId}/following`);
+    return response.data.following;  // Adjust based on your response structure
+  } catch (error) {
+    console.error('Error fetching following:', error);
+    throw error;
+  }
+};

@@ -27,7 +27,7 @@ exports.getAuthorById = async (req, res) => {
 
 // Create a new author
 exports.createAuthor = async (req, res) => {
-  const { first_name, last_name, email, location } = req.body;
+  const { first_name, last_name, email } = req.body;
   const token = req.headers.authorization?.split('Bearer ')[1];
   
   if (!token) {
@@ -41,7 +41,6 @@ exports.createAuthor = async (req, res) => {
       first_name,
       last_name,
       email,
-      location,
       bio: '',
       books_as_author: [],
       favorited_books: [],
@@ -103,7 +102,6 @@ exports.updateProfilePic = async (req, res) => {
       return res.status(400).send('Missing authorId or profilePicUrl');
     }
 
-    // Firestore update
     const authorRef = db.collection('authors').doc(authorId);
     await authorRef.update({ profile_pic_url: profilePicUrl });
 
@@ -114,3 +112,17 @@ exports.updateProfilePic = async (req, res) => {
     return res.status(500).send('Internal Server Error');
   }
 };
+
+// authorsController.js
+exports.getFollowing = async (req, res) => {
+  try {
+    console.log("Requesting following for", req.params.authorId);  // Add this line for more insight
+    const authorId = req.params.authorId;
+    const followingList = await getFollowing(authorId);
+    res.json({ following: followingList });
+  } catch (error) {
+    console.error('Error in getFollowing:', error);  // This will give more details about the error
+    res.status(500).json({ error: 'Failed to fetch following list' });
+  }
+};
+
