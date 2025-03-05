@@ -47,7 +47,7 @@ function Home() {
       
       <div className="home-book-grid">
         {books.length > 0 ? (
-          <BookGrid books={books} showEditLink={false} />
+          <BookGrid books={books} showEditLink={false} booksPerPage={15} />
         ) : (
           <>
             <h3>
