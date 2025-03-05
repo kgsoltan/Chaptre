@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'; // Import Link
 import { getAuthorDetails } from '../services/api'; // Your API function to fetch author details
 import '../Profile.css';
 
-const FollowingModal = () => {
+const FollowingModal = ({onClose}) => {
   const { authorId } = useParams();
   const [followingList, setFollowingList] = useState([]);  // This will store the list of followed authors' details
   const [loading, setLoading] = useState(true);
@@ -47,7 +47,7 @@ const FollowingModal = () => {
   if (error) return <p>{error}</p>;
 
   const handleClose = () => {
-    setIsModalOpen(false); // Close the modal by updating the state
+    onClose(); // Call the onClose prop function
   };
 
   if (!isModalOpen) return null; // Don't render anything if the modal is closed
@@ -65,6 +65,7 @@ const FollowingModal = () => {
                   to={`/profile/${followedAuthor.id}`} 
                   className="author-link" 
                   title="View Author's Profile"
+                  onClick={handleClose}
                 >
                   {followedAuthor.first_name} {followedAuthor.last_name} {/* Display first and last name */}
                 </Link>

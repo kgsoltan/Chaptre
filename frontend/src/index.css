@@ -184,17 +184,6 @@ button.nav-item:hover {
   color: white;
 }
 
-.logout-btn {
-  background-color: transparent;
-  border: none;
-  color: #d32f2f;
-  font-weight: bold;
-}
-
-.logout-btn:hover {
-  background: rgba(211, 47, 47, 0.2);
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;

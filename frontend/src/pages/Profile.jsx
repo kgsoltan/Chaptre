@@ -92,11 +92,11 @@ function Profile() {
     }
   };
 
-  const handleFollowingModal = () => {
-    setIsFollowingModalOpen((prev) => !prev);
+  const handleFollowingModal = async () => {
+    setIsFollowingModalOpen(true);
   };
 
-  const closeFollowingModal = () => {
+  const closeFollowingModal = async () => {
     setIsFollowingModalOpen(false);
   };
 
@@ -127,8 +127,13 @@ function Profile() {
             alt="Profile"
           />
         </label>
+        <div className='profile-header-content'>
+        <div className='logout'>
+        <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
+        </div>
         <div className="profile-info">
-          <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
+
 
           <div className="bio-display">
             {isEditingBio ? (
@@ -138,7 +143,7 @@ function Profile() {
                 onChange={(e) => setBioText(e.target.value)}
                 className="bio-input"
               />
-              <button onClick={handleSaveBio} className="save-button">Save</button>
+              <button onClick={handleSaveBio} className="edit-button">Save</button>
               <button onClick={() => setIsEditingBio(false)} className="cancel-button">Cancel</button>
             </div>
           ) : (
@@ -146,9 +151,9 @@ function Profile() {
               <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
               {isCurrentUser ? (
                 <div>
-                  <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit</button>
+                  <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit Bio</button>
                   <button onClick={handleFollowingModal} className="edit-button">View Followed Authors</button>
-                <button onClick={handleLogout} className="edit-button logout-btn">Logout</button>
+                
                 </div>
               ) : (
                 <button onClick={handleSubscribe} className="edit-button">
@@ -158,6 +163,7 @@ function Profile() {
             </div>
           )}
           </div>
+        </div>
         </div>
       </div>
       {isCurrentUser && (
