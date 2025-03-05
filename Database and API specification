@@ -34,7 +34,7 @@ books
         |               └── COMMENT_ID:
         |                   ├── COMMENTOR_ID : string
         |                   ├── COMMENTOR_NAME : string
-        |                   ├── RATING : bool
+        |                   ├── RATING : int
         |                   ├── TEXT: string
 
 
