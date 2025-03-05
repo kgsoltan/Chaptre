@@ -107,9 +107,9 @@ export const searchBooks = async (searchTerm, genres) => {
   }
 };
 
-export const getComments = async (bookId) => {
+export const getComments = async (bookId, chapterId) => {
   try {
-    const response = await api.get(`/books/${bookId}/comments`);
+    const response = await api.get(`/books/${bookId}/chapters/${chapterId}/comments`);
     return response.data;
   } catch (error) {
     console.error("Error fetching comments:", error);
@@ -268,10 +268,10 @@ export const updateBook = async (bookId, updates) => {
 };
 
 //create new comment
-export const createComment = async (bookId, commentData) => {
+export const createComment = async (bookId, chapterId, commentData) => {
   try {
       const token = await getAuthToken();
-      const response = await api.post(`/books/${bookId}/comments`, commentData, {
+      const response = await api.post(`/books/${bookId}/chapters/${chapterId}/comments`, commentData, {
           headers: {
               Authorization: `Bearer ${token}`,
           },
@@ -281,6 +281,31 @@ export const createComment = async (bookId, commentData) => {
       console.error("Error creating comment:", error);
       throw error;
   }
+};
+
+// Delete a comment
+export const deleteComment = async (bookId, chapterId, commentId) => {
+  try {
+      const token = await getAuthToken();
+      const response = await api.delete(`/books/${bookId}/chapters/${chapterId}/comments/${commentId}`, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Error deleting comment:", error);
+      throw error;
+  }
+};
+
+// Update a specific comment by comment ID
+export const updateComment = async (bookId, chapterId, commentId, updates) => {
+  return await patchRequest(
+    `/books/${bookId}/chapters/${chapterId}/comments/${commentId}`,
+    updates,
+    'Error updating chapter details'
+  );
 };
 
 // api.js

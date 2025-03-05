@@ -19,11 +19,10 @@ router.post('/:bookId/chapters', booksController.createChapter);
 router.patch('/:bookId/chapters/:chapterId', booksController.updateChapter);
 router.delete('/:bookId/chapters/:chapterId', booksController.deleteChapter);
 
-// Comment endpoints under /books/:bookID
-router.get('/:bookId/comments', booksController.getComments);
-router.get('/:bookId/comments/:commentId', booksController.getCommentById);
-router.post('/:bookId/comments', booksController.createComment);
-router.patch('/:bookId/comments/:commentId', booksController.updateComment);
-router.delete('/:bookId/comments/:commentId', booksController.deleteComment);
+// Comment endpoints under /books/:bookId/chapters/:chapterId
+router.get('/:bookId/chapters/:chapterId/comments', booksController.getComments);
+router.post('/:bookId/chapters/:chapterId/comments', booksController.createComment);
+router.patch('/:bookId/chapters/:chapterId/comments/:commentId', booksController.updateComment);
+router.delete('/:bookId/chapters/:chapterId/comments/:commentId', booksController.deleteComment);
 
 module.exports = router;

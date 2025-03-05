@@ -1,62 +1,84 @@
-import { useState } from "react";
-import { createComment } from "../services/api";
+import { useEffect, useState } from "react";
+import { createComment, updateComment } from "../services/api";
+import TextEditor from '../components/TextEditor';
+import "../ReadBook.css";
 import "../Modal.css";
 
-function NewCommentModal({ bookId, onClose, onCommentAdded }) {
+function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingComment }) {
   const [commentText, setCommentText] = useState("");
-  const [isPositive, setIsPositive] = useState(true); // Default to "Good Book"
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    if (existingComment) {
+        setCommentText(existingComment.text);
+        setRating(existingComment.rating);
+    }
+  }, [existingComment]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!commentText) {
+    const plainText = document.createElement("div");
+    plainText.innerHTML = commentText;
+    const cleanedText = plainText.innerText.trim();
+
+    if (!cleanedText) {
       alert("Please enter a comment");
       return;
     }
 
-    try {
-      const newComment = await createComment(bookId, {
-        text: commentText,
-        good_rating: isPositive,
-      });
+    if(rating === 0) {
+        alert("Please leave a rating");
+        return;
+    }
 
-      onCommentAdded(newComment); // Pass the new comment to the parent or update state
-      onClose(); // Close the modal after submission
+    try {
+      let response;
+      if (existingComment) {
+        response = await updateComment(bookId, chapterId, existingComment.id, {
+            text: cleanedText,
+            rating: rating
+        })
+        onCommentAdded({ ...existingComment, text: cleanedText, rating: rating });
+      } else {
+        response = await createComment(bookId, chapterId, {
+            text: cleanedText,
+            rating: rating,
+        });
+        onCommentAdded(response);
+      }
+      onClose();
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
   };
 
   return (
-    <div className="comment-modal-overlay">
-      <div className="comment-modal-content">
+    <div className="new-comment-modal">
+      <div className="modal-content">
         <h2>Leave a Comment</h2>
         <form onSubmit={handleSubmit}>
+          <div className="stars">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <span
+                key={value}
+                className={`star ${rating >= value ? "filled" : ""}`}
+                onClick={() => setRating(value)}
+              >
+                ★
+              </span>
+            ))}
+          </div>        
           <div>
-            <button
-              type="button"
-              onClick={() => setIsPositive(true)} // Set to positive review
-              style={{ backgroundColor: isPositive === true ? "green" : "transparent" }}
-            >
-              Good Book
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsPositive(false)} // Set to negative review
-              style={{ backgroundColor: isPositive === false ? "red" : "transparent" }}
-            >
-              Bad Book
-            </button>
-          </div>
-          <div>
-            <textarea
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Write your comment..."
+            <TextEditor
+              value={commentText}
+              onChange={(content) => setCommentText(content)}
             />
           </div>
-          <button type="submit">Submit</button>
-          <button onClick={onClose}>Close</button>
+          <div className="modal-buttons">
+            <button className="modal-button" type="submit">Submit</button>
+            <button className="modal-button" onClick={onClose}>Close</button>
+          </div>
         </form>
       </div>
     </div>

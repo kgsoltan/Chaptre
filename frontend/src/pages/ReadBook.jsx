@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getChapterDetails, getChapters, getComments } from "../services/api";
+import { getChapterDetails, getChapters, getComments, deleteComment } from "../services/api";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewCommentModal from '../components/NewCommentModal';
 import "../ReadBook.css";
 
@@ -10,12 +11,17 @@ function ReadBook() {
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [chapterContent, setChapterContent] = useState("");
   const [selectedChapterName, setSelectedChapterName] = useState("Chapter Name");
-  const [viewingComments, setViewingComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [selectedComment, setSelectedComment] = useState(null)
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [chapterPage, setChapterPage] = useState(1);
-
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
   const wordsPerPage = 400;
+  
+  useEffect(() => {
+    return onAuthStateChanged(auth, setUser);
+  }, []);
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -24,7 +30,9 @@ function ReadBook() {
         const publishedChapterList = chapterList.filter((chapter) => chapter.is_published);
         setChapters(publishedChapterList);
         if (publishedChapterList.length > 0) {
-          fetchChapterContent(publishedChapterList[0].id);
+          const firstChapterId = publishedChapterList[0].id;
+          fetchChapterContent(firstChapterId);
+          fetchComments(firstChapterId);
         }
       } catch (error) {
         console.error("Failed to fetch chapters:", error);
@@ -47,19 +55,52 @@ function ReadBook() {
     }
   };
 
-  const fetchComments = async () => {
+  const fetchComments = async (chapterId) => {
     try {
-      const commentsData = await getComments(bookId);
+      const commentsData = await getComments(bookId, chapterId);
       setComments(commentsData);
-      setViewingComments(true);
-      setSelectedChapter(null);
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     }
   };
 
   const handleNewComment = (newComment) => {
-    setComments((prevComments) => [newComment, ...prevComments]);
+    if (!newComment || !newComment.id) {
+      console.error("Invalid comment:", newComment);
+      return;
+    }
+  
+    setComments((prevComments) => {
+      const existingCommentIndex = prevComments.findIndex(
+        (comment) => comment.id === newComment.id
+      );
+  
+      // for updating a comment
+      if (existingCommentIndex !== -1) {
+        const updatedComments = [...prevComments];
+        updatedComments[existingCommentIndex] = newComment;
+        return updatedComments;
+      }
+  
+      // for new comments
+      return [newComment, ...prevComments];
+    });
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) return;
+  
+    try {
+      await deleteComment(bookId, selectedChapter, commentId);
+      setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+    }
+  };
+
+  const handleUpdateComment = async (commentId) => {
+    setSelectedComment(commentId);
+    setShowCommentModal(true);
   };
 
   const paginateWords = (text, page) => {
@@ -84,46 +125,24 @@ function ReadBook() {
             <li
               key={chapter.id}
               className={selectedChapter === chapter.id ? "active" : ""}
-              onClick={() => fetchChapterContent(chapter.id)}
+              onClick={() => {
+                fetchChapterContent(chapter.id);
+                fetchComments(chapter.id);
+              }}
             >
               {chapter.title}
             </li>
           ))}
         </ul>
-        <button onClick={fetchComments} className={`view-comments-button ${viewingComments ? "active" : ""}`}>
-          View Comments
-        </button>
       </div>
+  
       <div className="chapter-content">
-        {viewingComments ? (
-          <>
-            <div className="comments-header">
-              <h2>Comments</h2>
-              <button className="new-comment-button" onClick={() => setShowCommentModal(true)}>
-                Leave a Comment
-              </button>
-            </div>
-            <ul className="comments-list">
-              {comments.length > 0 ? (
-                comments.map((comment) => (
-                  <li key={comment.id}>
-                    <strong>{comment.commentor_name}</strong>
-                    <div>{comment.good_rating ? "Positive Review" : "Negative Review"}</div>
-                    <p>{comment.text}</p>
-                  </li>
-                ))
-              ) : (
-                <p>No comments yet.</p>
-              )}
-            </ul>
-          </>
-        ) : (
-          <>
-            <h2>{selectedChapterName}</h2>
-            <div className="content-box">
-              <div className="content" dangerouslySetInnerHTML={{ __html: currentChapterText }} />
-            </div>
-            {totalChapterPages > 1 && (
+        <>
+          <h2>{selectedChapterName}</h2>
+          <div className="content-box">
+            <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
+          </div>
+          {totalChapterPages > 1 && (
               <div className="chapter-pagination">
                 <button onClick={() => setChapterPage(chapterPage - 1)} disabled={chapterPage === 1}>
                   Previous Page
@@ -134,12 +153,65 @@ function ReadBook() {
                 </button>
               </div>
             )}
-          </>
-        )}
+
+          <div className="comments-header">
+            <h2>Comments</h2>
+            {user ? (
+              <button 
+                className="new-comment-button"
+                onClick={() => {
+                  setSelectedComment(null);
+                  setShowCommentModal(true);
+                }}
+              > 
+                Leave a Comment
+              </button>
+            ) : (
+              <p className="login-message">Login to leave comment</p>
+            )}
+          </div>
+          <ul className="comments-list">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <li key={comment.id}>
+                  <strong>{comment.commentor_name}</strong>
+                  <div>{"★".repeat(comment.rating)}</div>
+                  <p>{comment.text}</p>
+
+                  {user && user.uid === comment.commentor_id && (
+                    <div>
+                      <button 
+                        className="new-comment-button"
+                        onClick={() => handleUpdateComment(comment.id)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="new-comment-button"
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ))
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </ul>
+        </>
+
       </div>
       {showCommentModal && (
-        <NewCommentModal bookId={bookId} onClose={() => setShowCommentModal(false)} onCommentAdded={handleNewComment} />
-      )}
+        <NewCommentModal
+          bookId={bookId}
+          chapterId={selectedChapter}
+          onClose={() => setShowCommentModal(false)}
+          onCommentAdded={handleNewComment}
+          existingComment={comments.find(comment => comment.id === selectedComment)}
+        />
+      )}  
     </div>
   );
 }
