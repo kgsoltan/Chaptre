@@ -80,8 +80,9 @@ function BookCard({ book, showEditLink }) {
                 </span>
               ))}
             </div>
-            <p className="truncate-synopsis">{book.book_synopsis}</p>
-
+            <p className="truncate-synopsis">
+              {book.book_synopsis ? book.book_synopsis : "No synopsis available."}
+            </p>
           </div>
         )}
       </div>
