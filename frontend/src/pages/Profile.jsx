@@ -38,9 +38,13 @@ function Profile() {
       const favoritedBooksData = [];
       
       // Loop through the favorited book IDs
+      
       for (const bookId of favoritedBookIds) {
-        const book = await getBookDetails(bookId);
-        favoritedBooksData.push(book);
+        try {
+          const book = await getBookDetails(bookId);
+          favoritedBooksData.push(book);
+        } catch (error) {
+        }
       }
       
       setFavoritedBooks(favoritedBooksData);
