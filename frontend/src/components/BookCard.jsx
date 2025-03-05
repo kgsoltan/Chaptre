@@ -71,9 +71,8 @@ function BookCard({ book, showEditLink }) {
               className={`card-modal-content ${modalPosition}`}
               ref={modalRef}
           >
-            <h3>{book.book_title}</h3>
-            <p>By {book.author}</p>
-            <p>{book.description}</p>
+            <h3 className="truncate">{book.book_title}</h3>
+            <p className="truncate">By {book.author}</p>
             <div className="genre-container">
               {book.genre_tags.map((genre, index) => (
                 <span key={index} className="genre-bubble">
@@ -81,6 +80,8 @@ function BookCard({ book, showEditLink }) {
                 </span>
               ))}
             </div>
+            <p className="truncate-synopsis">{book.book_synopsis}</p>
+
           </div>
         )}
       </div>

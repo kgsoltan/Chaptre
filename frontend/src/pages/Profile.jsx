@@ -178,7 +178,7 @@ function Profile() {
 
       <h3 className="profile-books-title">Public Books:</h3>
       {publishedBooks.length > 0 ? (
-        <BookGrid books={publishedBooks} showEditLink={isCurrentUser} />
+        <BookGrid books={publishedBooks} showEditLink={isCurrentUser} booksPerPage={5} />
       ) : (
         <p>No public books yet.</p>
       )}
@@ -187,7 +187,7 @@ function Profile() {
         <>
           <h3 className="profile-books-title">Drafts:</h3>
           {draftBooks.length > 0 ? (
-            <BookGrid books={draftBooks} showEditLink={true} />
+            <BookGrid books={draftBooks} showEditLink={true} booksPerPage={5} />
           ) : (
             <p>No draft books yet.</p>
           )}
