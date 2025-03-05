@@ -74,8 +74,8 @@
   margin-top: auto;
   max-height: 90px;
   overflow: hidden;
-  justify-content: left; /* Centers the tags horizontally */
-  align-items: left; /* Centers the tags vertically if needed */
+  justify-content: center; /* Centers the tags horizontally */
+  align-items: center; /* Centers the tags vertically if needed */
 }
 
 .genre-bubble {
