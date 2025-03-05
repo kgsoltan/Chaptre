@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createComment, updateComment } from "../services/api";
 import TextEditor from '../components/TextEditor';
 import "../ReadBook.css";
+import "../Modal.css";
 
 function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingComment }) {
   const [commentText, setCommentText] = useState("");

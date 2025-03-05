@@ -32,7 +32,7 @@ exports.getBookById = async (req, res) => {
 
 // Create a new book
 exports.createBook = async (req, res) => {
-  const { book_title, author, author_id, cover_image_url, genre_tags } = req.body;
+  const { book_title, author, author_id, book_synopsis, cover_image_url, genre_tags } = req.body;
   const token = req.headers.authorization?.split('Bearer ')[1];
 
   if (!token) {
@@ -45,6 +45,7 @@ exports.createBook = async (req, res) => {
       is_published: false,
       author,
       author_id,
+      book_synopsis,
       cover_image_url, 
       genre_tags,
       num_chapters: 0,

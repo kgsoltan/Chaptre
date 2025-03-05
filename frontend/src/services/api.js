@@ -178,6 +178,22 @@ export const createBook = async (bookData) => {
   return response.data;
 };
 
+// Delete a book
+export const deleteBook = async (bookId) => {
+  try {
+    const token = await getAuthToken();
+    const response = await api.delete(`/books/${bookId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    throw error;
+  }
+};
+
 // Create a new chapter
 export const createChapter = async (bookId, chapterData) => {
   try {
@@ -290,4 +306,16 @@ export const updateComment = async (bookId, chapterId, commentId, updates) => {
     updates,
     'Error updating chapter details'
   );
+};
+
+// api.js
+export const getFollowing = async (authorId) => {
+  try {
+    console.log(`Requesting following for ${authorId}`);  // Log to see if the request is triggered
+    const response = await api.get(`/authors/${authorId}/following`);
+    return response.data.following;  // Adjust based on your response structure
+  } catch (error) {
+    console.error('Error fetching following:', error);
+    throw error;
+  }
 };

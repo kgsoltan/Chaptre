@@ -35,11 +35,11 @@
   font-size: 1rem;
   color: #555;
 }
-
+/* 
 .read-book-container .chapter-list li:hover {
   background-color: #eaeaea;
   padding-left: 15px;
-}
+} */
 
 .read-book-container .chapter-list li.active {
   background-color: #d4d4d4;
@@ -230,3 +230,36 @@ ul.comments-list {
 .modal-button:hover {
   background-color: #218838;
 }
+
+.chapter-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .chapter-pagination button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+  }
+  
+  .chapter-pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .chapter-pagination button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  .chapter-pagination span {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  

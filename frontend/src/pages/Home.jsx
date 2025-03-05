@@ -37,9 +37,7 @@ function Home() {
     <div className="home">
       <div className='home-header'>
         <h1 style={{ margin: '20px 0' }}>
-          {searchQuery || genreFilter.length > 0
-            ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
-            : 'Books: '}
+          Books
         </h1>
 
         <div className="search-bar">
@@ -48,11 +46,22 @@ function Home() {
       </div>
       
       <div className="home-book-grid">
-      {books.length > 0 ? (
-        <BookGrid books={books} showEditLink={false} />
-      ) : (
-        <p>{searchQuery || genreFilter.length > 0 ? 'No books match your search...' : 'There are no books on the website...'}</p>
-      )}
+        {books.length > 0 ? (
+          <BookGrid books={books} showEditLink={false} booksPerPage={15} />
+        ) : (
+          <>
+            <h3>
+              {searchQuery || genreFilter.length > 0
+                ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
+                : 'Books:'}
+            </h3>
+            <p>
+              {searchQuery || genreFilter.length > 0
+                ? 'No books match your search...'
+                : 'There are no books on the website...'}
+            </p>
+          </>
+        )}
       </div>
 
     </div>

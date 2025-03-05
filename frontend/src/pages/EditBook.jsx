@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
-import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter } from '../services/api';
+import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter, deleteBook } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import '../EditBook.css'; 
@@ -12,11 +12,11 @@ function EditBook() {
   const [bookTitle, setBookTitle] = useState('');
   const [isPublished, setIsPublished] = useState(false);
   const [author, setAuthor] = useState('');
+  const [synonpsis, setSynonpsis] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
   const [genreTags, setGenreTags] = useState([]);
   const [chapters, setChapters] = useState([]);
-  const [newChapterTitle, setNewChapterTitle] = useState('');
-  const [newChapterNumber, setNewChapterNumber] = useState(1);
+  const [newChapterTitle, setNewChapterTitle] = useState('');  
   const { bookId } = useParams();
   const navigate = useNavigate();
 
@@ -46,6 +46,7 @@ function EditBook() {
       setBookTitle(bookData.book_title);
       setIsPublished(bookData.is_published);
       setAuthor(bookData.author);
+      setSynonpsis(bookData.book_synopsis);
       setCoverImageUrl(bookData.cover_image_url);
       setGenreTags(bookData.genre_tags);
     } catch (error) {
@@ -68,6 +69,7 @@ function EditBook() {
         book_title: bookTitle,
         is_published: isPublished,
         author: author,
+        book_synopsis: synonpsis,
         cover_image_url: coverImageUrl,
         genre_tags: genreTags
       };
@@ -152,6 +154,22 @@ function EditBook() {
     }
   };
 
+  const handleDeleteBook = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this book? This action cannot be undone.");
+    
+    if (isConfirmed) {
+      try {
+        await deleteBook(bookId);
+        alert('Book deleted successfully!');
+        navigate('/'); // Redirect to home page or author's books list
+      } catch (error) {
+        console.error('Error deleting book:', error);
+        alert('Failed to delete book. Please try again.');
+      }
+    }
+  };
+  
+
   const togglePublished = () => {
     setIsPublished(!isPublished);
   }
@@ -171,9 +189,17 @@ function EditBook() {
     }
   };
 
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
+  };  
+
   return (
     <div className="edit-book-container">
-      <h2>Edit Book</h2>
+      <div className="edit-book-title-delete">
+        <h2>Edit Book</h2>
+        <button className='delete-button' onClick={handleDeleteBook}>Delete Book</button>
+      </div>
       <div className="book-details-form">
         <label>Title</label>
         <input
@@ -182,13 +208,14 @@ function EditBook() {
           onChange={(e) => setBookTitle(e.target.value)}
           placeholder="Book Title"
         />
-        
-        {/* <input
+        <label>Synonpsis</label>
+        <textarea
           type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          placeholder="Author"
-        /> */}
+          value={synonpsis}
+          onChange={(e) => setSynonpsis(e.target.value)}
+          placeholder="Synopsis"
+          className='synopsis-input'
+        />
         <button onClick={() => document.getElementById('cover-photo-upload').click()} className="cover-photo-upload-btn">
         Cover Photo Upload
         </button>
@@ -199,7 +226,7 @@ function EditBook() {
         className="file-upload"
         onChange={(event) => handleCoverImage(event, bookId, updateCoverImage, setCoverImageUrl)} 
         style={{ display: 'none' }}
-      />
+        />
         <label>Genre</label>
         <Select
           isMulti
@@ -214,7 +241,7 @@ function EditBook() {
           <li key={chapter.id} className="chapter-item">
             <div className="chapter-buttons">
               <img className="published-icon" src={chapter.is_published ? pubIcon : unpubIcon} alt="published" />
-              {chapter.chapter_num}: {chapter.title}
+              {chapter.chapter_num}: {truncateText(chapter.title, 50)}
             </div>
             <div className="chapter-buttons">
               <div className="chapter-order-buttons">

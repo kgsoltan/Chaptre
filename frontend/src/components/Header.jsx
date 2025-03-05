@@ -1,28 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../index.css';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal'
-import { useNavigate } from "react-router-dom"; 
 
 function Header() {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
   const auth = getAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
   }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-    navigate("/");
-  };
 
   return (
     <header className="header">
@@ -30,20 +19,13 @@ function Header() {
 
       <nav className="nav-container">
         <ul className="nav-list">
-        {user && (
-            <li>
-              <button onClick={() => setShowModal(true)} className="nav-item">
-                New Book
-              </button>
-            </li>
-          )}
-          {user && <li><Link to={`/profile/${user.uid}`} className="nav-item">Profile</Link></li>}
-
           <li>
             {user ? (
-              <button onClick={handleLogout} className="nav-item logout-btn">
-                Logout
-              </button>
+              <li>
+              <button onClick={() => setShowModal(true)} className="nav-item">
+              New Book
+            </button>
+              <Link to={`/profile/${user.uid}`} className="nav-item">Profile</Link></li>
             ) : (
               <Link to="/login" className="nav-item login-btn">Login / Sign up</Link>
             )}

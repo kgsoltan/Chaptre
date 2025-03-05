@@ -5,6 +5,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .book-list {
@@ -83,7 +84,7 @@ html, body {
   justify-content: flex-end; /* Align elements to the right */
   align-items: center; /* Vertically center all items */
   gap: 10px; /* Space between elements */
-  max-width: 600px;
+  max-width: 1000px;
   width: 100%;
 }
 
@@ -99,7 +100,7 @@ html, body {
 }
 
 .search-input {
-  width: 500px !important; /* Override width */
+  width: 900px !important; /* Override width */
   padding: 8px 12px !important; /* Override padding */
   margin-bottom: 0 !important; /* Remove margin-bottom */
   border: 1px solid #ccc !important; /* Ensure consistent border */
@@ -183,60 +184,6 @@ button.nav-item:hover {
   color: white;
 }
 
-.logout-btn {
-  background-color: transparent;
-  border: none;
-  color: #d32f2f;
-  font-weight: bold;
-}
-
-.logout-btn:hover {
-  background: rgba(211, 47, 47, 0.2);
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-
-.modal-content {
-  background: white;
-  padding: 40px; /* Increased padding for more space inside */
-  border-radius: 8px;
-  width: 600px; /* Increased width for a larger modal */
-  max-width: 90%; /* Ensure it doesn't overflow on smaller screens */
-  height: auto; /* Let the content determine the height */
-  max-height: 80vh; /* Limit the height to 80% of the viewport */
-  overflow-y: auto; /* Allow scrolling if content overflows */
-  position: relative; /* Ensure positioning for the close button */
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #4b4242;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.close-btn:hover {
-  color: #141212;
-}
-
 .input-group {
   margin-bottom: 20px; /* Increased margin for more spacing between fields */
 }
@@ -265,24 +212,4 @@ button.nav-item:hover {
 
 .primary-button:hover {
   background-color: #45a049;
-}
-
-.genre-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center; /* Centers the tags horizontally */
-  align-items: center; /* Centers the tags vertically if needed */
-  margin: 8px 0;
-}
-
-.genre-bubble {
-  background-color: #f0f0f0;
-  color: #333;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 14px;
-  font-weight: bold;
-  display: inline-block;
-  text-align: center;
 }

@@ -14,9 +14,11 @@ function ReadBook() {
   const [comments, setComments] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null)
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [chapterPage, setChapterPage] = useState(1);
   const [user, setUser] = useState(null);
   const auth = getAuth();
-
+  const wordsPerPage = 400;
+  
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
   }, []);
@@ -46,6 +48,8 @@ function ReadBook() {
       setSelectedChapter(chapterId);
       setSelectedChapterName(chapterData.title);
       setChapterContent(chapterData.text);
+      setChapterPage(1);
+      setViewingComments(false);
     } catch (error) {
       console.error("Failed to fetch chapter content:", error);
     }
@@ -99,6 +103,19 @@ function ReadBook() {
     setShowCommentModal(true);
   };
 
+  const paginateWords = (text, page) => {
+    const words = text.split(/\s+/);
+    const totalPages = Math.ceil(words.length / wordsPerPage);
+    const start = (page - 1) * wordsPerPage;
+    const end = start + wordsPerPage;
+    return {
+      text: words.slice(start, end).join(" "),
+      totalPages,
+    };
+  };
+
+  const { text: currentChapterText, totalPages: totalChapterPages } = paginateWords(chapterContent, chapterPage);
+
   return (
     <div className="read-book-container">
       <div className="chapter-list">
@@ -125,6 +142,17 @@ function ReadBook() {
           <div className="content-box">
             <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
           </div>
+          {totalChapterPages > 1 && (
+              <div className="chapter-pagination">
+                <button onClick={() => setChapterPage(chapterPage - 1)} disabled={chapterPage === 1}>
+                  Previous Page
+                </button>
+                <span>{`Page ${chapterPage} of ${totalChapterPages}`}</span>
+                <button onClick={() => setChapterPage(chapterPage + 1)} disabled={chapterPage === totalChapterPages}>
+                  Next Page
+                </button>
+              </div>
+            )}
 
           <div className="comments-header">
             <h2>Comments</h2>
@@ -173,9 +201,8 @@ function ReadBook() {
             )}
           </ul>
         </>
+
       </div>
-
-
       {showCommentModal && (
         <NewCommentModal
           bookId={bookId}
@@ -189,4 +216,4 @@ function ReadBook() {
   );
 }
 
-export default ReadBook;    
+export default ReadBook;

@@ -4,6 +4,14 @@
   padding: 30px;
   font-family: Arial, sans-serif;
   box-sizing: border-box; /* Ensures padding/borders are included in the width */
+  margin: 0 auto;
+}
+
+.edit-book-title-delete {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  max-height: 35px;
 }
 
 h2,
@@ -77,6 +85,7 @@ input[type="number"],
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  align-items: center;
 }
 
 button,
@@ -100,8 +109,7 @@ button,
   color: white;
 }
 
-.delete-button,
-.unpublish-button {
+.delete-button {
   background-color: #f44336;
   color: white;
 }
@@ -115,12 +123,13 @@ button,
   background-color: white;
   color: #007bff;
   border: 2px solid #007bff;
+  font-size: 12px;
 }
 
 .publish-button {
   background-color: #007bff;
   color: white;
-  border: 2px solid #007bff;
+  font-size: 14px;
 }
 
 button:hover,
@@ -141,14 +150,15 @@ button:hover,
 
 .add-chapter-form input {
   flex: 1;
+  max-width: 750px;
+}
+
+.add-chapter-form button {
+  height: 35px;
 }
 
 .chapter-number {
   max-width: 40px;
-}
-
-.add-chapter-form button {
-  height: 40px;
 }
 
 .editor-container {
@@ -157,8 +167,24 @@ button:hover,
   border-radius: 4px;
 }
 
+
+
+.synopsis-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  min-width: 820px;
+  height: 100px; /* Fixed height */
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none; /* Prevents manual resizing */
+  font-family: inherit; /* Ensures consistent font */
+}
+
 .button-group {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 }

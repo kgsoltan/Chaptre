@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../BookCard.css';
+import '../Modal.css';
 import defaultBookCover from "../assets/default-book-cover.jpg";
 
 function BookCard({ book, showEditLink }) {
@@ -67,12 +68,11 @@ function BookCard({ book, showEditLink }) {
       </div>
         {isModalOpen && (
           <div
-              className={`modal-content ${modalPosition}`}
+              className={`card-modal-content ${modalPosition}`}
               ref={modalRef}
           >
-            <h3>{book.book_title}</h3>
-            <p>By {book.author}</p>
-            <p>{book.description}</p>
+            <h3 className="truncate">{book.book_title}</h3>
+            <p className="truncate">By {book.author}</p>
             <div className="genre-container">
               {book.genre_tags.map((genre, index) => (
                 <span key={index} className="genre-bubble">
@@ -80,6 +80,9 @@ function BookCard({ book, showEditLink }) {
                 </span>
               ))}
             </div>
+            <p className="truncate-synopsis">
+              {book.book_synopsis ? book.book_synopsis : "No synopsis available."}
+            </p>
           </div>
         )}
       </div>

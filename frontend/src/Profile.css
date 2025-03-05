@@ -1,5 +1,5 @@
 
-  .profile {
+.profile {
     max-width: 1200px;
     margin: 40px auto;
     padding: 20px;
@@ -8,8 +8,9 @@
   
   .profile-header {
     display: flex; 
-    align-items: center;
+    align-items: left;
     gap: 20px;
+    min-width: 830px;
   }
   
   .profile-img {
@@ -20,6 +21,10 @@
     border: 3px solid #ddd;
     cursor: pointer;
   }
+
+  .profile-header-content {
+    min-width: 900px;
+  }
   
   .profile-info {
     flex-grow: 1;
@@ -28,22 +33,14 @@
   .profile-name {
     margin: 0;
     font-size: 30px;
+    margin-bottom: 20px;
   }
   
   .profile-bio {
     margin: 5px 0;
     color: gray;
-  }
-  
-  
-  .bio-input {
-    width: 100%;
-    height: 80px;
-    font-size: 1rem;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-family: inherit;
+    max-width: 830px;
+    margin-bottom: 20px;
   }
   
   .save-button, .edit-button, .cancel-button {
@@ -68,4 +65,34 @@
     background-color: #dc3545;
     color: white;
   }
+   
+  .logout-btn {
+    border: 2px solid #d32f2f;
+    background-color: transparent;
+    color: #d32f2f;
+    max-height: 35px;
+  }
   
+  .logout-btn:hover {
+    background: rgba(211, 47, 47, 0.2);
+  }
+
+  .logout {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .bio-input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    min-width: 820px;
+    height: 100px; /* Fixed height */
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none; /* Prevents manual resizing */
+    font-family: inherit; /* Ensures consistent font */
+  }
