@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link
 import { getAuthorDetails } from '../services/api'; // Your API function to fetch author details
 import '../Profile.css';
+import '../Modal.css';
 
 const FollowingModal = ({onClose}) => {
   const { authorId } = useParams();
@@ -53,8 +54,8 @@ const FollowingModal = ({onClose}) => {
   if (!isModalOpen) return null; // Don't render anything if the modal is closed
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="following-modal-overlay">
+      <div className="following-modal-content">
         <button className="close-button" onClick={handleClose}>×</button> {/* Use the handleClose function */}
         <h3>Following List</h3>
         {followingList.length > 0 ? (

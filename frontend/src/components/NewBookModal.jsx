@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createBook, getAuthorDetails } from '../services/api';
 import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
+import '../Modal.css';
 
 function CreateBookModal({ user, onClose }) {
   const [bookTitle, setBookTitle] = useState('');
@@ -56,8 +57,8 @@ function CreateBookModal({ user, onClose }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="create-book-modal-overlay">
+      <div className="create-book-modal-content">
         {/* Close Button */}
         <button className="close-button" onClick={onClose}>x</button>
         

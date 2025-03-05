@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../BookCard.css';
+import '../Modal.css';
 import defaultBookCover from "../assets/default-book-cover.jpg";
 
 function BookCard({ book, showEditLink }) {
@@ -67,7 +68,7 @@ function BookCard({ book, showEditLink }) {
       </div>
         {isModalOpen && (
           <div
-              className={`modal-content ${modalPosition}`}
+              className={`card-modal-content ${modalPosition}`}
               ref={modalRef}
           >
             <h3>{book.book_title}</h3>

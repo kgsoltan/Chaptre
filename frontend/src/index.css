@@ -184,33 +184,6 @@ button.nav-item:hover {
   color: white;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-
-.modal-content {
-  background: white;
-  padding: 40px; /* Increased padding for more space inside */
-  border-radius: 8px;
-  width: 90%; /* Increased width for a larger modal */
-  min-width: 600px;
-  height: auto; /* Let the content determine the height */
-  max-height: 80vh; /* Limit the height to 80% of the viewport */
-  overflow-y: auto; /* Allow scrolling if content overflows */
-  position: relative; /* Ensure positioning for the close button */
-}
-
 .input-group {
   margin-bottom: 20px; /* Increased margin for more spacing between fields */
 }

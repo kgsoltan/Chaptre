@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createComment } from "../services/api";
+import "../Modal.css";
 
 function NewCommentModal({ bookId, onClose, onCommentAdded }) {
   const [commentText, setCommentText] = useState("");
@@ -27,8 +28,8 @@ function NewCommentModal({ bookId, onClose, onCommentAdded }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="comment-modal-overlay">
+      <div className="comment-modal-content">
         <h2>Leave a Comment</h2>
         <form onSubmit={handleSubmit}>
           <div>
