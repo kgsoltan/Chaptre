@@ -319,3 +319,11 @@ export const getFollowing = async (authorId) => {
     throw error;
   }
 };
+
+export const updateFavoriteBooks = async (authorId, updatedFavorites) => {
+  return await patchRequest(
+    `/authors/${authorId}`,
+    { favorited_books: updatedFavorites },
+    'Error updating favorite books'
+  );
+};

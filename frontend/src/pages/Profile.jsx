@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getAuthorDetails, getAuthorBooks, updateProfilePic, updateAuthor } from '../services/api';
+import { getAuthorDetails, getAuthorBooks, updateProfilePic, updateAuthor, getBookDetails } from '../services/api';  // Ensure getBookById is imported
 import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import defaultProfilePic from "../assets/default-profile-pic.jpg";
@@ -17,8 +17,9 @@ function Profile() {
   const [bioText, setBioText] = useState("");
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
-  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFavoritedModalOpen, setIsFavoritedModalOpen] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [favoritedBooks, setFavoritedBooks] = useState([]); // State for favorited books
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -28,6 +29,23 @@ function Profile() {
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
+    }
+  };
+
+  // Function to fetch favorited books
+  const getFavoritedBooks = async (favoritedBookIds) => {
+    try {
+      const favoritedBooksData = [];
+      
+      // Loop through the favorited book IDs
+      for (const bookId of favoritedBookIds) {
+        const book = await getBookDetails(bookId);
+        favoritedBooksData.push(book);
+      }
+      
+      setFavoritedBooks(favoritedBooksData);
+    } catch (error) {
+      console.error("Error fetching favorited books:", error);
     }
   };
 
@@ -54,7 +72,12 @@ function Profile() {
 
       if (currentUser) {
         const userDetails = await getAuthorDetails(currentUser.uid);
-        setIsFollowing(userDetails.following?.includes(authorId) || false);
+        setIsFavorited(userDetails.following?.includes(authorId) || false);
+
+        // Fetch favorited books if user is logged in
+        if (userDetails.following?.length > 0) {
+          getFavoritedBooks(userDetails.favorited_books);  // Pass favorited authors
+        }
       }
     });
 
@@ -72,7 +95,7 @@ function Profile() {
       let currentFollowing = Array.isArray(userDetails.following) ? [...userDetails.following] : [];
 
       let updatedFollowing;
-      if (isFollowing) {
+      if (isFavorited) {
         // Unsubscribe
         updatedFollowing = currentFollowing.filter(id => id !== authorId);
         alert("Successfully unsubscribed from the author.");
@@ -85,19 +108,19 @@ function Profile() {
       await updateAuthor(user.uid, { following: updatedFollowing });
 
       // Update local state
-      setIsFollowing(!isFollowing);
+      setIsFavorited(!isFavorited);
     } catch (error) {
       console.error("Error subscribing/unsubscribing:", error);
       alert("Failed to update subscription.");
     }
   };
 
-  const handleFollowingModal = async () => {
-    setIsFollowingModalOpen(true);
+  const handleFavoritedModal = async () => {
+    setIsFavoritedModalOpen(true);
   };
 
-  const closeFollowingModal = async () => {
-    setIsFollowingModalOpen(false);
+  const closeFavoritedModal = async () => {
+    setIsFavoritedModalOpen(false);
   };
 
   const handleSaveBio = async () => {
@@ -152,12 +175,11 @@ function Profile() {
               {isCurrentUser ? (
                 <div>
                   <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit Bio</button>
-                  <button onClick={handleFollowingModal} className="edit-button">View Followed Authors</button>
-                
+                  <button onClick={handleFavoritedModal} className="edit-button">View Favorited Authors</button>
                 </div>
               ) : (
                 <button onClick={handleSubscribe} className="edit-button">
-                {isFollowing ? "Unsubscribe" : "Subscribe"}
+                {isFavorited ? "Unsubscribe" : "Subscribe"}
               </button>
               )}
             </div>
@@ -183,6 +205,14 @@ function Profile() {
         <p>No public books yet.</p>
       )}
 
+      {/* Display Favorited Books */}
+      {isCurrentUser && favoritedBooks.length > 0 && (
+        <>
+          <h3 className="profile-books-title">Favorited Books:</h3>
+          <BookGrid books={favoritedBooks} showEditLink={false} booksPerPage={5} />
+        </>
+      )}
+
       {isCurrentUser && (
         <>
           <h3 className="profile-books-title">Drafts:</h3>
@@ -194,10 +224,10 @@ function Profile() {
         </>
       )}
 
-      {isFollowingModalOpen && (
+      {isFavoritedModalOpen && (
         <FollowingModal
           following={user?.following || []}
-          onClose={closeFollowingModal}
+          onClose={closeFavoritedModal}
         />
       )}
     </div>
