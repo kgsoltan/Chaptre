@@ -155,13 +155,17 @@ function Profile() {
           />
         </label>
         <div className='profile-header-content'>
-        <div className='logout'>
-        <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
-        </div>
+        {isCurrentUser ? (
+          <div className='logout'>
+            <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
+            <button onClick={handleLogout} className="logout-btn">Logout</button>
+          </div>
+        ) : (
+          <div className='logout'>
+          <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
+          </div>
+        )}
         <div className="profile-info">
-
-
           <div className="bio-display">
             {isEditingBio ? (
             <div className="bio-edit">
