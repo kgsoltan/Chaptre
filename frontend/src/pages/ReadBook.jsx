@@ -140,7 +140,7 @@ function ReadBook() {
         <>
           <h2>{selectedChapterName}</h2>
           <div className="content-box">
-            <div className="content" dangerouslySetInnerHTML={{ __html: chapterContent }} />
+            <div className="content" dangerouslySetInnerHTML={{ __html: currentChapterText }} />
           </div>
           {totalChapterPages > 1 && (
               <div className="chapter-pagination">
