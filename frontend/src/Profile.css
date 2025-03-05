@@ -41,6 +41,7 @@
     color: gray;
     max-width: 830px;
     margin-bottom: 20px;
+    word-break: break-word;
   }
   
   .save-button, .edit-button, .cancel-button {
