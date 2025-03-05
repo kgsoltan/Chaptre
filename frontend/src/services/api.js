@@ -178,6 +178,22 @@ export const createBook = async (bookData) => {
   return response.data;
 };
 
+// Delete a book
+export const deleteBook = async (bookId) => {
+  try {
+    const token = await getAuthToken();
+    const response = await api.delete(`/books/${bookId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    throw error;
+  }
+};
+
 // Create a new chapter
 export const createChapter = async (bookId, chapterData) => {
   try {

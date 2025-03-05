@@ -7,6 +7,13 @@
   margin: 0 auto;
 }
 
+.edit-book-title-delete {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  max-height: 35px;
+}
+
 h2,
 h3 {
   color: #333;
@@ -159,6 +166,8 @@ button:hover,
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+
 
 .synopsis-input {
   display: flex;

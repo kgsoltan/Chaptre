@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
-import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter } from '../services/api';
+import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter, deleteBook } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import '../EditBook.css'; 
@@ -154,6 +154,22 @@ function EditBook() {
     }
   };
 
+  const handleDeleteBook = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this book? This action cannot be undone.");
+    
+    if (isConfirmed) {
+      try {
+        await deleteBook(bookId);
+        alert('Book deleted successfully!');
+        navigate('/'); // Redirect to home page or author's books list
+      } catch (error) {
+        console.error('Error deleting book:', error);
+        alert('Failed to delete book. Please try again.');
+      }
+    }
+  };
+  
+
   const togglePublished = () => {
     setIsPublished(!isPublished);
   }
@@ -180,7 +196,10 @@ function EditBook() {
 
   return (
     <div className="edit-book-container">
-      <h2>Edit Book</h2>
+      <div className="edit-book-title-delete">
+        <h2>Edit Book</h2>
+        <button className='delete-button' onClick={handleDeleteBook}>Delete Book</button>
+      </div>
       <div className="book-details-form">
         <label>Title</label>
         <input
