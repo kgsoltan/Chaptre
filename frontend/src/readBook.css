@@ -242,7 +242,7 @@ ul.comments-list {
   .chapter-pagination button {
     padding: 8px 12px;
     border: none;
-    background-color: #007bff;
+    background-color: #d32f2f;
     color: white;
     cursor: pointer;
     border-radius: 5px;
@@ -254,9 +254,7 @@ ul.comments-list {
     cursor: not-allowed;
   }
   
-  .chapter-pagination button:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
+  
   
   .chapter-pagination span {
     font-size: 16px;
@@ -269,7 +267,7 @@ ul.comments-list {
     cursor: pointer;
     border-radius: 5px;
     border: none;
-    background-color: #007bff;
+    background-color: #d32f2f;
     color: white;
     display: block; 
     text-align: center;
