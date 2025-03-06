@@ -14,6 +14,7 @@ function BookCard({ book, showEditLink }) {
   const modalRef = useRef(null);
   const [averageRating, setAverageRating] = useState(0);
 
+  /*
   useEffect(() => {
     const fetchRatings = async () => {
       try {
@@ -41,6 +42,7 @@ function BookCard({ book, showEditLink }) {
 
     fetchRatings();
   }, [book.id]);
+  */
 
   useEffect(() => {
     const checkModalPosition = () => {

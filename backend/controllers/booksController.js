@@ -2,6 +2,7 @@ const { admin, db } = require('../config/firebase');
 
 // Get published books
 exports.getBooks = async (req, res) => {
+  console.log("HELLO")
   const count = parseInt(req.query.count);
   try {
     let query = db.collection('books').where('is_published', '==', true);
