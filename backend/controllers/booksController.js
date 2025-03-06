@@ -40,18 +40,16 @@ exports.createBook = async (req, res) => {
   }
   try {
     await admin.auth().verifyIdToken(token);
+    const date = admin.firestore.FieldValue.serverTimestamp();
     const newBook = {
       book_title,
       is_published: false,
       author,
       author_id,
+      date,
       book_synopsis,
       cover_image_url, 
-      genre_tags,
-      num_chapters: 0,
-      num_drafts: 0,
-      date: 'TODO',
-      chapters: [],
+      genre_tags
     };
     const docRef = await db.collection('books').add(newBook);
     res.status(201).json({ id: docRef.id, book_title });

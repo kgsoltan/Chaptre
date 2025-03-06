@@ -7,10 +7,9 @@ authors
         ├── EMAIL: string
         ├── BIO: string
         ├── LOCATION: string
-        ├── BOOKS_AS_AUTHOR: [string] (array of book IDs) //Owns these and has edit permissions aka is the author to these book IDs
+        ├── PROFILE_PIC_URL: string (URL of the profile image)
         ├── FAVORITED_BOOKS: [string] (array of book IDs) //The ones the profile has clicked favorite on
         ├── FOLLOWING: [string] (array of userIDs/genres) //list of genres/userIDs followed
-        ├── PROFILE_PIC_URL: string (URL of the profile image)
 
 books
   └── BOOK_ID
@@ -18,12 +17,10 @@ books
         ├── IS_PUBLISHED: bool
         ├── AUTHOR: string
         ├── AUTHOR_ID: string
-        ├── GENRE_TAGS: [string] (array of genre tags)
-        |── NUM_CHAPTERS: int
-        ├── NUM_DRAFTS: int
-        |── DATE: time
+        |── DATE: timestamp
+        |── BOOK_SYNOPSIS: string
         ├── COVER_IMAGE_URL: string (URL of the book cover)
-        |── SYNOPSIS: string
+        ├── GENRE_TAGS: [string] (array of genre tags)
         ├── CHAPTERS: 
         │     └── CHAPTER_ID:
         |         ├── IS_PUBLISHED : bool
@@ -34,6 +31,7 @@ books
         |               └── COMMENT_ID:
         |                   ├── COMMENTOR_ID : string
         |                   ├── COMMENTOR_NAME : string
+        |                   |── DATE: timestamp
         |                   ├── RATING : int
         |                   ├── TEXT: string
 

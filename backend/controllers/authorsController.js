@@ -42,10 +42,9 @@ exports.createAuthor = async (req, res) => {
       last_name,
       email,
       bio: '',
-      books_as_author: [],
+      profile_pic_url: '',
       favorited_books: [],
       following: [],
-      profile_pic_url: '',
     };
 
     await db.collection('authors').doc(uid).set(newAuthor);
