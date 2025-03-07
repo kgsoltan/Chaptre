@@ -37,9 +37,9 @@ function Profile() {
   const getFavoritedBooks = async (favoritedBookIds) => {
     try {
       const favoritedBooksData = [];
-      
+
       // Loop through the favorited book IDs
-      
+
       for (const bookId of favoritedBookIds) {
         try {
           const book = await getBookDetails(bookId);
@@ -47,7 +47,7 @@ function Profile() {
         } catch (error) {
         }
       }
-      
+
       setFavoritedBooks(favoritedBooksData);
     } catch (error) {
       console.error("Error fetching favorited books:", error);
@@ -128,6 +128,23 @@ function Profile() {
     setIsFavoritedModalOpen(false);
   };
 
+  const handleProfileImage = async (event, authorId, updateProfilePic) => {
+    const file = event.target.files[0];
+    if (!validateFile(file)) return;
+
+
+    try {
+      const s3ImageUrl = await uploadToS3(file);
+      await updateProfilePic(authorId, s3ImageUrl);
+      console.log("Profile image updated in Firestore:", s3ImageUrl);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during profile image upload:", error);
+      alert("Failed to upload profile image.");
+    }
+  };
+
+
   const handleSaveBio = async () => {
     try {
       await updateAuthor(authorId, { bio: bioText });
@@ -149,52 +166,58 @@ function Profile() {
     <div className="profile">
       <div className="profile-header">
         <label htmlFor="file-upload" className="profile-img-label">
-          <img
-            className="profile-img"
-            src={author.profile_pic_url?.trim() ? author.profile_pic_url : defaultProfilePic}
-            alt="Profile"
-          />
+          <img className="profile-img" src={author.profile_pic_url || defaultProfilePic} alt="Profile" />
         </label>
+        <input
+          id="file-upload"
+          type="file"
+          accept="image/*"
+          className="file-upload"
+          onChange={(event) => handleProfileImage(event, authorId, updateProfilePic)}
+          style={{ display: 'none' }}
+        />
+
+
         <div className='profile-header-content'>
-        {isCurrentUser ? (
-          <div className='logout'>
-            <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
-          </div>
-        ) : (
-          <div className='logout'>
-          <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
-          </div>
-        )}
-        <div className="profile-info">
-          <div className="bio-display">
-            {isEditingBio ? (
-            <div className="bio-edit">
-              <textarea
-                value={bioText}
-                onChange={(e) => setBioText(e.target.value)}
-                className="bio-input"
-              />
-              <button onClick={handleSaveBio} className="edit-button">Save</button>
-              <button onClick={() => setIsEditingBio(false)} className="cancel-button">Cancel</button>
+          {isCurrentUser ? (
+            <div className='logout'>
+              <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
+              <button onClick={handleLogout} className="logout-btn">Logout</button>
             </div>
           ) : (
-            <div className="bio-display">
-              <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
-              {isCurrentUser ? (
-                <div>
-                  <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit Bio</button>
-                  <button onClick={handleFavoritedModal} className="edit-button">View Favorited Authors</button>
-                </div>
-              ) : (
-                <button onClick={handleSubscribe} className="edit-button">
-                {isFavorited ? "Unsubscribe" : "Subscribe"}
-              </button>
-              )}
+            <div className='logout'>
+              <h1 className="profile-name">{`${author.first_name} ${author.last_name}'s Profile`}</h1>
             </div>
           )}
+          <div className="profile-info">
+            <div className="bio-display">
+              {isEditingBio ? (
+                <div className="bio-edit">
+                  <textarea
+                    value={bioText}
+                    onChange={(e) => setBioText(e.target.value)}
+                    className="bio-input"
+                  />
+                  <button onClick={handleSaveBio} className="edit-button">Save</button>
+                  <button onClick={() => setIsEditingBio(false)} className="cancel-button">Cancel</button>
+                </div>
+              ) : (
+                <div className="bio-display">
+                  <p className="profile-bio">{bioText || 'Empty bio ...'}</p>
+                  {isCurrentUser ? (
+                    <div>
+                      <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit Bio</button>
+                      <button onClick={handleFavoritedModal} className="edit-button">View Favorited Authors</button>
+                    </div>
+                  ) : (
+                    <button onClick={handleSubscribe} className="edit-button">
+                      {isFavorited ? "Unsubscribe" : "Subscribe"}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
         </div>
       </div>
       {isCurrentUser && (
