@@ -1,0 +1,156 @@
+/* components/Sidebar.css */
+
+/* Sidebar container */
+.sidebar {
+  position: fixed;
+  top: 35px; /* Adjusted based on header height */
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 60px); /* Full height minus header */
+  background-color: #f8f8f8;
+  padding: 20px 0;
+  border-right: 1px solid #ddd;
+  z-index: 1;
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: width 0.3s ease; /* Smooth transition for potential collapse */
+}
+
+/* Navigation container */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Reduced gap for tighter spacing */
+  padding: 0 20px; /* Inner padding for content */
+}
+
+/* Individual sidebar item (links) */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 8px; /* Rounded corners to match the button */
+  background-color: transparent; /* Default transparent background */
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  background-color: #ffecec; /* Light pink background on hover */
+  color: #d32f2f; /* Red text to match the button */
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2); /* Subtle shadow for depth */
+}
+
+/* Icon styling */
+.sidebar-icon {
+  margin-right: 10px;
+  font-size: 18px; /* Slightly larger icons for better visibility */
+  color: #666; /* Default icon color */
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item.active .sidebar-icon {
+  color: #d32f2f; /* Icon color changes to red on hover/active */
+}
+
+/* Label styling */
+.sidebar-label {
+  font-size: 16px;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for long text */
+}
+
+/* Section container for lists */
+.sidebar-section {
+  margin-top: 20px;
+  padding: 0 10px; /* Inner padding for sections */
+}
+
+/* Section title styling */
+.sidebar-section-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #d32f2f; /* Red color for section titles */
+  margin-bottom: 10px;
+  padding-left: 5px;
+}
+
+/* List styling */
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* List item styling */
+.sidebar-list-item {
+  padding: 0;
+}
+
+.sidebar-list-item .sidebar-item {
+  background-color: #f5efef;
+  padding: 8px 15px; /* Slightly less padding for list items */
+  font-weight: 400; /* Lighter weight for list items */
+  border: 2px solid transparent; /* Default transparent border */
+  border-radius: 8px; /* Rounded corners to match the button */
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.sidebar-list-item .sidebar-item:hover,
+.sidebar-list-item .sidebar-item.active {
+  background-color: #ffecec; /* Light pink background on hover */
+  color: #d32f2f; /* Red text to match the button */
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2); /* Subtle shadow for depth */
+  border-color: transparent; /* Remove outline effect for this style */
+}
+
+/* Empty state styling */
+.sidebar-empty {
+  font-style: italic;
+  color: #777;
+  font-size: 0.9rem;
+  padding: 10px 15px;
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px; /* Narrower sidebar on mobile */
+    top: 50px; /* Adjust if header height changes on mobile */
+    height: calc(100vh - 50px);
+  }
+
+  .sidebar-nav {
+    padding: 0 10px;
+  }
+
+  .sidebar-label {
+    font-size: 14px;
+  }
+
+  .sidebar-section-title {
+    font-size: 1rem;
+  }
+
+  .sidebar-item {
+    padding: 10px 15px;
+  }
+
+  .sidebar-list-item .sidebar-item {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    display: none; /* Hide sidebar on very small screens */
+  }
+}

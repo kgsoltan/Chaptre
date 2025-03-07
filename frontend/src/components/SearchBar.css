@@ -1,5 +1,5 @@
 
-  .search-input,
+.search-input,
 .search-btn {
   height: 40px; /* Consistent height */
   padding: 8px 12px; /* Consistent padding */
@@ -24,8 +24,6 @@
 .search-select {
     width: 500px;
   }
-
-
 
 .search-btn {
     background-color: transparent;

@@ -5,12 +5,15 @@ html, body {
   overflow-x: hidden;
   min-height: 100vh;
 }
-
 .author-link {
   color: #d32f2f !important;
   text-decoration: none;
   font-weight: bold;
   transition: color 0.2s ease-in-out;
+}
+
+.main-content {
+  padding-top: 75px; /* Same as the header's total height */
 }
 
 .author-link:hover {
@@ -67,6 +70,11 @@ button.nav-item:hover {
   display: flex;
   justify-content: flex-end; 
   padding-right: 30px;
+}
+
+.headersearch {
+  display: flex;
+  justify-content: center;
 }
 
 .nav-list {

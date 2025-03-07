@@ -1,13 +1,27 @@
 .header {
-    background-color: #ffecec;
-    padding: 15px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
+  position: fixed;
+  background-color: #ffecec;
+  padding: 15px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Keep this for now, but we'll adjust the structure */
+  width: 100%;
+  z-index: 100;
+}
 
+.header-content {
+  flex-grow: 15; /* Allows the content to take up available space */
+  display: flex;
+  justify-content: center; /* Centers the search bar */
+}
+
+.headersearch {
+  display: flex;
+  justify-content: center; /* Ensures the search bar itself is centered */
+  margin-left: 10px;
+  margin-right: 10px;
+}
 
   .login-btn {
     border: 2px solid #d32f2f;
@@ -18,3 +32,5 @@
     background: #d32f2f;
     color: white;
   }
+
+  

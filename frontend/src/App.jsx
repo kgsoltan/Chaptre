@@ -6,6 +6,7 @@ import ReadBook from './pages/ReadBook';
 import LoginPage from './pages/LoginPage';
 import EditBook from './pages/EditBook';
 import EditChapter from './pages/EditChapter';
+import Sidebar from './components/Sidebar';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
     <Router>
       <div className="App">
         <Header />
+        <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
@@ -22,6 +24,7 @@ function App() {
           <Route path="/book/:bookId/chapter/:chapterId/editor" element={<EditChapter />} />
           <Route path="/search" element={<Home />} />
         </Routes>
+        </main>
       </div>
       <div id="modal-root"></div>
     </Router>

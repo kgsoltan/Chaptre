@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getPublishedBooks, searchBooks } from '../services/api';
 import SearchBar from '../components/SearchBar'
+import Sidebar from '../components/Sidebar';
 
 import './Home.css'
 
@@ -37,17 +38,13 @@ function Home() {
 
   return (
     <div className="home">
+      <Sidebar/>
+      <div className="home-book-grid">
       <div className='home-header'>
-        <h1 style={{ margin: '20px 0' }}>
+        <h1 className='Homebookmargin'>
           Books
         </h1>
-
-        <div className="search-bar">
-          <SearchBar />
-        </div>
       </div>
-      
-      <div className="home-book-grid">
         {books.length > 0 ? (
           <BookGrid books={books} showEditLink={false} booksPerPage={15} />
         ) : (
