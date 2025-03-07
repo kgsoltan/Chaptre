@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getChapterDetails, getAuthorDetails, getChapters, getComments, deleteComment, updateFavoriteBooks } from "../services/api";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewCommentModal from '../components/NewCommentModal';
-import "../ReadBook.css";
+import "./ReadBook.css"
 
 function ReadBook() {
   const { bookId } = useParams();

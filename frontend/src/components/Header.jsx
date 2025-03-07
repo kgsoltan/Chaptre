@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../index.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal'
+
+import './Header.css';
 
 function Header() {
   const [showModal, setShowModal] = useState(false);

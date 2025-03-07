@@ -4,6 +4,8 @@ import BookGrid from '../components/BookGrid';
 import { getPublishedBooks, searchBooks } from '../services/api';
 import SearchBar from '../components/SearchBar'
 
+import './Home.css'
+
 function Home() {
   const [books, setBooks] = useState([]);
   const location = useLocation();

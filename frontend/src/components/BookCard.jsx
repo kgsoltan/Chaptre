@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../BookCard.css';
-import '../Modal.css';
+
 import defaultBookCover from "../assets/default-book-cover.jpg";
+
+import './BookCard.css';
 
 function BookCard({ book, showEditLink }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

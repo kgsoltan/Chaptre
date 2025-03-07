@@ -1,0 +1,20 @@
+.header {
+    background-color: #ffecec;
+    padding: 15px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+
+  .login-btn {
+    border: 2px solid #d32f2f;
+    padding: 10px 15px;
+  }
+  
+  .login-btn:hover {
+    background: #d32f2f;
+    color: white;
+  }

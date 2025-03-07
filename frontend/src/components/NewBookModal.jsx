@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { createBook, getAuthorDetails } from '../services/api';
 import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
-import '../Modal.css';
+
+import './NewBookModal.css';
 
 function CreateBookModal({ user, onClose }) {
   const [bookTitle, setBookTitle] = useState('');

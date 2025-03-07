@@ -1,0 +1,164 @@
+.edit-chapter-container,
+.edit-book-container {
+  width: 900px; /* Set the container width */
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box; /* Ensures padding/borders are included in the width */
+  margin: 0 auto;
+}
+
+.edit-book-title-delete {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    max-height: 35px;
+  }
+
+
+
+
+
+  h2,
+  h3 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .published-icon {
+    color: #28a745;
+    height: 16px;
+    width: 16px;
+  }
+  
+  .book-details-form,
+  .chapter-details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  .chapter-input,
+  .chapter-number {
+    width: 97.5%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  .chapter-list {
+    list-style-type: none;
+    width: 100%;
+    max-width: 1000px;
+    padding: 0;
+  }
+  
+  .chapter-item {
+    display: flex;
+    justify-content: space-between; /* Distributes space between left and right */
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding/borders are included in the width */
+  }
+  
+  .chapter-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 60%; 
+  }
+  
+  .chapter-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    width: 40%; 
+  }
+  
+  .chapter-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .back-button {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .unpublish-button {
+    background-color: white;
+    color: #007bff;
+    border: 2px solid #007bff;
+    font-size: 12px;
+  }
+  
+  .publish-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+  }
+
+  
+  .add-chapter-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .add-chapter-form input {
+    flex: 1;
+    max-width: 750px;
+  }
+  
+  .add-chapter-form button {
+    height: 35px;
+  }
+  
+  .chapter-number {
+    max-width: 40px;
+  }
+  
+  .editor-container {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .synopsis-input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    min-width: 820px;
+    height: 100px; /* Fixed height */
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none; /* Prevents manual resizing */
+    font-family: inherit; /* Ensures consistent font */
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  

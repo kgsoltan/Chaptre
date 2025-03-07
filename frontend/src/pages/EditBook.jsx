@@ -4,9 +4,10 @@ import Select from 'react-select';
 import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter, deleteBook } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
-import '../EditBook.css'; 
 import pubIcon from "../assets/published.png";
 import unpubIcon from "../assets/unpublished.png";
+
+import './EditBook.css'
 
 function EditBook() {
   const [bookTitle, setBookTitle] = useState('');

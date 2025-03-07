@@ -6,10 +6,12 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import "../Login.css";
 import googleLogo from "../assets/google_logo.png";
 import { createAuthor } from "../services/api";
 import { useNavigate } from "react-router-dom"; 
+
+
+import './LoginPage.css'
 
 function LoginPage() {
   const [email, setEmail] = useState("");

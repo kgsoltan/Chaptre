@@ -2,7 +2,8 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import TextEditor from '../components/TextEditor';
 import { getChapterDetails, updateChapter } from '../services/api';
-import '../EditBook.css';
+
+import './EditBook.css'
 
 function EditChapter() {
   const editorRef = useRef(null);

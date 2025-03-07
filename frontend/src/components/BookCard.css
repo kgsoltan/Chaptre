@@ -1,0 +1,201 @@
+.book-card-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .book-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    color: inherit;
+    text-decoration: none;
+    background: white;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease, background 0.3s ease;
+    width: 250px;
+    box-sizing: border-box;
+  }
+  
+  .book-card:hover {
+    transform: scale(1.03);          /* Slightly increase the size */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background: #f9f9f9;             /* Light background change */
+  }
+  
+  .book-card a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .book-card a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .book-card img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 200px;
+    max-height: 370px;
+    max-width: 200px;
+    min-height: 380px;
+  }
+  
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .book-card img {
+    width: 200px;
+    height: 250px;
+    min-width: 180px;
+    min-height: 250px;
+  
+    background-color: #f0f0f0;
+  }
+  
+  .book-card h3 {
+    font-size: 1rem;
+    margin: 0 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .book-card p {
+    font-size: 0.9rem;
+    margin: 0 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .star.filled {
+    color: gold; /* Gold color for filled stars */
+  }
+  
+  .star:hover {
+    color: #ffcc00; /* Highlight color on hover */
+  }
+
+
+  .genre-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: auto;
+    max-height: 90px;
+    overflow: hidden;
+    justify-content: center; /* Centers the tags horizontally */
+    align-items: center; /* Centers the tags vertically if needed */
+  }
+  
+  .genre-bubble {
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  
+  .genre-overflow {
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 0.8rem;
+  }
+
+
+  .card-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-modal-content {
+    position: fixed;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 400px;
+    max-width: 90%;
+  }
+  
+  .card-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  
+  .truncate-synopsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .card-modal-content {
+    position: absolute;
+    top: 0;
+    height: 250px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto; /* Enables vertical scrolling */
+    max-width: 300px;
+  }
+  
+  .card-modal-content.right {
+    left: 105%;
+  }
+  
+  .card-modal-content.left {
+    right: 105%; 
+  }
+  
+  @media (min-width: 768px) {
+    .card-modal-content {
+        max-width: 300px;
+    }
+  }

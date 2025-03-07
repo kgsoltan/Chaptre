@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
+import './SearchBar.css'
+
 // Predefined genres for selection
 const genreOptions = [
     { value: "Fantasy", label: "Fantasy" },

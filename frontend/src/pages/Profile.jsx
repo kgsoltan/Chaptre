@@ -7,7 +7,8 @@ import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import defaultProfilePic from "../assets/default-profile-pic.jpg";
 import FollowingModal from '../components/FollowingModal';
-import '../Profile.css';
+
+import './Profile.css';
 
 function Profile() {
   const { authorId } = useParams();

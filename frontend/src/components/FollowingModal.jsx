@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link
 import { getAuthorDetails } from '../services/api'; // Your API function to fetch author details
-import '../Profile.css';
-import '../Modal.css';
+
+import './FollowingModal.css'
 
 const FollowingModal = ({onClose}) => {
   const { authorId } = useParams();
