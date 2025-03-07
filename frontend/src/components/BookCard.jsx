@@ -54,37 +54,38 @@ function BookCard({ book, showEditLink }) {
         ref={cardRef}
     >
       <div className="book-card">
-        <Link to={linkPath}>
-          <img src={book.cover_image_url || defaultBookCover} alt="Cover Not Found" />
-          <h3>{book.book_title}</h3>
-          <p>
-            By <Link to={`/profile/${book.author_id}`} className="author-link" title="View Author's Profile">
-              {book.author}
-            </Link>
-          </p>
-          {averageRating > 0 ? (
-            <p className="star">
-              <span style={{ color: 'gold' }}>{"★".repeat(Math.round(averageRating))}</span>
-              <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(averageRating))}</span>
-            </p>
-          ) : (
-            <p className="star">
-              <span style={{ marginLeft: '5px', color: 'gray' }}>Not enough ratings</span>
-            </p>
-          )}
-          <div className="genre-container">
-              {book.genre_tags.slice(0, maxVisibleTags).map((genre, index) => (
-                <span key={index} className="genre-bubble">
-                  {genre}
-                </span>
-              ))}
-              {book.genre_tags.length > maxVisibleTags && (
-                <span className="genre-overflow">
-                  +{book.genre_tags.length - maxVisibleTags} more
-                </span>
-              )}
-          </div>
+      <Link to={linkPath}>
+        <img src={book.cover_image_url || defaultBookCover} alt="Cover Not Found" />
+        <h3>{book.book_title}</h3>
         </Link>
+        <p>
+          By{' '}
+          <Link to={`/profile/${book.author_id}`} className="author-link" title="View Author's Profile">
+            {book.author}
+          </Link>
+        </p>
+        {averageRating > 0 ? (
+          <p className="star">
+            <span style={{ color: 'gold' }}>{"★".repeat(Math.round(averageRating))}</span>
+            <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(averageRating))}</span>
+          </p>
+        ) : (
+          <p className="star">
+            <span style={{ marginLeft: '5px', color: 'gray' }}>Not enough ratings</span>
+          </p>
+        )}
+        <div className="genre-container">
+          {book.genre_tags.slice(0, maxVisibleTags).map((genre, index) => (
+            <span key={index} className="genre-bubble">
+              {genre}
+            </span>
+          ))}
+          {book.genre_tags.length > maxVisibleTags && (
+            <span className="genre-overflow">
+              +{book.genre_tags.length - maxVisibleTags} more
+            </span>
+          )}
+        </div>
       </div>
         {isModalOpen && (
           <div
