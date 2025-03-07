@@ -49,7 +49,9 @@ exports.createBook = async (req, res) => {
       author_id,
       date,
       book_synopsis,
-      cover_image_url, 
+      cover_image_url,
+      count_comments: 0,
+      sum_rating: 0,
       genre_tags
     };
     const docRef = await db.collection('books').add(newBook);
@@ -77,10 +79,20 @@ exports.deleteBook = async (req, res) => {
   try {
     const bookRef = db.collection('books').doc(bookId);
     const chaptersRef = bookRef.collection('chapters');
+    const chaptersSnapshot = await chaptersRef.get();
     const batch = db.batch();
 
-    const chaptersSnapshot = await chaptersRef.get();
-    chaptersSnapshot.forEach(doc => batch.delete(doc.ref));
+    for (const chapterDoc of chaptersSnapshot.docs) {
+      const commentsRef = chapterDoc.ref.collection('comments');
+      const commentsSnapshot = await commentsRef.get();
+      
+      commentsSnapshot.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      batch.delete(chapterDoc.ref);
+    }
+
     batch.delete(bookRef);
 
     await batch.commit();
@@ -183,12 +195,40 @@ exports.updateChapter = async (req, res) => {
 exports.deleteChapter = async (req, res) => {
   const { bookId, chapterId } = req.params;
   try {
-    await db
-      .collection('books')
-      .doc(bookId)
-      .collection('chapters')
-      .doc(chapterId)
-      .delete();
+    const bookRef = db.collection('books').doc(bookId);
+    const chapterRef = bookRef.collection('chapters').doc(chapterId);
+    const commentsRef = chapterRef.collection('comments');
+
+    // Get all comments to calculate sum_ratings and count_comments
+    const commentsSnapshot = await commentsRef.get();
+    let totalRatings = 0;
+    let numComments = 0;
+
+    commentsSnapshot.forEach((doc) => {
+      totalRatings += doc.data().rating || 0;
+      numComments++;
+    });
+
+    // Update the book document separately
+    const bookDoc = await bookRef.get();
+    if (!bookDoc.exists) {
+      return res.status(404).send('Book not found');
+    }
+
+    const currentCount = bookDoc.data().count_comments || 0;
+    const currentSum = bookDoc.data().sum_ratings || 0;
+
+    await bookRef.update({
+      count_comments: Math.max(currentCount - numComments, 0),
+      sum_ratings: Math.max(currentSum - totalRatings, 0),
+    });
+
+    const batch = db.batch();
+
+    commentsSnapshot.forEach(doc => batch.delete(doc.ref));
+    batch.delete(chapterRef);
+
+    await batch.commit();
     res.status(200).send(`Chapter '${chapterId}' deleted`);
   } catch (error) {
     res.status(500).send(`Error deleting chapter '${chapterId}'`);
@@ -244,6 +284,13 @@ exports.createComment = async (req, res) => {
       .collection('comments')
       .add({ commentor_id, commentor_name, date, rating, text });
 
+    // Update the book's aggregate data (count_comments and sum_ratings)
+    const bookRef = db.collection('books').doc(bookId);
+    await bookRef.update({
+      count_comments: admin.firestore.FieldValue.increment(1),
+      sum_ratings: admin.firestore.FieldValue.increment(rating)
+    });
+
     res.status(201).json({ id: docRef.id, commentor_id, commentor_name, date, rating, text });
   } catch (error) {
     res.status(500).send('Error creating comment');
@@ -267,10 +314,20 @@ exports.updateComment = async (req, res) => {
       .collection('comments')
       .doc(commentId);
 
+    // Get the old rating to adjust the sum later
+    const oldCommentDoc = await commentRef.get();
+    const oldRating = oldCommentDoc.data().rating;
+
     await commentRef.update(updatedData);
 
-    const updatedCommentDoc = await commentRef.get();
-    res.status(200).json({ id: updatedCommentDoc.id, ...updatedCommentDoc.data() });
+    // Update the book's aggregate data
+    const newRating = updatedData.rating;
+    const bookRef = db.collection('books').doc(bookId);
+    await bookRef.update({
+      sum_ratings: admin.firestore.FieldValue.increment(newRating - oldRating)
+    });
+
+    res.status(200).json({ id: commentId, ...updatedData });
   } catch (error) {
     res.status(500).send('Error updating comment');
   }
@@ -280,17 +337,29 @@ exports.updateComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
   const { bookId, chapterId, commentId } = req.params;
   try {
-    await db
+    const commentRef = db
       .collection('books')
       .doc(bookId)
       .collection('chapters')
       .doc(chapterId)
       .collection('comments')
-      .doc(commentId)
-      .delete();
-    res.status(200).send(`Chapter '${commentId}' deleted`);
+      .doc(commentId);
+
+    const commentDoc = await commentRef.get();
+    const rating = commentDoc.data().rating;
+
+    await commentRef.delete();
+
+    // Update the book's aggregate data
+    const bookRef = db.collection('books').doc(bookId);
+    await bookRef.update({
+      count_comments: admin.firestore.FieldValue.increment(-1),
+      sum_ratings: admin.firestore.FieldValue.increment(-rating)
+    });
+  
+    res.status(200).send(`Comment '${commentId}' deleted`);
   } catch (error) {
-    res.status(500).send(`Error deleting chapter '${commentId}'`);
+    res.status(500).send(`Error deleting comment '${commentId}'`);
   }
 };
 

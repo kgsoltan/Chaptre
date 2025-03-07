@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import '../BookCard.css';
 import '../Modal.css';
 import defaultBookCover from "../assets/default-book-cover.jpg";
-import { getChapters, getComments } from '../services/api';
 
 function BookCard({ book, showEditLink }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,35 +13,13 @@ function BookCard({ book, showEditLink }) {
   const modalRef = useRef(null);
   const [averageRating, setAverageRating] = useState(0);
 
-  /*
   useEffect(() => {
-    const fetchRatings = async () => {
-      try {
-        const chapters = await getChapters(book.id);
-        let totalRating = 0;
-        let totalComments = 0;
-
-        for (const chapter of chapters) {
-          const comments = await getComments(book.id, chapter.id);
-          comments.forEach(comment => {
-            if (comment.rating) {
-              totalRating += comment.rating;
-              totalComments++;
-            }
-          });
-        }
-
-        if (totalComments > 0) {
-          setAverageRating((totalRating / totalComments).toFixed(1));
-        }
-      } catch (error) {
-        console.error('Error fetching ratings:', error);
-      }
-    };
-
-    fetchRatings();
-  }, [book.id]);
-  */
+    if (book.count_comments && book.count_comments > 0) {
+      setAverageRating((book.sum_ratings / book.count_comments).toFixed(1));
+    } else {
+      setAverageRating(0);
+    }
+  }, [book.count_comments, book.sum_ratings]);
 
   useEffect(() => {
     const checkModalPosition = () => {

@@ -6,7 +6,6 @@ authors
         ├── LAST_NAME: string
         ├── EMAIL: string
         ├── BIO: string
-        ├── LOCATION: string
         ├── PROFILE_PIC_URL: string (URL of the profile image)
         ├── FAVORITED_BOOKS: [string] (array of book IDs) //The ones the profile has clicked favorite on
         ├── FOLLOWING: [string] (array of userIDs/genres) //list of genres/userIDs followed
@@ -20,6 +19,8 @@ books
         |── DATE: timestamp
         |── BOOK_SYNOPSIS: string
         ├── COVER_IMAGE_URL: string (URL of the book cover)
+        |── COUNT_COMMENTS: int
+        |── SUM_RATINGS: int
         ├── GENRE_TAGS: [string] (array of genre tags)
         ├── CHAPTERS: 
         │     └── CHAPTER_ID:
