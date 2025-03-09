@@ -323,7 +323,7 @@ function ReadBook() {
 
           <div className="comments-header">
             <h2>Comments</h2>
-            {user ? (
+            {user && 
               <button
                 className="new-comment-button"
                 onClick={() => {
@@ -333,9 +333,7 @@ function ReadBook() {
               >
                 Leave a Comment
               </button>
-            ) : (
-              <p className="login-message">Login to leave comment</p>
-            )}
+            }
           </div>
           <ul className="comments-list">
             {comments.length > 0 ? (
