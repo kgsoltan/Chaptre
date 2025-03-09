@@ -187,11 +187,11 @@
   }
   
   .card-modal-content.right {
-    left: 105%;
+    left: 82%;
   }
   
   .card-modal-content.left {
-    right: 105%; 
+    right: 102%; 
   }
   
   @media (min-width: 768px) {
