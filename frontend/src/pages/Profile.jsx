@@ -7,6 +7,7 @@ import { auth } from '../services/firebaseConfig';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import defaultProfilePic from "../assets/default-profile-pic.jpg";
 import FollowingModal from '../components/FollowingModal';
+import Sidebar from '../components/Sidebar';
 
 import './Profile.css';
 
@@ -164,6 +165,7 @@ function Profile() {
 
   return (
     <div className="profile">
+      <Sidebar/>
       <div className="profile-header">
         <label htmlFor="file-upload" className="profile-img-label">
           <img className="profile-img" src={author.profile_pic_url || defaultProfilePic} alt="Profile" />
@@ -207,12 +209,13 @@ function Profile() {
                   {isCurrentUser ? (
                     <div>
                       <button onClick={() => setIsEditingBio(true)} className="edit-button">Edit Bio</button>
-                      <button onClick={handleFavoritedModal} className="edit-button">View Favorited Authors</button>
                     </div>
-                  ) : (
+                  ) : user ? (
                     <button onClick={handleSubscribe} className="edit-button">
                       {isFavorited ? "Unsubscribe" : "Subscribe"}
                     </button>
+                  ) : (
+                    <p className="bio-display">Please log in to subscribe</p>
                   )}
                 </div>
               )}
@@ -232,24 +235,16 @@ function Profile() {
 
       <h3 className="profile-books-title">Public Books:</h3>
       {publishedBooks.length > 0 ? (
-        <BookGrid books={publishedBooks} showEditLink={isCurrentUser} booksPerPage={5} />
+        <BookGrid books={publishedBooks} showEditLink={isCurrentUser} booksPerPage={4} />
       ) : (
         <p>No public books yet.</p>
-      )}
-
-      {/* Display Favorited Books */}
-      {isCurrentUser && favoritedBooks.length > 0 && (
-        <>
-          <h3 className="profile-books-title">Favorited Books:</h3>
-          <BookGrid books={favoritedBooks} showEditLink={false} booksPerPage={5} />
-        </>
       )}
 
       {isCurrentUser && (
         <>
           <h3 className="profile-books-title">Drafts:</h3>
           {draftBooks.length > 0 ? (
-            <BookGrid books={draftBooks} showEditLink={true} booksPerPage={5} />
+            <BookGrid books={draftBooks} showEditLink={true} booksPerPage={4} />
           ) : (
             <p>No draft books yet.</p>
           )}
