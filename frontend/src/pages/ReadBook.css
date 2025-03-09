@@ -4,6 +4,56 @@
     overflow: hidden;
     font-family: Arial, sans-serif;
   }
+
+  .read-book-container .cover-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .read-book-container .cover-content h2 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .read-book-container .cover-content img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+  }
+
+  .star.filled {
+    color: gold; /* Gold color for filled stars */
+  }
+  
+  .star:hover {
+    color: #ffcc00; /* Highlight color on hover */
+  }
+
+  .genre-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: auto;
+    max-height: 90px;
+    overflow: hidden;
+    justify-content: left; /* Centers the tags horizontally */
+    align-items: center; /* Centers the tags vertically if needed */
+  }
+  
+  .genre-bubble {
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
   
   .read-book-container .chapter-content {
     flex: 1;
@@ -42,7 +92,7 @@
   }
 
   .save-book-button {
-    margin: 20px auto; /* Centers horizontally */
+    margin: 5px auto 20px auto; /* Centers horizontally */
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
@@ -51,9 +101,9 @@
     color: white;
     display: block; 
     text-align: center;
-    position: absolute; /* Position at the bottom */
-    bottom: 20px; /* Adjusts distance from the bottom */
-    left: 6%;
+    top: 69px; /* Adjusts distance from the bottom */
+    left: 150px;
+    width: 120px;
   }
 
 
@@ -206,4 +256,20 @@
       background-color: #d4d4d4;
       font-weight: bold;
       color: #333;
+    }
+
+    .read-book-container .chapter-list cover {
+      padding: 10px 20px 10px 0px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, padding-left 0.3s ease;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #333;
+      text-align: left;
+    }
+
+    .read-book-container .chapter-list cover.active {
+      font-weight: bold;
+      color: #d32f2f;
     }
