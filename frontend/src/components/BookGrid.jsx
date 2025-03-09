@@ -33,7 +33,7 @@ function BookGrid({ books, showEditLink, booksPerPage }) {
           >
             Previous
           </button>
-          <span>{`Page ${currentPage} of ${totalPages}`}</span>
+          <span className='page-number'>{`Page ${currentPage} of ${totalPages}`}</span>
           <button
             className="next-button"
             onClick={() => handlePageChange(currentPage + 1)}

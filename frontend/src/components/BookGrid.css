@@ -27,6 +27,15 @@
     cursor: not-allowed;
   }
 
+  .page-number {
+    margin: 0 5px;
+    padding: 5px 10px;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
   .prev-button {
     margin: 0 5px;
     padding: 5px 10px;

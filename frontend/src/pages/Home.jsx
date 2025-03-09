@@ -37,6 +37,13 @@ function Home() {
     loadBooks();
   }, [searchQuery, genreFilter]);
 
+  const topRatedBooks = useMemo(() => {
+    if (books.length > 0) {
+      return books.filter(book => book.sum_ratings > 0).sort((a, b) => b.rating - a.rating).slice(0, 10);
+    }
+    return [];
+  }, [books]);
+
   return (
     <div className="home">
       <Sidebar/>
@@ -46,6 +53,13 @@ function Home() {
           Books
         </h1>
       </div>
+        <label> Top Rated</label>
+        {topRatedBooks.length > 0 ? (
+          <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={4} />
+        ) : (
+          <p>No top rated books available.</p>
+        )}
+        <label> All Books</label>
         {books.length > 0 ? (
           <BookGrid books={books} showEditLink={false} booksPerPage={15} />
         ) : (
