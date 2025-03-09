@@ -11,7 +11,7 @@
 }
 
 .search-input {
-  width: 900px !important; /* Override width */
+  width: 400px !important; /* Override width */
   padding: 8px 12px !important; /* Override padding */
   margin-bottom: 0 !important; /* Remove margin-bottom */
   border: 1px solid #ccc !important; /* Ensure consistent border */
@@ -22,8 +22,8 @@
 }
 
 .search-select {
-    width: 500px;
-  }
+  width: 300px;
+}
 
 .search-btn {
     background-color: transparent;

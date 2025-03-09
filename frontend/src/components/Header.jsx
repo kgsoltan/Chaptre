@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal';
 import SearchBar from './SearchBar';
-
+import logo from '../assets/logo.svg';
 import './Header.css';
 
 function Header() {
@@ -17,7 +17,9 @@ function Header() {
 
   return (
     <header className="header">
-      <Link to="/" className="nav-item">Chaptre</Link>
+      <Link to="/" className="logo-item">
+        <img width='80%' height='auto'src={logo} alt="Chaptre" />
+      </Link>
 
       <div className="header-content">
         <div className="headersearch">
