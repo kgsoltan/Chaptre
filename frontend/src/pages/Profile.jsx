@@ -168,7 +168,12 @@ function Profile() {
       <Sidebar/>
       <div className="profile-header">
         <label htmlFor="file-upload" className="profile-img-label">
-          <img className="profile-img" src={author.profile_pic_url || defaultProfilePic} alt="Profile" />
+          <img 
+            className="profile-img"
+            src={author.profile_pic_url || defaultProfilePic} 
+            alt="Profile Pic Error" 
+            onError={(e) => { e.target.src = defaultProfilePic; }}
+          />
         </label>
         <input
           id="file-upload"

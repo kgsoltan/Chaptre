@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import defaultBookCover from "../assets/default-book-cover.jpg";
+import defaultBookCover from "../assets/default-cover.jpg";
 
 import './BookCard.css';
 
@@ -55,7 +55,11 @@ function BookCard({ book, showEditLink }) {
     >
       <div className="book-card">
       <Link to={linkPath}>
-        <img src={book.cover_image_url || defaultBookCover} alt="Cover Not Found" />
+        <img 
+          src={book.cover_image_url || defaultBookCover} 
+          alt="Cover Not Found" 
+          onError={(e) => { e.target.src = defaultBookCover; }}
+        />
         <h3>{book.book_title}</h3>
         </Link>
         <p>
