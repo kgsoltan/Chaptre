@@ -15,6 +15,13 @@ function Home() {
   const searchQuery = searchParams.get('q');
   const genreFilter = useMemo(() => searchParams.getAll('genre'), [location.search]);
 
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, setUser);
+  }, []);
+
   useEffect(() => {
     const loadBooks = async () => {
       if (!searchQuery && genreFilter.length === 0) {
@@ -46,16 +53,18 @@ function Home() {
 
   return (
     <div className="home">
-      <Sidebar/>
-      <div className="home-book-grid">
+      {user && <Sidebar/> }
+      <div className={user ? "home-book-grid-logged-in" : "home-book-grid-logged-out"}>
       <div className='home-header'>
         <h1 className='Homebookmargin'>
           Books
         </h1>
       </div>
         <label> Top Rated</label>
-        {topRatedBooks.length > 0 ? (
+        {topRatedBooks.length > 0 && user ? (
           <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={4} />
+        ) : topRatedBooks.length > 0 ? (
+          <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={5} />
         ) : (
           <p>No top rated books available.</p>
         )}

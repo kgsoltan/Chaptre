@@ -1,4 +1,9 @@
-.home-book-grid {
+.home-book-grid-logged-out {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-book-grid-logged-in {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 0px 0 300px; /* Adds a 50px offset by increasing left padding (20px + 50px = 70px) */
