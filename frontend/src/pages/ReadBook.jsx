@@ -242,12 +242,14 @@ function ReadBook() {
     <div className="read-book-container">
       <div className="chapter-list">
         {/* Favorite Button */}
+        { user && 
         <button
           className="save-book-button"
           onClick={() => handleFavoriteBooks(bookId)}
         >
           {favoriteBooks.includes(bookId) ? "Unfavorite" : "Favorite"}
         </button>
+        }
 
         <cover
           className={selectedChapter === "cover" ? "active" : ""}
