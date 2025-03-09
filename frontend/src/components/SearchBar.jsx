@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 
 import './SearchBar.css'
@@ -24,6 +24,7 @@ function SearchBar() {
   const [query, setQuery] = useState(""); 
   const [selectedGenres, setSelectedGenres] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -39,6 +40,13 @@ function SearchBar() {
 
     navigate(`/search?${searchParams.toString()}`);
   };
+
+  useEffect(() => {
+    if (!location.pathname.startsWith("/search")) {
+      setQuery("");
+      setSelectedGenres([]);
+    }
+  }, [location]);
 
   return (
     <form onSubmit={handleSearch} className="search-bar">
