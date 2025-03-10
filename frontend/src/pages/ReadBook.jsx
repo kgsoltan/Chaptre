@@ -249,9 +249,9 @@ function ReadBook() {
           {favoriteBooks.includes(bookId) ? "Unfavorite" : "Favorite"}
         </button>
         }
-
+        <h3>Table of Contents</h3>
         <cover
-          className={selectedChapter === "cover" ? "active" : ""}
+          className={`chapter-item ${selectedChapter === "cover" ? "active" : ""}`}
           onClick={() => {
             setSelectedChapter("cover");
             setSelectedChapterName("cover");
@@ -259,9 +259,8 @@ function ReadBook() {
             updateRating(book);
           }}
         >
-          Cover
+          Book Cover
         </cover>
-        <h3>Table of Contents</h3>
         <ul>
           {chapters.map((chapter) => (
             <li
