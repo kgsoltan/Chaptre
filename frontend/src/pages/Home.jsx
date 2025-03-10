@@ -46,7 +46,14 @@ function Home() {
 
   const topRatedBooks = useMemo(() => {
     if (books.length > 0) {
-      return books.filter(book => book.sum_ratings > 0).sort((a, b) => b.rating - a.rating).slice(0, 10);
+      return books
+        .filter(book => book.sum_ratings > 0)
+        .sort((a, b) => {
+          const avgRatingA = a.sum_ratings / a.count_comments;
+          const avgRatingB = b.sum_ratings / b.count_comments;
+          return avgRatingB - avgRatingA;
+        })
+        .slice(0, 10);
     }
     return [];
   }, [books]);
