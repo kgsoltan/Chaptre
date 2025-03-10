@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal';
 import SearchBar from './SearchBar';
@@ -10,6 +10,7 @@ function Header() {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
   const auth = getAuth();
+  const location = useLocation();
 
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
@@ -22,9 +23,9 @@ function Header() {
       </Link>
 
       <div className="header-content">
-        <div className="headersearch">
+        {location.pathname === '/' && (
           <SearchBar />
-        </div>
+        )}
       </div>
 
       <nav className="nav-container">
