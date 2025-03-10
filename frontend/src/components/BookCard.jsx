@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import defaultBookCover from "../assets/default-cover.jpg";
 
@@ -13,6 +13,7 @@ function BookCard({ book, showEditLink }) {
   const cardRef = useRef(null); 
   const modalRef = useRef(null);
   const [averageRating, setAverageRating] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (book.count_comments && book.count_comments > 0) {
@@ -46,6 +47,11 @@ function BookCard({ book, showEditLink }) {
     };
   }, [isModalOpen]);
 
+  const handleClick = useCallback(() => {
+    window.scrollTo(0, 0);
+    navigate(linkPath);
+  }, [navigate, linkPath]);
+
   return (
     <div
         className="book-card-container"
@@ -54,14 +60,14 @@ function BookCard({ book, showEditLink }) {
         ref={cardRef}
     >
       <div className="book-card">
-      <Link to={linkPath}>
+        <div onClick={handleClick} style={{ cursor: 'pointer' }}>
         <img 
           src={book.cover_image_url || defaultBookCover} 
           alt="Cover Not Found" 
           onError={(e) => { e.target.src = defaultBookCover; }}
         />
         <h3>{book.book_title}</h3>
-        </Link>
+        </div>
         <p>
           By{' '}
           <Link to={`/profile/${book.author_id}`} className="author-link" title="View Author's Profile">
