@@ -15,6 +15,13 @@
     padding: 0 20px;
   }
 
+  .search-description {
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
   .home-header {
     display: flex;
     justify-content: space-between;

@@ -62,28 +62,33 @@ function Home() {
     <div className="home">
       {user && <Sidebar/> }
       <div className={user ? "home-book-grid-logged-in" : "home-book-grid-logged-out"}>
-      <div className='home-header'>
-        <h1 className='Homebookmargin'>
-          Books
-        </h1>
-      </div>
-        <label> Top Rated</label>
-        {topRatedBooks.length > 0 && user ? (
+        <h1> Books </h1>
+        {!searchQuery && genreFilter.length <=0 && topRatedBooks.length > 0  && <h3> Top Rated</h3>}
+        {!searchQuery && genreFilter.length <=0 && topRatedBooks.length > 0 && user ? (
           <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={4} />
-        ) : topRatedBooks.length > 0 ? (
+        ) : !searchQuery && genreFilter.length <=0 && topRatedBooks.length > 0 ? (
           <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={5} />
-        ) : (
+        ) : !searchQuery && genreFilter.length <=0 && (
           <p>No top rated books available.</p>
         )}
-        <label> All Books</label>
+
         {books.length > 0 ? (
-          <BookGrid books={books} showEditLink={false} booksPerPage={15} />
+          <>
+            <h3 className='search-description'>
+              {searchQuery || genreFilter.length > 0
+                ? `Search Results for ${searchQuery ? `"${searchQuery}"` : ''}
+                ${searchQuery && genreFilter.length > 0 ? ' and ' : ''}${genreFilter.join(', ')}`
+                : 'All Books'}
+            </h3>
+            <BookGrid books={books} showEditLink={false} booksPerPage={15} />
+          </>
         ) : (
           <>
-            <h3>
+            <h3 className='search-description'>
               {searchQuery || genreFilter.length > 0
-                ? `Search Results for "${searchQuery || genreFilter.join(', ')}"`
-                : 'Books:'}
+                ? `Search Results for ${searchQuery ? `"${searchQuery}"` : ''}
+                ${searchQuery && genreFilter.length > 0 ? ' and ' : ''}${genreFilter.join(', ')}`
+                : 'All Books'}
             </h3>
             <p>
               {searchQuery || genreFilter.length > 0
