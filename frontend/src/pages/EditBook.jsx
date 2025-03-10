@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
-import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter, deleteBook } from '../services/api';
+import { getChapters, createChapter, deleteChapter, getBookDetails, updateBook, updateCoverImage, updateChapter, deleteBook } from '../services/api'; // Assuming you have these API functions
 import { useNavigate } from 'react-router-dom';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import pubIcon from "../assets/published.png";
@@ -17,7 +17,8 @@ function EditBook() {
   const [coverImageUrl, setCoverImageUrl] = useState('');
   const [genreTags, setGenreTags] = useState([]);
   const [chapters, setChapters] = useState([]);
-  const [newChapterTitle, setNewChapterTitle] = useState('');  
+  const [reorderedChapters, setReorderedChapters] = useState([]); // New state for reordering
+  const [newChapterTitle, setNewChapterTitle] = useState('');
   const { bookId } = useParams();
   const navigate = useNavigate();
 
@@ -40,6 +41,10 @@ function EditBook() {
     fetchBookDetails();
     fetchChapters();
   }, [bookId]);
+
+  useEffect(() => {
+    setReorderedChapters([...chapters]);
+  }, [chapters]);
 
   const fetchBookDetails = async () => {
     try {
@@ -75,7 +80,18 @@ function EditBook() {
         genre_tags: genreTags
       };
       await updateBook(bookId, updatedBook);
+
+      const updates = reorderedChapters.map((chapter, index) => ({
+        id: chapter.id,
+        chapter_num: index + 1
+      }));
+
+      for (const update of updates) {
+        await updateChapter(bookId, update.id, { chapter_num: update.chapter_num });
+      }
+
       alert('Book saved successfully!');
+      fetchChapters(); 
     } catch (error) {
       console.error('Error saving book:', error);
       alert('Failed to save book. Please try again.');
@@ -85,79 +101,48 @@ function EditBook() {
   const handleAddChapter = async () => {
     try {
       const newChapter = {
-          chapter_num: chapters.length > 0 ? Math.max(...chapters.map(c => c.chapter_num)) + 1 : 1,
-          title: newChapterTitle,
-          text: '',
-          is_published: false,
+        chapter_num: chapters.length > 0 ? Math.max(...chapters.map(c => c.chapter_num)) + 1 : 1,
+        title: newChapterTitle,
+        text: '',
+        is_published: false,
       };
       await createChapter(bookId, newChapter);
       setNewChapterTitle('');
       fetchChapters();
     } catch (error) {
-      console.error('Error adding chapter:', error);
+        console.error('Error adding chapter:', error);
     }
   };
 
-  const moveChapter = async (index, direction) => {
-    const newChapters = [...chapters];
+  const moveChapter = (index, direction) => {
+    const newChapters = [...reorderedChapters];
     if (direction === 'up' && index > 0) {
       [newChapters[index], newChapters[index - 1]] = [newChapters[index - 1], newChapters[index]];
     } else if (direction === 'down' && index < newChapters.length - 1) {
       [newChapters[index], newChapters[index + 1]] = [newChapters[index + 1], newChapters[index]];
     }
-
-    const updatedChapters = newChapters.map((chapter, idx) => ({ ...chapter, chapter_num: idx + 1 }));
-    setChapters(updatedChapters);
-
-    try {
-      for (const [idx, chapter] of updatedChapters.entries()) {
-        await updateChapter(bookId, chapter.id, { chapter_num: idx + 1 });
-      }
-      fetchChapters();
-    } catch (error) {
-      console.error('Error updating chapter numbers in backend:', error);
-      alert('Failed to update chapter order. Please try again.');
-      fetchChapters();
-    }
+    setReorderedChapters(newChapters);
   };
 
   const handleDeleteChapter = async (chapterId) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this chapter? This action cannot be undone.");
-  
+
     if (isConfirmed) {
       try {
         await deleteChapter(bookId, chapterId);
         const updatedChapters = chapters.filter(chapter => chapter.id !== chapterId);
         setChapters(updatedChapters);
-        await updateChapterNumbers(updatedChapters);
+        setReorderedChapters(updatedChapters); // Update reorderedChapters as well
         fetchChapters();
       } catch (error) {
         console.error('Error deleting chapter:', error);
       }
     }
   };
- 
-  const updateChapterNumbers = async (chaptersToUpdate) => {
-    try {
-        const updatedChapters = chaptersToUpdate.map((chapter, index) => ({ ...chapter, chapter_num: index + 1 }));
-        setChapters(updatedChapters);
-
-        for (const [index, chapter] of updatedChapters.entries()) {
-            await updateChapter(bookId, chapter.id, { chapter_num: index + 1 });
-        }
-
-        fetchChapters();
-    } catch (error) {
-        console.error('Error updating chapter numbers:', error);
-        alert('Failed to update chapter numbers. Please try again.');
-
-        fetchChapters();
-    }
-  };
 
   const handleDeleteBook = async () => {
     const isConfirmed = window.confirm("Are you sure you want to delete this book? This action cannot be undone.");
-    
+
     if (isConfirmed) {
       try {
         await deleteBook(bookId);
@@ -169,16 +154,16 @@ function EditBook() {
       }
     }
   };
-  
+
 
   const togglePublished = () => {
     setIsPublished(!isPublished);
   }
-  
+
   const handleCoverImage = async (event, bookId, updateCoverImage, setCoverImageUrl) => {
     const file = event.target.files[0];
     if (!validateFile(file)) return;
-  
+
     try {
       const s3ImageUrl = await uploadToS3(file);
       setCoverImageUrl(s3ImageUrl);
@@ -193,7 +178,7 @@ function EditBook() {
   const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) return text;
     return text.slice(0, maxLength) + '...';
-  };  
+  };
 
   return (
     <div className="edit-book-container">
@@ -218,15 +203,15 @@ function EditBook() {
           className='synopsis-input'
         />
         <button onClick={() => document.getElementById('cover-photo-upload').click()} className="cover-photo-upload-btn">
-        Cover Photo Upload
+          Cover Photo Upload
         </button>
         <input
-        id="cover-photo-upload"
-        type="file"
-        accept="image/*"
-        className="file-upload"
-        onChange={(event) => handleCoverImage(event, bookId, updateCoverImage, setCoverImageUrl)} 
-        style={{ display: 'none' }}
+          id="cover-photo-upload"
+          type="file"
+          accept="image/*"
+          className="file-upload"
+          onChange={(event) => handleCoverImage(event, bookId, updateCoverImage, setCoverImageUrl)} 
+          style={{ display: 'none' }}
         />
         <label>Genre</label>
         <Select
@@ -238,24 +223,24 @@ function EditBook() {
       </div>
       <h3>Chapters:</h3>
       <ul className="chapter-list">
-        {chapters.map((chapter, index) => (
+        {reorderedChapters.map((chapter, index) => ( 
           <li key={chapter.id} className="chapter-item">
             <div className="chapter-buttons">
               <img className="published-icon" src={chapter.is_published ? pubIcon : unpubIcon} alt="published" />
-              {chapter.chapter_num}: {truncateText(chapter.title, 50)}
+              {index + 1}: {truncateText(chapter.title, 50)} 
             </div>
             <div className="chapter-buttons">
               <div className="chapter-order-buttons">
-                <button 
-                  onClick={() => moveChapter(index, 'up')} 
+                <button
+                  onClick={() => moveChapter(index, 'up')}
                   disabled={index === 0}
                   className="order-button"
                 >
                   ▲
                 </button>
-                <button 
-                  onClick={() => moveChapter(index, 'down')} 
-                  disabled={index === chapters.length - 1}
+                <button
+                  onClick={() => moveChapter(index, 'down')}
+                  disabled={index === reorderedChapters.length - 1}
                   className="order-button"
                 >
                   ▼
@@ -284,13 +269,13 @@ function EditBook() {
         <button className='save-button' onClick={handleAddChapter}>Add Chapter</button>
       </div>
       <div className="chapter-buttons">
-      <button 
-          className={`${isPublished ? 'unpublish-button' : 'publish-button'}`} 
+        <button
+          className={`${isPublished ? 'unpublish-button' : 'publish-button'}`}
           onClick={togglePublished}
         >
           {isPublished ? 'Unpublish' : 'Publish'}
-      </button>
-      <button className='save-button' onClick={handleSaveBook}>Save Book</button>
+        </button>
+        <button className='save-button' onClick={handleSaveBook}>Save Book</button>
       </div>
     </div>
   );
