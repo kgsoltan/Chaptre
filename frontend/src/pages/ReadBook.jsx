@@ -136,7 +136,6 @@ function ReadBook() {
         updatedFavorites = [...currentFavorites, bookId];
         alert("Book added to favorites.");
       }
-
       setFavoriteBooks(updatedFavorites);
       await updateFavoriteBooks(authorId, updatedFavorites);
     } catch (err) {
@@ -267,7 +266,7 @@ function ReadBook() {
           {chapters.map((chapter) => (
             <li
               key={chapter.id}
-              className={selectedChapter === chapter.id ? "active" : ""}
+              className={`chapter-item ${selectedChapter === chapter.id ? "active" : ""}`}
               onClick={() => {
                 fetchChapterContent(chapter.id);
                 fetchComments(chapter.id);
@@ -307,7 +306,7 @@ function ReadBook() {
         </div>
       ) : (
         <div className="chapter-content">
-          <h2>{selectedChapterName}</h2>
+          <h2 className="chapter-title">{selectedChapterName}</h2>
           <div className="content-box">
             <div className="content" dangerouslySetInnerHTML={{ __html: currentChapterText }} />
           </div>
