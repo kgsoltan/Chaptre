@@ -14,11 +14,17 @@
   width: 400px !important; /* Override width */
   padding: 8px 12px !important; /* Override padding */
   margin-bottom: 0 !important; /* Remove margin-bottom */
-  border: 1px solid #ccc !important; /* Ensure consistent border */
+  border: 1px solid #ccc; /* Ensure consistent border */
   border-radius: 8px !important; /* Ensure consistent border radius */
   font-size: inherit !important; /* Ensure consistent font size */
   height: 40px !important; /* Ensure consistent height */
   box-sizing: border-box !important; /* Include padding in height */
+  outline: none;
+}
+
+.search-input[type=text]:focus {
+  border: 2px solid #d32f2f;
+  outline: none !important;
 }
 
 .search-select {

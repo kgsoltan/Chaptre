@@ -77,10 +77,24 @@ function SearchBar() {
           multiValue: (base) => ({
             ...base,
             flexShrink: 0,
+            backgroundColor: '#ffecec',
           }),
-          control: (base) => ({
+          control: (base, state) => ({
             ...base,
             minHeight: "40px",
+            border: state.isFocused ? '2px solid #d32f2f' : '#2px solid #ccc', 
+            boxShadow: 'none',
+            '&:hover': {
+                border: state.isFocused ? '2px solid #d32f2f' : '#2px solid #ccc',
+            }
+          }),
+          option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected ? '#d32f2f' : (state.isFocused ? '#ffecec' : 'transparent'),
+            color: state.isSelected ? 'white' : 'black',
+            '&:hover': {
+              backgroundColor: '#ffecec',
+            },
           }),
         }}
       />
