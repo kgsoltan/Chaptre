@@ -41,8 +41,8 @@ function CreateBookModal({ user, onClose }) {
   };
 
   const validateSynopsis = (synopsis) => {
-    if (synopsis.length > 500 || synopsis.length < 1) {
-      return 'Synopsis must be between 1 and 500 characters.';
+    if (synopsis.length > 500 || synopsis.length <= 49) {
+      return 'Synopsis must be between 50 and 500 characters.';
     }
     return '';
   };

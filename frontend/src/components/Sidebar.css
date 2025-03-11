@@ -65,9 +65,13 @@
 }
 
 /* Section container for lists */
-.sidebar-section {
+.sidebar-section1 {
   margin-top: 20px;
-  padding: 0 10px; /* Inner padding for sections */
+  padding: 0 10px 20px; /* Inner padding for sections */
+}
+.sidebar-section2 {
+  margin-bottom: 20px;
+  padding: 0 10px 20px; /* Inner padding for sections */
 }
 
 /* Section title styling */

@@ -74,7 +74,7 @@ const Sidebar = () => {
       <nav className="sidebar-nav">
         {user ? (
           <>
-            <div className="sidebar-section">
+            <div className="sidebar-section1">
               <h4 className="sidebar-section-title">Saved Books</h4>
               {favoritedBooks.length > 0 ? (
                 <ul className="sidebar-list">
@@ -92,7 +92,7 @@ const Sidebar = () => {
             </div>
 
 
-            <div className="sidebar-section">
+            <div className="sidebar-section2">
               <h4 className="sidebar-section-title">Saved Authors</h4>
               {favoritedAuthors.length > 0 ? (
                 <ul className="sidebar-list">
@@ -112,11 +112,11 @@ const Sidebar = () => {
         ) : (
           <>
 
-            <div className="sidebar-section">
+            <div className="sidebar-section1">
               <h4 className="sidebar-section-title">Saved Books</h4>
               <p className="sidebar-empty">Log in to view</p>
             </div>
-            <div className="sidebar-section">
+            <div className="sidebar-section2">
               <h4 className="sidebar-section-title">Saved Authors</h4>
               <p className="sidebar-empty">Log in to view</p>
             </div>

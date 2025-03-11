@@ -279,7 +279,10 @@ function ReadBook() {
       
       {selectedChapter === "cover" ? (
         <div className="cover-content">
-          <img src={book.cover_image_url || defaultBookCover} alt="Cover Not Found" />
+          <img src={book.cover_image_url || defaultBookCover} 
+            alt="Cover Not Found" 
+            onError={(e) => { e.target.src = defaultBookCover; 
+          }}/>
           <h3>{book.book_title}</h3>
           <p>By {book.author}</p>
           {averageRating > 0 ? (
