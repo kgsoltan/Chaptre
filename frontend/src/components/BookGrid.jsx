@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import BookCard from './BookCard';
 import './BookGrid.css';
 
 function BookGrid({ books, showEditLink, booksPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortedBooks, setSortedBooks] = useState([]);
-
-  useEffect(() => {
-    const sorted = [...books].sort((a, b) => a.book_title.localeCompare(b.book_title));
-    setSortedBooks(sorted);
-  }, [books]);
 
   const currentBooks =
     booksPerPage === 0
-      ? sortedBooks
-      : sortedBooks.slice((currentPage - 1) * booksPerPage, currentPage * booksPerPage);
+      ? books
+      : books.slice((currentPage - 1) * booksPerPage, currentPage * booksPerPage);
 
-  const totalPages = booksPerPage === 0 ? 1 : Math.ceil(sortedBooks.length / booksPerPage);
+  const totalPages = booksPerPage === 0 ? 1 : Math.ceil(books.length / booksPerPage);
 
   const enablePages = booksPerPage !== 0;
 
