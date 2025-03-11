@@ -22,6 +22,11 @@ function EditBook() {
   const { bookId } = useParams();
   const navigate = useNavigate();
 
+  const [titleError, setTitleError] = useState('');
+  const [synopsisError, setSynopsisError] = useState('');
+  const [chapterTitleError, setChapterTitleError] = useState('');
+  const [tagsError, setTagsError] = useState('');
+
   const genreOptions = [
     { value: "Fantasy", label: "Fantasy" },
     { value: "Sci-Fi", label: "Sci-Fi" },
@@ -69,7 +74,56 @@ function EditBook() {
     }
   };
 
+  // Validation functions
+  const validateTitle = (title) => {
+    if (title.length > 50 || title.length <= 0) {
+      return 'Title must be between 1 and 50 characters.';
+    }
+    return '';
+  };
+
+  const validateSynopsis = (synopsis) => {
+    if (synopsis.length > 500 || synopsis.length <= 0) {
+      return 'Synopsis must be between 1 and 500 characters.';
+    }
+    return '';
+  };
+
+  const validateChapterTitle = (title) => {
+    if (title.length > 50 || title.length <= 0) {
+      return 'Chapter title must be between 1 and 50 characters.';
+    }
+    return '';
+  };
+
+  const validateTags = (tags) => {
+    if (tags.length > 3|| tags.length <= 0) {
+      return 'You must select between 1 and 3 tags.';
+    }
+    return '';
+  };
+
   const handleSaveBook = async () => {
+    // Clear existing errors
+    setTitleError('');
+    setSynopsisError('');
+    setTagsError('');
+
+    // Perform validation
+    const titleError = validateTitle(bookTitle);
+    const synopsisError = validateSynopsis(synonpsis);
+    const tagsError = validateTags(genreTags);
+
+    // Update state with errors
+    setTitleError(titleError);
+    setSynopsisError(synopsisError);
+    setTagsError(tagsError);
+
+    // If there are any errors, stop here
+    if (titleError || synopsisError || tagsError) {
+      return;
+    }
+
     try {
       const updatedBook = {
         book_title: bookTitle,
@@ -91,7 +145,7 @@ function EditBook() {
       }
 
       alert('Book saved successfully!');
-      fetchChapters(); 
+      fetchChapters();
     } catch (error) {
       console.error('Error saving book:', error);
       alert('Failed to save book. Please try again.');
@@ -99,6 +153,13 @@ function EditBook() {
   };
 
   const handleAddChapter = async () => {
+    setChapterTitleError('');
+    const chapterTitleError = validateChapterTitle(newChapterTitle);
+    setChapterTitleError(chapterTitleError);
+    if (chapterTitleError) {
+      return;
+    }
+
     try {
       const newChapter = {
         chapter_num: chapters.length > 0 ? Math.max(...chapters.map(c => c.chapter_num)) + 1 : 1,
@@ -110,7 +171,7 @@ function EditBook() {
       setNewChapterTitle('');
       fetchChapters();
     } catch (error) {
-        console.error('Error adding chapter:', error);
+      console.error('Error adding chapter:', error);
     }
   };
 
@@ -155,7 +216,6 @@ function EditBook() {
     }
   };
 
-
   const togglePublished = () => {
     setIsPublished(!isPublished);
   }
@@ -188,6 +248,7 @@ function EditBook() {
       </div>
       <div className="book-details-form">
         <label>Title</label>
+        {titleError && <p className="error-message">{titleError}</p>}
         <input
           type="text"
           value={bookTitle}
@@ -195,6 +256,7 @@ function EditBook() {
           placeholder="Book Title"
         />
         <label>Synonpsis</label>
+        {synopsisError && <p className="error-message">{synopsisError}</p>}
         <textarea
           type="text"
           value={synonpsis}
@@ -210,10 +272,11 @@ function EditBook() {
           type="file"
           accept="image/*"
           className="file-upload"
-          onChange={(event) => handleCoverImage(event, bookId, updateCoverImage, setCoverImageUrl)} 
+          onChange={(event) => handleCoverImage(event, bookId, updateCoverImage, setCoverImageUrl)}
           style={{ display: 'none' }}
         />
         <label>Genre</label>
+        {tagsError && <p className="error-message">{tagsError}</p>}
         <Select
           isMulti
           options={genreOptions}
@@ -223,11 +286,11 @@ function EditBook() {
       </div>
       <h3>Chapters:</h3>
       <ul className="chapter-list">
-        {reorderedChapters.map((chapter, index) => ( 
+        {reorderedChapters.map((chapter, index) => (
           <li key={chapter.id} className="chapter-item">
             <div className="chapter-buttons">
               <img className="published-icon" src={chapter.is_published ? pubIcon : unpubIcon} alt="published" />
-              {index + 1}: {truncateText(chapter.title, 50)} 
+              {index + 1}: {truncateText(chapter.title, 50)}
             </div>
             <div className="chapter-buttons">
               <div className="chapter-order-buttons">
@@ -259,6 +322,7 @@ function EditBook() {
           </li>
         ))}
       </ul>
+      {chapterTitleError && <p className="error-message">{chapterTitleError}</p>}
       <div className="add-chapter-form">
         <input
           type="text"

@@ -16,6 +16,22 @@
     height: 100vh;
   }
 
+  .input-group {
+    margin-bottom: 20px; /* Increased margin for more spacing between fields */
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 8px; /* Increased margin for better spacing */
+  }
+  
+  .input-group input {
+    width: 93%;
+    padding: 12px; /* Increased padding for larger input fields */
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Slightly larger border radius */
+  }
+
   .login-box {
     
     background: white;

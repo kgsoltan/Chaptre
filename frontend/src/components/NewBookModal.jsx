@@ -9,7 +9,12 @@ function CreateBookModal({ user, onClose }) {
   const [bookTitle, setBookTitle] = useState('');
   const [bookGenre, setBookGenre] = useState([]);
   const [bookSynopsis, setBookSynopsis] = useState('');
-  const [error, setError] = useState(null);
+
+  // Error states
+  const [titleError, setTitleError] = useState('');
+  const [synopsisError, setSynopsisError] = useState('');
+  const [genreError, setGenreError] = useState('');
+  const [apiError, setApiError] = useState(null); // Renamed from 'error' to 'apiError'
 
   const navigate = useNavigate();
 
@@ -28,13 +33,51 @@ function CreateBookModal({ user, onClose }) {
     { value: "Non-Fiction", label: "Non-Fiction" },
   ];
 
+  const validateTitle = (title) => {
+    if (title.length > 50 || title.length < 1) {
+      return 'Title must be between 1 and 50 characters.';
+    }
+    return '';
+  };
+
+  const validateSynopsis = (synopsis) => {
+    if (synopsis.length > 500 || synopsis.length < 1) {
+      return 'Synopsis must be between 1 and 500 characters.';
+    }
+    return '';
+  };
+
+  const validateGenre = (genre) => {
+    if (genre.length > 3 || genre.length < 1) {
+      return 'You must select between 1 and 3 genres.';
+    }
+    return '';
+  };
+
   const handleCreateBook = async (e) => {
     e.preventDefault();
+
+    setTitleError('');
+    setSynopsisError('');
+    setGenreError('');
+    setApiError(null);
+
+    const titleError = validateTitle(bookTitle);
+    const synopsisError = validateSynopsis(bookSynopsis);
+    const genreError = validateGenre(bookGenre);
+
+    setTitleError(titleError);
+    setSynopsisError(synopsisError);
+    setGenreError(genreError);
+
+    if (titleError || synopsisError || genreError) {
+      return;
+    }
 
     try {
       const authorData = await getAuthorDetails(user.uid);
       if (!authorData || !authorData.first_name) {
-        setError("Could not retrieve author details.");
+        setApiError("Could not retrieve author details.");
         return;
       }
 
@@ -53,7 +96,7 @@ function CreateBookModal({ user, onClose }) {
       navigate(`/profile/${user.uid}`);
     } catch (error) {
       console.error('Error creating book:', error);
-      setError('Failed to create book.');
+      setApiError('Failed to create book.');
     }
   };
 
@@ -64,11 +107,11 @@ function CreateBookModal({ user, onClose }) {
         <button className="close-button" onClick={onClose}>x</button>
         
         <h2>Create a New Book</h2>
-        {error && <p className="error">{error}</p>}
-        
+        {apiError && <p className="error-message">{apiError}</p>}
         <form onSubmit={handleCreateBook}>
           <div className="input-group">
             <label>Book Title</label>
+            {titleError && <p className="error-message">{titleError}</p>}
             <input
               type="text"
               value={bookTitle}
@@ -77,21 +120,25 @@ function CreateBookModal({ user, onClose }) {
             />
           </div>
           <div className="input-group">
+            <label>Genre</label>
+            {genreError && <p className="error-message">{genreError}</p>}
+            <Select
+              isMulti
+              options={genreOptions}
+              menuShouldScrollIntoView={false}
+              value={genreOptions.filter(option => bookGenre.includes(option.value))}
+              onChange={(selectedOptions) => setBookGenre(selectedOptions.map(option => option.value))}
+            />
+          </div>
+          <div className="input-group">
             <label>Book Synopsis</label>
+            {synopsisError && <p className="error-message">{synopsisError}</p>}
+
             <input
               type="text"
               value={bookSynopsis}
               onChange={(e) => setBookSynopsis(e.target.value)}
               required
-            />
-          </div>
-          <div className="input-group">
-            <label>Genre</label>
-            <Select
-              isMulti
-              options={genreOptions}
-              value={genreOptions.filter(option => bookGenre.includes(option.value))}
-              onChange={(selectedOptions) => setBookGenre(selectedOptions.map(option => option.value))}
             />
           </div>
           <button className="primary-button" type="submit">

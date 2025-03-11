@@ -14,6 +14,8 @@ function EditChapter() {
   const { bookId, chapterId } = useParams();
   const navigate = useNavigate();
 
+  const [chapterTitleError, setChapterTitleError] = useState('');
+
   useEffect(() => {
     const fetchChapterContent = async () => {
       try {
@@ -36,7 +38,22 @@ function EditChapter() {
     setText(value);
   }, []);
 
+  const validateChapterTitle = (title) => {
+    if (title.length > 50 || title.length <= 0) {
+      return 'Chapter title must be between 1 and 50 characters.';
+    }
+    return '';
+  };
+
   const handleSaveChapter = async () => {
+    setChapterTitleError('');
+    const chapterTitleError = validateChapterTitle(chapterTitle);
+    setChapterTitleError(chapterTitleError);
+
+    if (chapterTitleError) {
+      return;
+    }
+
     try {
       const htmlContent = editorRef.current.getHTML();
       const updates = {
@@ -64,6 +81,7 @@ function EditChapter() {
         <h2>Edit Chapter</h2>
         <div className='chapter-details-form'>
           <label>Title</label>
+          {chapterTitleError && <p className="error-message">{chapterTitleError}</p>}
           <input
             type="text"
             value={chapterTitle}

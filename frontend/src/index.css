@@ -92,22 +92,6 @@ button.nav-item:hover {
   align-items: center;
 }
 
-.input-group {
-  margin-bottom: 20px; /* Increased margin for more spacing between fields */
-}
-
-.input-group label {
-  display: block;
-  margin-bottom: 8px; /* Increased margin for better spacing */
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px; /* Increased padding for larger input fields */
-  border: 1px solid #ccc;
-  border-radius: 6px; /* Slightly larger border radius */
-}
-
 .primary-button {
   width: 100%;
   padding: 0.75rem;
@@ -177,6 +161,5 @@ button:hover,
   width: 100%;
 }
 
-/* Add your global styles here */
 
 

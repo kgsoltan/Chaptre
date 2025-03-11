@@ -19,7 +19,7 @@
     border-radius: 8px;
     width: 90%; /* Increased width for a larger modal */
     max-width: 600px;
-    height: auto; /* Let the content determine the height */
     max-height: 80vh; /* Limit the height to 80% of the viewport */
     position: relative; /* Ensure positioning for the close button */
   }
+
