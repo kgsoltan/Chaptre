@@ -81,6 +81,12 @@ export const getAuthorBooks = async (authorId) => {
   return response.data;
 };
 
+export const getPublishedBooksChunk = async (count) => {
+  const response = await api.get(`/books/chunk?count=${count}`);
+  return response.data;
+
+};
+
 //search books route
 export const searchBooks = async (searchTerm, genres) => {
   try {

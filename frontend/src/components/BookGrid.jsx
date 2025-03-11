@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import BookCard from './BookCard';
-
-import './BookGrid.css'
-
+import './BookGrid.css';
 
 function BookGrid({ books, showEditLink, booksPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+  const currentBooks =
+    booksPerPage === 0
+      ? books
+      : books.slice((currentPage - 1) * booksPerPage, currentPage * booksPerPage);
 
-  const totalPages = Math.ceil(books.length / booksPerPage);
+  const totalPages = booksPerPage === 0 ? 1 : Math.ceil(books.length / booksPerPage);
+
+  const enablePages = booksPerPage !== 0;
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -24,7 +25,7 @@ function BookGrid({ books, showEditLink, booksPerPage }) {
           <BookCard key={book.id} book={book} showEditLink={showEditLink} />
         ))}
       </div>
-      {totalPages > 1 && (
+      {enablePages && totalPages > 1 && (
         <div className="pagination">
           <button
             className="prev-button"

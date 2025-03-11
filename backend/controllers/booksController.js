@@ -16,6 +16,33 @@ exports.getBooks = async (req, res) => {
   }
 };
 
+exports.getChunk = async (req, res) => {
+  const chunkSize = 10;
+  console.log(req.query.count)
+  const count = req.query.count === "0" || !req.query.count ? null : req.query.count;
+
+  console.log("Fetching chunk with lastDocId:", count);
+  try {
+    let query = db.collection('books')
+      .where('is_published', '==', true)
+      .orderBy(admin.firestore.FieldPath.documentId())
+      .limit(chunkSize);
+
+    if (count) {
+      query = query.startAfter(count);
+    }
+
+    const snapshot = await query.get();
+    const books = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const newLastDocId = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1].id : null;
+
+    res.json({ books, lastDocId: newLastDocId });
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    res.status(500).send('Error fetching books');
+  }
+};
+
 // Get a specific book
 exports.getBookById = async (req, res) => {
   const { bookId } = req.params;

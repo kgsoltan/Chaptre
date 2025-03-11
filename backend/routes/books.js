@@ -4,6 +4,7 @@ const booksController = require('../controllers/booksController');
 
 // Book endpoints
 router.get('/', booksController.getBooks);
+router.get('/chunk', booksController.getChunk)
 router.get('/search', booksController.search);
 router.get('/:bookId', booksController.getBookById);
 router.post('/', booksController.createBook);
