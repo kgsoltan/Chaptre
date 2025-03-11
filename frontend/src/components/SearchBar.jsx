@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
-
+import searchIcon from '../assets/search.svg';
 import './SearchBar.css'
 
 // Predefined genres for selection
@@ -98,7 +98,12 @@ function SearchBar() {
           }),
         }}
       />
-      <button type="submit" className="nav-item search-btn">Search</button>
+      <button type="submit" className="search-btn">
+        <div className="search-icon-button">
+        <img src={searchIcon} alt="Search" className="search-icon" />
+        <p>Search</p>
+        </div>
+      </button>
     </form>
   );
 }

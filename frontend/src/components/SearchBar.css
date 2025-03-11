@@ -32,12 +32,28 @@
 }
 
 .search-btn {
-    background-color: transparent;
-    border: none;
-    color: #d32f2f;
-    cursor: pointer;
-  }
+  background-color: d32f2f;
+  border: none;
+  background-color: #d32f2f;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background: rgba(211, 47, 47, 0.2);
+}
   
-  .search-btn:hover {
-    background: rgba(211, 47, 47, 0.2);
-  }
+.search-icon-button {
+  display: flex;
+  align-items: center;
+  direction: horizontal;
+  max-height: 24px;
+  color: #fff;;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.search-icon {
+  padding-right: 5px;
+  width: 18px;
+  height: 18px;
+}
