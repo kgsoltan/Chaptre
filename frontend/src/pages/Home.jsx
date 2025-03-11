@@ -65,7 +65,7 @@ function Home() {
         <h1> Books </h1>
         {!searchQuery && genreFilter.length <=0 && topRatedBooks.length > 0  && <h3> Top Rated</h3>}
         {!searchQuery && genreFilter.length <=0 && topRatedBooks.length > 0 && user ? (
-          <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={4} />
+          <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={5} />
         ) : !searchQuery && genreFilter.length <=0 && topRatedBooks.length > 0 ? (
           <BookGrid books={topRatedBooks} showEditLink={false} booksPerPage={5} />
         ) : !searchQuery && genreFilter.length <=0 && (
