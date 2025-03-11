@@ -4,6 +4,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewBookModal from '../components/NewBookModal';
 import SearchBar from './SearchBar';
 import logo from '../assets/logo.svg';
+import profileIcon from '../assets/user.svg';
+import bookIcon from '../assets/book.svg';
 import './Header.css';
 
 function Header() {
@@ -19,13 +21,13 @@ function Header() {
   return (
     <header className="header">
       <Link to="/" className="logo-item">
-        <img width='80%' height='auto'src={logo} alt="Chaptre" />
+        <img width='80%' height='auto' src={logo} alt="Chaptre" />
       </Link>
 
       <div className="header-content">
-      {(location.pathname === '/' || location.pathname.startsWith('/search')) && (
-        <SearchBar />
-      )}
+        {(location.pathname === '/' || location.pathname.startsWith('/search')) && (
+          <SearchBar />
+        )}
       </div>
 
       <nav className="nav-container">
@@ -33,10 +35,12 @@ function Header() {
           <li>
             {user ? (
               <>
-                <button onClick={() => setShowModal(true)} className="nav-item">
-                  New Book
+                <button onClick={() => setShowModal(true)} className="nav-item icon-btn">
+                  <img src={bookIcon} alt="New Book" className="icon" />
                 </button>
-                <Link to={`/profile/${user.uid}`} className="nav-item">Profile</Link>
+                <Link to={`/profile/${user.uid}`} className="nav-item icon-btn">
+                  <img src={profileIcon} alt="Profile" className="icon" />
+                </Link>
               </>
             ) : (
               <Link to="/login" className="nav-item login-btn">Login / Sign up</Link>

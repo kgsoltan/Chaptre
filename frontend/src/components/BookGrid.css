@@ -39,7 +39,7 @@
   .prev-button {
     margin: 0 5px;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #d32f2f;
     color: white;
     border: none;
     border-radius: 4px;
@@ -49,7 +49,7 @@
 .next-button {
     margin: 0 5px;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #d32f2f;
     color: white;
     border: none;
     border-radius: 4px;

@@ -44,20 +44,15 @@
     margin-bottom: 20px;
     word-break: break-word;
   }
-
-
-  
-
   
   .edit-button {
-    background-color: #007bff;
+    background-color: #d32f2f;
     color: white;
   }
 
-  
   .cancel-button {
-    background-color: #dc3545;
-    color: white;
+    background-color: transparent;
+    color: #dc3545;
   }
    
   .logout-btn {

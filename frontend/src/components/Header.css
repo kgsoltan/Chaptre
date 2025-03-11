@@ -33,4 +33,16 @@
     color: white;
   }
 
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
   
+  .icon {
+    width: 32px;
+    height: 32px;
+    color: #d32f2f;
+  }
