@@ -18,7 +18,6 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [location, setLocation] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState(null);
 
@@ -108,10 +107,6 @@ function LoginPage() {
               <div className="input-group">
                 <label>Last Name</label>
                 <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-              </div>
-              <div className="input-group">
-                <label>Location</label>
-                <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
               </div>
             </>
           )}

@@ -23,7 +23,7 @@ function ReadBook() {
   const [error, setError] = useState(null);
   const [favoriteBooks, setFavoriteBooks] = useState([]);
   const [loading, setLoading] = useState(false); // Added loading state
-  const wordsPerPage = 400;
+  const wordsPerPage = 800;
   const [averageRating, setAverageRating] = useState(0);
   
   const updateRating = async (book) => {
