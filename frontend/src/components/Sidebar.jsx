@@ -93,7 +93,7 @@ const Sidebar = () => {
 
 
             <div className="sidebar-section2">
-              <h4 className="sidebar-section-title">Saved Authors</h4>
+              <h4 className="sidebar-section-title">Followed Authors</h4>
               {favoritedAuthors.length > 0 ? (
                 <ul className="sidebar-list">
                   {favoritedAuthors.map((author) => (
@@ -105,7 +105,7 @@ const Sidebar = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="sidebar-empty">No saved authors yet.</p>
+                <p className="sidebar-empty">No followed authors yet.</p>
               )}
             </div>
           </>
@@ -117,7 +117,7 @@ const Sidebar = () => {
               <p className="sidebar-empty">Log in to view</p>
             </div>
             <div className="sidebar-section2">
-              <h4 className="sidebar-section-title">Saved Authors</h4>
+              <h4 className="sidebar-section-title">Followed Authors</h4>
               <p className="sidebar-empty">Log in to view</p>
             </div>
           </>

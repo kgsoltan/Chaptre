@@ -217,7 +217,7 @@ function Profile() {
                     </div>
                   ) : user ? (
                     <button onClick={handleSubscribe} className="edit-button">
-                      {isFavorited ? "Unsubscribe" : "Subscribe"}
+                      {isFavorited ? "Unfollow" : "Follow"}
                     </button>
                   ) : (
                     <p className="bio-display">Please log in to subscribe</p>

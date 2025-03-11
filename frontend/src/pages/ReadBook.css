@@ -48,6 +48,9 @@
   border: none; /*Resets li border*/
   background: none;
   background-color: #eaeaea;
+  word-break: normal !important;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* Hover effect for chapter list items */
@@ -62,7 +65,6 @@
   background-color: #ffecec;
   font-weight: bold;
   color: #d32f2f;
-  border-left: 4px solid #d32f2f;
 }
 
 /* Cover Styles in Chapter List */

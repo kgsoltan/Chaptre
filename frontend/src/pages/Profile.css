@@ -1,11 +1,11 @@
 .profile {
     max-width: 1200px;
-    margin-left: 250px;
-    padding: 20px;
+    padding: 0 0 0 300px;
     text-align: left;
   }
   
   .profile-header {
+    margin-top: 30px;
     display: flex; 
     align-items: left;
     gap: 20px;
