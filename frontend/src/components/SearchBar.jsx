@@ -65,6 +65,24 @@ function SearchBar() {
         value={selectedGenres}
         onChange={setSelectedGenres}
         className="search-select"
+        styles={{
+          valueContainer: (base) => ({
+            ...base,
+            display: "flex",
+            flexWrap: "nowrap",
+            overflowX: "auto",
+            maxWidth: "100%",
+            minHeight: "40px",
+          }),
+          multiValue: (base) => ({
+            ...base,
+            flexShrink: 0,
+          }),
+          control: (base) => ({
+            ...base,
+            minHeight: "40px",
+          }),
+        }}
       />
       <button type="submit" className="nav-item search-btn">Search</button>
     </form>
