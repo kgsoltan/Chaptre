@@ -23,9 +23,9 @@ function Header() {
       </Link>
 
       <div className="header-content">
-        {location.pathname === '/' && (
-          <SearchBar />
-        )}
+      {(location.pathname === '/' || location.pathname.startsWith('/search')) && (
+        <SearchBar />
+      )}
       </div>
 
       <nav className="nav-container">
