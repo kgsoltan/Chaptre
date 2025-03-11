@@ -63,7 +63,6 @@
 .read-book-container .chapter-list li.active,
 .read-book-container .chapter-list cover.active {
   background-color: #ffecec;
-  font-weight: bold;
   color: #d32f2f;
 }
 

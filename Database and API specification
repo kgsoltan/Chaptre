@@ -7,8 +7,8 @@ authors
         ├── EMAIL: string
         ├── BIO: string
         ├── PROFILE_PIC_URL: string (URL of the profile image)
-        ├── FAVORITED_BOOKS: [string] (array of book IDs) //The ones the profile has clicked favorite on
-        ├── FOLLOWING: [string] (array of userIDs/genres) //list of genres/userIDs followed
+        ├── FAVORITED_BOOKS: [string] (array of bookIDs) //Books favorited
+        ├── FOLLOWING: [string] (array of authorIDs) //authors followed
 
 books
   └── BOOK_ID
