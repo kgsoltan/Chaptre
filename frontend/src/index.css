@@ -95,7 +95,7 @@ button.nav-item:hover {
 .primary-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #d32f2f;
   color: white;
   border: none;
   border-radius: 5px;
@@ -104,7 +104,7 @@ button.nav-item:hover {
 }
 
 .primary-button:hover {
-  background-color: #0056b3;
+  background-color: #941717;
 }
 
 
@@ -138,7 +138,7 @@ button,
 
 .chapter-button,
 .save-button {
-  background-color: #007bff;
+  background-color: #d32f2f;
   color: white;
 }
 

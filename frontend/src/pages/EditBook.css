@@ -96,8 +96,8 @@
   
   
   .delete-button {
-    background-color: #f44336;
-    color: white;
+    background-color: white;
+    color: #f44336;
   }
   
   .back-button {
@@ -107,13 +107,13 @@
   
   .unpublish-button {
     background-color: white;
-    color: #007bff;
-    border: 2px solid #007bff;
+    color: #d32f2f;
+    border: 2px solid #d32f2f;
     font-size: 12px;
   }
   
   .publish-button {
-    background-color: #007bff;
+    background-color: #d32f2f;
     color: white;
     font-size: 14px;
   }
