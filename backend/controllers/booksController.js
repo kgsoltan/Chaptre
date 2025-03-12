@@ -21,6 +21,7 @@ exports.getTopRatedBooks = async (req, res) => {
   try {
     const snapshot = await db.collection('books')
       .where('is_published', '==', true)
+      .where('sum_ratings', '>', 3)
       .orderBy('sum_ratings', 'desc')
       .limit(count)
       .get();
