@@ -3,6 +3,27 @@
 
 **Chaptre** is  a collaborative website for authors and readers. The platform allows users to sign up, create profiles, write books, publish chapters, and read a library of stories. 
 
+##  Usage
+
+#### Install Node.js with NPM: 
+Download Link: `https://nodejs.org/en/download/`
+
+Check installation with `node -v` and `npm -v`
+
+
+#### In `/backend`: 
+Must have: `serviceAccountKey.json` and `.env` for Firebase and AWS S3
+
+Run: `npm install` and then `node server.js`
+
+#### In `/frontend`: 
+Must have:`.env` with Vite API key
+
+Run: `npm install` and then `npm run dev`
+
+Then `http://localhost:5173/` to see the website.
+
+
 ##  Features
 
 ### 👥 User Profiles

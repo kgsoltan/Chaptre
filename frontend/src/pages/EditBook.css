@@ -1,9 +1,9 @@
 .edit-chapter-container,
 .edit-book-container {
-  width: 900px; /* Set the container width */
+  width: 900px;
   padding: 30px;
   font-family: Arial, sans-serif;
-  box-sizing: border-box; /* Ensures padding/borders are included in the width */
+  box-sizing: border-box;
   margin: 0 auto;
 }
 
@@ -12,6 +12,12 @@
   justify-content: space-between;
   margin-bottom: 40px;
   max-height: 35px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 0.25em;
 }
 
 h2,
@@ -55,14 +61,14 @@ input[type="number"],
 
 .chapter-item {
   display: flex;
-  justify-content: space-between; /* Distributes space between left and right */
+  justify-content: space-between;
   align-items: center;
   padding: 10px;
   border: 1px solid #eee;
   margin-bottom: 10px;
   border-radius: 4px;
   width: 100%;
-  box-sizing: border-box; /* Ensures padding/borders are included in the width */
+  box-sizing: border-box;
 }
 
 .chapter-left {
@@ -70,7 +76,7 @@ input[type="number"],
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  width: 60%; 
+  width: 60%;
 }
 
 .chapter-right {
@@ -78,7 +84,7 @@ input[type="number"],
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
-  width: 40%; 
+  width: 40%;
 }
 
 .chapter-buttons {
@@ -88,30 +94,10 @@ input[type="number"],
   align-items: center;
 }
 
-button,
-.chapter-button,
-.delete-button,
-.back-button,
-.publish-button,
-.unpublish-button,
-.save-button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-}
-
-.chapter-button,
-.save-button {
-  background-color: #007bff;
-  color: white;
-}
 
 .delete-button {
-  background-color: #f44336;
-  color: white;
+  background-color: white;
+  color: #f44336;
 }
 
 .back-button {
@@ -121,26 +107,17 @@ button,
 
 .unpublish-button {
   background-color: white;
-  color: #007bff;
-  border: 2px solid #007bff;
+  color: #d32f2f;
+  border: 2px solid #d32f2f;
   font-size: 12px;
 }
 
 .publish-button {
-  background-color: #007bff;
+  background-color: #d32f2f;
   color: white;
   font-size: 14px;
 }
 
-button:hover,
-.chapter-button:hover,
-.delete-button:hover,
-.back-button:hover,
-.publish-button:hover,
-.unpublish-button:hover,
-.save-button:hover {
-  opacity: 0.8;
-}
 
 .add-chapter-form {
   display: flex;
@@ -167,20 +144,18 @@ button:hover,
   border-radius: 4px;
 }
 
-
-
 .synopsis-input {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
   min-width: 820px;
-  height: 100px; /* Fixed height */
+  height: 100px;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  resize: none; /* Prevents manual resizing */
-  font-family: inherit; /* Ensures consistent font */
+  resize: none;
+  font-family: inherit;
 }
 
 .button-group {

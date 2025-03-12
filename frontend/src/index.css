@@ -1,6 +1,5 @@
-/* Add your global styles here */
-
-html, body {
+html,
+body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -8,137 +7,31 @@ html, body {
   min-height: 100vh;
 }
 
-.book-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  justify-content: center;
-  align-items: center;
-}
-
-.book-card {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-  color: inherit;
+.author-link {
+  color: #d32f2f !important;
   text-decoration: none;
-  background: white;
-  border-radius: 8px;
-  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease, background 0.3s ease;
-  width: 250px;
-  box-sizing: border-box;
+  font-weight: bold;
+  transition: color 0.2s ease-in-out;
 }
 
-.book-card:hover {
-  transform: scale(1.03);          /* Slightly increase the size */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  background: #f9f9f9;             /* Light background change */
+.main-content {
+  padding-top: 75px;
 }
 
-.book-card a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.book-card a:hover {
-  text-decoration: none;
-  color: inherit;
-}
-
-.book-card img {
-  max-width: 100%;
-  height: auto;
-}
-
-.chapter-logo {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-  z-index: 10; 
-}
-
-.header {
-  background-color: #ffecec;
-  padding: 15px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.home-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-.search-bar {
-  display: flex;
-  justify-content: flex-end; /* Align elements to the right */
-  align-items: center; /* Vertically center all items */
-  gap: 10px; /* Space between elements */
-  max-width: 1000px;
-  width: 100%;
-}
-
-.search-input,
-.search-btn {
-  height: 40px; /* Consistent height */
-  padding: 8px 12px; /* Consistent padding */
-  border-radius: 8px; /* Rounded corners */
-  box-sizing: border-box; /* Include padding in height */
-  font-family: inherit;
-  font-size: inherit;
-  border: 1px solid #ccc; /* Add a border for consistency */
-}
-
-.search-input {
-  width: 900px !important; /* Override width */
-  padding: 8px 12px !important; /* Override padding */
-  margin-bottom: 0 !important; /* Remove margin-bottom */
-  border: 1px solid #ccc !important; /* Ensure consistent border */
-  border-radius: 8px !important; /* Ensure consistent border radius */
-  font-size: inherit !important; /* Ensure consistent font size */
-  height: 40px !important; /* Ensure consistent height */
-  box-sizing: border-box !important; /* Include padding in height */
-}
-
-.search-btn {
-  background-color: transparent;
-  border: none;
-  color: #d32f2f;
+.author-link:hover {
+  color: #fb6c6c !important;
+  text-decoration: underline;
   cursor: pointer;
 }
 
-.search-btn:hover {
-  background: rgba(211, 47, 47, 0.2);
-}
-
-.search-select {
-  width: 500px;
-}
-
-.nav-container {
-  flex-grow: 1;
-  display: flex;
-  justify-content: flex-end; 
-  padding-right: 30px;
-}
-
-.nav-list {
-  display: flex;
-  list-style: none;
-  gap: 20px;
-  padding: 0;
-  margin: 0;
-  align-items: center;
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .nav-item {
@@ -151,12 +44,18 @@ html, body {
   display: inline-block;
 }
 
+.logo-item {
+  max-width: 170px;
+  margin-left: 20px;
+  margin-right: -50px;
+}
+
 .nav-item:hover {
   background: rgba(211, 47, 47, 0.2);
 }
 
 .nav-item:focus {
-  outline: none; 
+  outline: none;
 }
 
 button.nav-item {
@@ -174,42 +73,94 @@ button.nav-item:hover {
   background: rgba(211, 47, 47, 0.2);
 }
 
-.login-btn {
-  border: 2px solid #d32f2f;
-  padding: 10px 15px;
+.nav-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 30px;
 }
 
-.login-btn:hover {
-  background: #d32f2f;
-  color: white;
+.headersearch {
+  display: flex;
+  justify-content: center;
 }
 
-.input-group {
-  margin-bottom: 20px; /* Increased margin for more spacing between fields */
-}
-
-.input-group label {
-  display: block;
-  margin-bottom: 8px; /* Increased margin for better spacing */
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px; /* Increased padding for larger input fields */
-  border: 1px solid #ccc;
-  border-radius: 6px; /* Slightly larger border radius */
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  align-items: center;
 }
 
 .primary-button {
-  background-color: #4CAF50;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #d32f2f;
   color: white;
-  padding: 12px 20px; /* Increased padding for a bigger button */
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px; /* Slightly larger font size */
+  font-size: 1rem;
 }
 
 .primary-button:hover {
-  background-color: #45a049;
+  background-color: #941717;
+}
+
+
+.save-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-button,
+.edit-button,
+.cancel-button {
+  margin: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+}
+
+button,
+.chapter-button,
+.delete-button,
+.back-button,
+.publish-button,
+.unpublish-button,
+.save-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.chapter-button,
+.save-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+button:hover,
+.chapter-button:hover,
+.delete-button:hover,
+.back-button:hover,
+.publish-button:hover,
+.unpublish-button:hover,
+.save-button:hover {
+  opacity: 0.8;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  max-width: 1000px;
+  width: 100%;
 }

@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getChapterDetails, getAuthorDetails, getChapters, getComments, deleteComment, updateFavoriteBooks } from "../services/api";
+import { getChapterDetails, getAuthorDetails, getChapters, getComments, deleteComment, updateFavoriteBooks, getBookDetails } from "../services/api";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NewCommentModal from '../components/NewCommentModal';
-import "../ReadBook.css";
+import "./ReadBook.css"
+
+import defaultBookCover from "../assets/default-book-cover.jpg";
 
 function ReadBook() {
+  const [book, setBook] = useState(null)
   const { bookId } = useParams();
   const [chapters, setChapters] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState(null);
+  const [selectedChapter, setSelectedChapter] = useState("");
   const [chapterContent, setChapterContent] = useState("");
-  const [selectedChapterName, setSelectedChapterName] = useState("Chapter Name");
+  const [selectedChapterName, setSelectedChapterName] = useState("");
   const [comments, setComments] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -19,8 +22,24 @@ function ReadBook() {
   const auth = getAuth();
   const [error, setError] = useState(null);
   const [favoriteBooks, setFavoriteBooks] = useState([]);
-  const [loading, setLoading] = useState(false); // Added loading state
-  const wordsPerPage = 400;
+  const [loading, setLoading] = useState(false);
+  const wordsPerPage = 800;
+
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        const fetchedBook = await getBookDetails(bookId);
+        setBook(fetchedBook);
+        setSelectedChapter("cover");
+        setSelectedChapterName("cover");
+        setChapterContent("");
+      } catch (error) {
+        console.error("Failed to fetch book details:", error);
+      }
+    };
+
+    fetchBookDetails();
+  }, [bookId]);
 
   // Fetch the user on component mount
   useEffect(() => {
@@ -30,20 +49,15 @@ function ReadBook() {
   // Fetch chapters and comments on bookId change
   useEffect(() => {
     const fetchChapters = async () => {
-      setLoading(true); // Set loading to true when fetching chapters
+      setLoading(true);
       try {
         const chapterList = await getChapters(bookId);
         const publishedChapterList = chapterList.filter((chapter) => chapter.is_published);
         setChapters(publishedChapterList);
-        if (publishedChapterList.length > 0) {
-          const firstChapterId = publishedChapterList[0].id;
-          fetchChapterContent(firstChapterId);
-          fetchComments(firstChapterId);
-        }
       } catch (error) {
         console.error("Failed to fetch chapters:", error);
       } finally {
-        setLoading(false); // Set loading to false after chapters are fetched
+        setLoading(false);
       }
     };
 
@@ -100,13 +114,10 @@ function ReadBook() {
       if (currentFavorites.includes(bookId)) {
         // Remove book from favorites (unfavorite)
         updatedFavorites = currentFavorites.filter((id) => id !== bookId);
-        alert("Book removed from favorites.");
       } else {
         // Add book to favorites (favorite)
         updatedFavorites = [...currentFavorites, bookId];
-        alert("Book added to favorites.");
       }
-
       setFavoriteBooks(updatedFavorites);
       await updateFavoriteBooks(authorId, updatedFavorites);
     } catch (err) {
@@ -119,7 +130,7 @@ function ReadBook() {
 
   // Fetch chapter content for selected chapter
   const fetchChapterContent = async (chapterId) => {
-    setLoading(true); // Set loading to true when fetching chapter content
+    setLoading(true);
 
     try {
       const chapterData = await getChapterDetails(bookId, chapterId);
@@ -130,13 +141,13 @@ function ReadBook() {
     } catch (error) {
       console.error("Failed to fetch chapter content:", error);
     } finally {
-      setLoading(false); // Set loading to false after chapter content is fetched
+      setLoading(false);
     }
   };
 
   // Fetch comments for the selected chapter
   const fetchComments = async (chapterId) => {
-    setLoading(true); // Set loading to true when fetching comments
+    setLoading(true);
 
     try {
       const commentsData = await getComments(bookId, chapterId);
@@ -144,7 +155,7 @@ function ReadBook() {
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     } finally {
-      setLoading(false); // Set loading to false after comments are fetched
+      setLoading(false);
     }
   };
 
@@ -211,95 +222,137 @@ function ReadBook() {
   return (
     <div className="read-book-container">
       <div className="chapter-list">
-        <h3>Chapters</h3>
+        {/* Favorite Button */}
+        {user &&
+          <button
+            className="save-book-button"
+            onClick={() => handleFavoriteBooks(bookId)}
+          >
+            {favoriteBooks.includes(bookId) ? "Unfavorite" : "Favorite"}
+          </button>
+        }
+        <h3>Table of Contents</h3>
+        <cover
+          className={`chapter-item ${selectedChapter === "cover" ? "active" : ""}`}
+          onClick={() => {
+            setSelectedChapter("cover");
+            setSelectedChapterName("cover");
+            setChapterContent("");
+            updateRating(book);
+          }}
+        >
+          Book Cover
+        </cover>
         <ul>
           {chapters.map((chapter) => (
             <li
               key={chapter.id}
-              className={selectedChapter === chapter.id ? "active" : ""}
+              className={`chapter-item ${selectedChapter === chapter.id ? "active" : ""}`}
               onClick={() => {
                 fetchChapterContent(chapter.id);
                 fetchComments(chapter.id);
               }}
             >
-              {chapter.title}
+              {chapter.chapter_num}: {chapter.title}
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Favorite Button */}
-      <button
-        className="save-book-button"
-        onClick={() => handleFavoriteBooks(bookId)}
-      >
-        {favoriteBooks.includes(bookId) ? "Unfavorite" : "Favorite"}
-      </button>
-
-      <div className="chapter-content">
-        <h2>{selectedChapterName}</h2>
-        <div className="content-box">
-          <div className="content" dangerouslySetInnerHTML={{ __html: currentChapterText }} />
-        </div>
-        {totalChapterPages > 1 && (
-          <div className="chapter-pagination">
-            <button onClick={() => setChapterPage(chapterPage - 1)} disabled={chapterPage === 1}>
-              Previous Page
-            </button>
-            <span>{`Page ${chapterPage} of ${totalChapterPages}`}</span>
-            <button onClick={() => setChapterPage(chapterPage + 1)} disabled={chapterPage === totalChapterPages}>
-              Next Page
-            </button>
+      {selectedChapter === "cover" ? (
+        <div className="cover-content">
+          <img src={book.cover_image_url || defaultBookCover}
+            alt="Cover Not Found"
+            onError={(e) => {
+              e.target.src = defaultBookCover;
+            }} />
+          <h3>{book.book_title}</h3>
+          <p>By {book.author}</p>
+          {book.average_rating > 0 ? (
+            <p className="star">
+              <span style={{ color: 'gold' }}>{"★".repeat(Math.round(book.average_rating))}</span>
+              <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(book.average_rating))}</span>
+            </p>
+          ) : (
+            <p className="star">
+              <span style={{ marginLeft: '5px', color: 'gray' }}>Not enough ratings</span>
+            </p>
+          )}
+          <div className="genre-container">
+            {book.genre_tags.map((genre, index) => (
+              <span key={index} className="genre-bubble">
+                {genre}
+              </span>
+            ))}
           </div>
-        )}
-
-        <div className="comments-header">
-          <h2>Comments</h2>
-          {user ? (
-            <button
-              className="new-comment-button"
-              onClick={() => {
-                setSelectedComment(null);
-                setShowCommentModal(true);
-              }}
-            >
-              Leave a Comment
-            </button>
-          ) : (
-            <p className="login-message">Login to leave comment</p>
-          )}
+          <p>
+            {book.book_synopsis ? book.book_synopsis : "No synopsis available."}
+          </p>
         </div>
-        <ul className="comments-list">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <li key={comment.id}>
-                <strong>{comment.commentor_name}</strong>
-                <div>{"★".repeat(comment.rating)}</div>
-                <p>{comment.text}</p>
-
-                {user && user.uid === comment.commentor_id && (
-                  <div>
-                    <button
-                      className="new-comment-button"
-                      onClick={() => handleUpdateComment(comment.id)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="new-comment-button"
-                      onClick={() => handleDeleteComment(comment.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </li>
-            ))
-          ) : (
-            <p>No comments yet.</p>
+      ) : (
+        <div className="chapter-content">
+          <h2 className="chapter-title">{selectedChapterName}</h2>
+          <div className="content-box">
+            <div className="content" dangerouslySetInnerHTML={{ __html: currentChapterText }} />
+          </div>
+          {totalChapterPages > 1 && (
+            <div className="chapter-pagination">
+              <button onClick={() => setChapterPage(chapterPage - 1)} disabled={chapterPage === 1}>
+                Previous Page
+              </button>
+              <span>{`Page ${chapterPage} of ${totalChapterPages}`}</span>
+              <button onClick={() => setChapterPage(chapterPage + 1)} disabled={chapterPage === totalChapterPages}>
+                Next Page
+              </button>
+            </div>
           )}
-        </ul>
-      </div>
+
+          <div className="comments-header">
+            <h2>Comments</h2>
+            {user &&
+              <button
+                className="new-comment-button"
+                onClick={() => {
+                  setSelectedComment(null);
+                  setShowCommentModal(true);
+                }}
+              >
+                Leave a Comment
+              </button>
+            }
+          </div>
+          <ul className="comments-list">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <li key={comment.id}>
+                  <strong>{comment.commentor_name}</strong>
+                  <div>{"★".repeat(comment.rating)}</div>
+                  <p>{comment.text}</p>
+
+                  {user && user.uid === comment.commentor_id && (
+                    <div>
+                      <button
+                        className="new-comment-button"
+                        onClick={() => handleUpdateComment(comment.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="new-comment-button"
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ))
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </ul>
+        </div>
+      )}
 
       {/* Comment Modal */}
       {showCommentModal && (

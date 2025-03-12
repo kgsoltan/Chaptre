@@ -1,0 +1,148 @@
+.sidebar {
+  position: fixed;
+  top: 35px;
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 60px);
+  background-color: #f8f8f8;
+  padding: 20px 0;
+  border-right: 1px solid #ddd;
+  z-index: 1;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 20px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  background-color: #ffecec;
+  color: #d32f2f;
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #666;
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item.active .sidebar-icon {
+  color: #d32f2f;
+}
+
+.sidebar-label {
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-section1 {
+  margin-top: 20px;
+  padding: 0 10px 20px;
+}
+
+.sidebar-section2 {
+  margin-bottom: 20px;
+  padding: 0 10px 20px;
+}
+
+.sidebar-section-title {
+  font-weight: 600;
+  color: #d32f2f;
+  margin-bottom: 10px;
+  padding-left: 5px;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sidebar-list-item {
+  padding: 0;
+}
+
+.sidebar-list-item .sidebar-item {
+  background-color: #f5efef;
+  padding: 8px 15px;
+  font-weight: 400;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar-list-item .sidebar-item:hover,
+.sidebar-list-item .sidebar-item.active {
+  background-color: #ffecec;
+  color: #d32f2f;
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+  border-color: transparent;
+}
+
+.sidebar-empty {
+  font-style: italic;
+  color: #777;
+  font-size: 0.9rem;
+  padding: 10px 15px;
+  text-align: center;
+}
+
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    top: 50px;
+    height: calc(100vh - 50px);
+  }
+
+  .sidebar-nav {
+    padding: 0 10px;
+  }
+
+  .sidebar-label {
+    font-size: 14px;
+  }
+
+  .sidebar-section-title {
+    font-size: 1rem;
+  }
+
+  .sidebar-item {
+    padding: 10px 15px;
+  }
+
+  .sidebar-list-item .sidebar-item {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    display: none;
+  }
+}

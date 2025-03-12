@@ -1,0 +1,77 @@
+//Database spec
+
+authors
+  └── AUTHOR_ID
+        ├── FIRST_NAME: string
+        ├── LAST_NAME: string
+        ├── EMAIL: string
+        ├── BIO: string
+        ├── PROFILE_PIC_URL: string (URL of the profile image)
+        ├── FAVORITED_BOOKS: [string] (array of bookIDs)
+        ├── FOLLOWING: [string] (array of authorIDs)
+
+books
+  └── BOOK_ID
+        ├── BOOK_TITLE: string
+        ├── IS_PUBLISHED: bool
+        ├── AUTHOR: string
+        ├── AUTHOR_ID: string
+        |── DATE: timestamp
+        |── BOOK_SYNOPSIS: string
+        ├── COVER_IMAGE_URL: string (URL of the book cover)
+        |── COUNT_COMMENTS: int
+        |── SUM_RATINGS: int
+        |── AVERAGE_RATING: int
+        ├── GENRE_TAGS: [string] (array of genre tags)
+        ├── CHAPTERS: 
+        │     └── CHAPTER_ID:
+        |         ├── IS_PUBLISHED : bool
+        │         ├── TITLE: string
+        |         ├── CHAPTER_NUM: int
+        │         ├── TEXT: string
+        |         ├── COMMENTS:
+        |               └── COMMENT_ID:
+        |                   ├── COMMENTOR_ID : string
+        |                   ├── COMMENTOR_NAME : string
+        |                   |── DATE: timestamp
+        |                   ├── RATING : int
+        |                   ├── TEXT: string
+
+
+Author endpoints:
+
+router.get('/', authorsController.getAuthors);
+router.get('/:authorId', authorsController.getAuthorById);
+router.post('/', authorsController.createAuthor);
+router.patch('/:authorId', authorsController.updateAuthor);
+router.delete('/:authorId', authorsController.deleteAuthor);
+router.patch('/:authorId/profile_pic_url', authorsController.updateProfilePic);
+router.get('/:authorId/following', authorsController.getFollowing);
+router.get('/:authorId/books', authorsController.getAuthorBooks);
+
+Book endpoints:
+
+router.get('/', booksController.getBooks);
+router.get('/chunk', booksController.getChunk)
+router.get('/toprated', booksController.getTopRatedBooks)
+router.get('/search', booksController.search);
+router.get('/:bookId', booksController.getBookById);
+router.post('/', booksController.createBook);
+router.patch('/:bookId', booksController.updateBook);
+router.delete('/:bookId', booksController.deleteBook);
+router.patch('/:bookId/cover_image_url', booksController.updateBookCover);
+
+router.get('/:bookId/chapters', booksController.getChapters);
+router.get('/:bookId/chapters/:chapterId', booksController.getChapterById);
+router.post('/:bookId/chapters', booksController.createChapter);
+router.patch('/:bookId/chapters/:chapterId', booksController.updateChapter);
+router.delete('/:bookId/chapters/:chapterId', booksController.deleteChapter);
+
+router.get('/:bookId/chapters/:chapterId/comments', booksController.getComments);
+router.post('/:bookId/chapters/:chapterId/comments', booksController.createComment);
+router.patch('/:bookId/chapters/:chapterId/comments/:commentId', booksController.updateComment);
+router.delete('/:bookId/chapters/:chapterId/comments/:commentId', booksController.deleteComment);
+
+S3 endpoint:
+
+router.get('/s3Url', s3Controller.getS3Url);

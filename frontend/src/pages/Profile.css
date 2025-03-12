@@ -1,0 +1,87 @@
+.profile {
+  max-width: 1200px;
+  padding: 0 0 0 300px;
+  text-align: left;
+}
+
+.profile-header {
+  margin-top: 30px;
+  display: flex;
+  align-items: left;
+  gap: 20px;
+  min-width: 830px;
+}
+
+.profile-img {
+  min-width: 150px;
+  min-height: 150px;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+  cursor: pointer;
+}
+
+.profile-header-content {
+  min-width: 900px;
+}
+
+.profile-info {
+  flex-grow: 1;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.profile-bio {
+  margin: 5px 0;
+  color: gray;
+  max-width: 830px;
+  margin-bottom: 20px;
+  word-break: break-word;
+}
+
+.edit-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.cancel-button {
+  background-color: transparent;
+  color: #dc3545;
+}
+
+.logout-btn {
+  border: 2px solid #d32f2f;
+  background-color: transparent;
+  color: #d32f2f;
+  max-height: 35px;
+}
+
+.logout-btn:hover {
+  background: rgba(211, 47, 47, 0.2);
+}
+
+.logout {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.bio-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  min-width: 820px;
+  height: 100px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  font-family: inherit;
+}

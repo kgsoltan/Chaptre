@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { createComment, updateComment } from "../services/api";
 import TextEditor from '../components/TextEditor';
-import "../ReadBook.css";
-import "../Modal.css";
+
+import "./NewCommentModal.css";
 
 function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingComment }) {
   const [commentText, setCommentText] = useState("");
@@ -10,8 +10,8 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingC
 
   useEffect(() => {
     if (existingComment) {
-        setCommentText(existingComment.text);
-        setRating(existingComment.rating);
+      setCommentText(existingComment.text);
+      setRating(existingComment.rating);
     }
   }, [existingComment]);
 
@@ -27,23 +27,23 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingC
       return;
     }
 
-    if(rating === 0) {
-        alert("Please leave a rating");
-        return;
+    if (rating === 0) {
+      alert("Please leave a rating");
+      return;
     }
 
     try {
       let response;
       if (existingComment) {
         response = await updateComment(bookId, chapterId, existingComment.id, {
-            text: cleanedText,
-            rating: rating
+          text: cleanedText,
+          rating: rating
         })
         onCommentAdded({ ...existingComment, text: cleanedText, rating: rating });
       } else {
         response = await createComment(bookId, chapterId, {
-            text: cleanedText,
-            rating: rating,
+          text: cleanedText,
+          rating: rating,
         });
         onCommentAdded(response);
       }
@@ -68,7 +68,7 @@ function NewCommentModal({ bookId, chapterId, onClose, onCommentAdded, existingC
                 ★
               </span>
             ))}
-          </div>        
+          </div>
           <div>
             <TextEditor
               value={commentText}
