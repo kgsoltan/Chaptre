@@ -21,8 +21,8 @@ exports.getTopRatedBooks = async (req, res) => {
   try {
     const snapshot = await db.collection('books')
       .where('is_published', '==', true)
-      .where('sum_ratings', '>', 3)
-      .orderBy('sum_ratings', 'desc')
+      .where('average_rating', '>', 3) 
+      .orderBy('average_rating', 'desc')
       .limit(count)
       .get();
 
@@ -100,6 +100,7 @@ exports.createBook = async (req, res) => {
       cover_image_url,
       count_comments: 0,
       sum_ratings: 0,
+      average_rating: 0, // Added to initialize the field
       genre_tags
     };
     const docRef = await db.collection('books').add(newBook);
@@ -266,9 +267,14 @@ exports.deleteChapter = async (req, res) => {
     const currentCount = bookDoc.data().count_comments || 0;
     const currentSum = bookDoc.data().sum_ratings || 0;
 
+    const newCountComments = Math.max(currentCount - numComments, 0);
+    const newSumRatings = Math.max(currentSum - totalRatings, 0);
+    const newAverageRating = newCountComments > 0 ? newSumRatings / newCountComments : 0;
+
     await bookRef.update({
-      count_comments: Math.max(currentCount - numComments, 0),
-      sum_ratings: Math.max(currentSum - totalRatings, 0),
+      count_comments: newCountComments,
+      sum_ratings: newSumRatings,
+      average_rating: newAverageRating // Added to update average_rating
     });
 
     const batch = db.batch();
@@ -324,22 +330,39 @@ exports.createComment = async (req, res) => {
     const commentor_name = (({ first_name, last_name }) => `${first_name} ${last_name}`)(commenterDoc.data());
     const date = admin.firestore.FieldValue.serverTimestamp();
 
-    const docRef = await db
-      .collection('books')
-      .doc(bookId)
-      .collection('chapters')
-      .doc(chapterId)
-      .collection('comments')
-      .add({ commentor_id, commentor_name, date, rating, text });
-
-    // Update the book's aggregate data (count_comments and sum_ratings)
     const bookRef = db.collection('books').doc(bookId);
-    await bookRef.update({
-      count_comments: admin.firestore.FieldValue.increment(1),
-      sum_ratings: admin.firestore.FieldValue.increment(rating)
-    });
+    const commentsRef = bookRef.collection('chapters').doc(chapterId).collection('comments');
 
-    res.status(201).json({ id: docRef.id, commentor_id, commentor_name, date, rating, text });
+    await db.runTransaction(async (transaction) => {
+      const bookDoc = await transaction.get(bookRef);
+      if (!bookDoc.exists) {
+        throw new Error('Book not found');
+      }
+
+      const currentSumRatings = bookDoc.data().sum_ratings || 0;
+      const currentCountComments = bookDoc.data().count_comments || 0;
+
+      const newSumRatings = currentSumRatings + rating;
+      const newCountComments = currentCountComments + 1;
+      const newAverageRating = newCountComments > 0 ? newSumRatings / newCountComments : 0;
+
+      const newComment = { commentor_id, commentor_name, date, rating, text };
+      const docRef = commentsRef.doc(); // Create a reference for the new comment
+
+      transaction.set(docRef, newComment);
+      transaction.update(bookRef, {
+        sum_ratings: newSumRatings,
+        count_comments: newCountComments,
+        average_rating: newAverageRating
+      });
+
+      return docRef.id;
+    }).then((newCommentId) => {
+      res.status(201).json({ id: newCommentId, commentor_id, commentor_name, date, rating, text });
+    }).catch((error) => {
+      console.error('Transaction failed:', error);
+      res.status(500).send('Error creating comment');
+    });
   } catch (error) {
     res.status(500).send('Error creating comment');
   }
@@ -362,17 +385,34 @@ exports.updateComment = async (req, res) => {
       .collection('comments')
       .doc(commentId);
 
-    // Get the old rating to adjust the sum later
-    const oldCommentDoc = await commentRef.get();
-    const oldRating = oldCommentDoc.data().rating;
-
-    await commentRef.update(updatedData);
-
-    // Update the book's aggregate data
-    const newRating = updatedData.rating;
     const bookRef = db.collection('books').doc(bookId);
-    await bookRef.update({
-      sum_ratings: admin.firestore.FieldValue.increment(newRating - oldRating)
+
+    await db.runTransaction(async (transaction) => {
+      const commentDoc = await transaction.get(commentRef);
+      if (!commentDoc.exists) {
+        throw new Error('Comment not found');
+      }
+
+      const oldRating = commentDoc.data().rating;
+      const newRating = updatedData.rating || oldRating; // Use old rating if not provided
+
+      const bookDoc = await transaction.get(bookRef);
+      if (!bookDoc.exists) {
+        throw new Error('Book not found');
+      }
+
+      const currentSumRatings = bookDoc.data().sum_ratings || 0;
+      const currentCountComments = bookDoc.data().count_comments || 0;
+
+      const diff = newRating - oldRating;
+      const newSumRatings = currentSumRatings + diff;
+      const newAverageRating = currentCountComments > 0 ? newSumRatings / currentCountComments : 0;
+
+      transaction.update(commentRef, updatedData);
+      transaction.update(bookRef, {
+        sum_ratings: newSumRatings,
+        average_rating: newAverageRating
+      });
     });
 
     res.status(200).json({ id: commentId, ...updatedData });
@@ -393,18 +433,36 @@ exports.deleteComment = async (req, res) => {
       .collection('comments')
       .doc(commentId);
 
-    const commentDoc = await commentRef.get();
-    const rating = commentDoc.data().rating;
-
-    await commentRef.delete();
-
-    // Update the book's aggregate data
     const bookRef = db.collection('books').doc(bookId);
-    await bookRef.update({
-      count_comments: admin.firestore.FieldValue.increment(-1),
-      sum_ratings: admin.firestore.FieldValue.increment(-rating)
+
+    await db.runTransaction(async (transaction) => {
+      const commentDoc = await transaction.get(commentRef);
+      if (!commentDoc.exists) {
+        throw new Error('Comment not found');
+      }
+
+      const rating = commentDoc.data().rating;
+
+      const bookDoc = await transaction.get(bookRef);
+      if (!bookDoc.exists) {
+        throw new Error('Book not found');
+      }
+
+      const currentSumRatings = bookDoc.data().sum_ratings || 0;
+      const currentCountComments = bookDoc.data().count_comments || 0;
+
+      const newSumRatings = currentSumRatings - rating;
+      const newCountComments = Math.max(currentCountComments - 1, 0);
+      const newAverageRating = newCountComments > 0 ? newSumRatings / newCountComments : 0;
+
+      transaction.delete(commentRef);
+      transaction.update(bookRef, {
+        sum_ratings: newSumRatings,
+        count_comments: newCountComments,
+        average_rating: newAverageRating
+      });
     });
-  
+
     res.status(200).send(`Comment '${commentId}' deleted`);
   } catch (error) {
     res.status(500).send(`Error deleting comment '${commentId}'`);
