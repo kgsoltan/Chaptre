@@ -16,6 +16,27 @@ exports.getBooks = async (req, res) => {
   }
 };
 
+exports.getTopRatedBooks = async (req, res) => {
+  const count = parseInt(req.query.count) || 10; // Default to 10 if no count provided
+  try {
+    const snapshot = await db.collection('books')
+      .where('is_published', '==', true)
+      .orderBy('sum_ratings', 'desc')
+      .limit(count)
+      .get();
+
+    const books = snapshot.docs.map(doc => ({ 
+      id: doc.id, 
+      ...doc.data() 
+    }));
+
+    res.json(books);
+  } catch (error) {
+    console.error("Error fetching top rated books:", error);
+    res.status(500).send('Error fetching top rated books');
+  }
+};
+
 exports.getChunk = async (req, res) => {
   const chunkSize = 10;
   console.log(req.query.count)
@@ -77,7 +98,7 @@ exports.createBook = async (req, res) => {
       book_synopsis,
       cover_image_url,
       count_comments: 0,
-      sum_rating: 0,
+      sum_ratings: 0,
       genre_tags
     };
     const docRef = await db.collection('books').add(newBook);

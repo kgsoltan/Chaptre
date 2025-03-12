@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
-import { getPublishedBooks, searchBooks, getPublishedBooksChunk } from '../services/api';
+import { getPublishedBooks, searchBooks, getPublishedBooksChunk, getTopRated } from '../services/api';
 import Sidebar from '../components/Sidebar';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
@@ -12,6 +12,7 @@ function Home() {
   const [lastDocId, setLastDocId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [topRatedBooks, setTopRatedBooks] = useState([]);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get('q');
@@ -24,6 +25,23 @@ function Home() {
     return onAuthStateChanged(auth, setUser);
   }, []);
 
+
+  useEffect(() => {
+    const loadTopRatedBooks = async () => {
+      try {
+        const response = await getTopRated(10);
+        setTopRatedBooks(response);
+      } catch (err) {
+        console.error('FAILED TO LOAD TOP RATED BOOKS:', err);
+        alert('FAILED TO LOAD TOP RATED BOOKS');
+      }
+    };
+    
+    if (!searchQuery && genreFilter.length === 0) {
+      loadTopRatedBooks();
+    }
+  }, [searchQuery, genreFilter]);
+
   useEffect(() => {
     const loadBooks = async () => {
       setLoading(true);
@@ -35,7 +53,7 @@ function Home() {
         setBooks(response);
         if (response.length > 0) {
           setLastDocId(response[response.length - 1].id);
-          setHasMore(true); // Reset hasMore when fetching new books
+          setHasMore(true);
         } else {
           setHasMore(false);
         }
@@ -54,10 +72,10 @@ function Home() {
     try {
       const response = await getPublishedBooksChunk(lastDocId);
       if (response.books.length > 0) {
-        setBooks(prevBooks => [...prevBooks, ...response.books]); // Fix: Ensure books are added correctly
-        setLastDocId(response.lastDocId); // Fix: Properly update lastDocId for pagination
+        setBooks(prevBooks => [...prevBooks, ...response.books]);
+        setLastDocId(response.lastDocId);
       } else {
-        setHasMore(false); // No more books to load
+        setHasMore(false);
       }
     } catch (err) {
       console.error('FAILED TO LOAD MORE BOOKS:', err);
@@ -79,13 +97,6 @@ function Home() {
 
     return () => observer.disconnect();
   }, [loadMoreBooks]);
-
-  const topRatedBooks = useMemo(() => {
-    return books
-      .filter(book => book.sum_ratings > 0)
-      .sort((a, b) => (b.sum_ratings / b.count_comments) - (a.sum_ratings / a.count_comments))
-      .slice(0, 10);
-  }, [books]);
 
   return (
     <div className="home">

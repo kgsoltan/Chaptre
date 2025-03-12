@@ -76,6 +76,12 @@ export const getPublishedBooks = async (count) => {
 
 };
 
+export const getTopRated = async (count) => {
+  const response = await api.get(`/books/toprated?count=6`);
+  return response.data;
+
+};
+
 export const getAuthorBooks = async (authorId) => {
   const response = await api.get(`/authors/${authorId}/books`);
   return response.data;
