@@ -21,6 +21,7 @@ books
         ├── COVER_IMAGE_URL: string (URL of the book cover)
         |── COUNT_COMMENTS: int
         |── SUM_RATINGS: int
+        |── AVERAGE_RATING: int
         ├── GENRE_TAGS: [string] (array of genre tags)
         ├── CHAPTERS: 
         │     └── CHAPTER_ID:

@@ -12,16 +12,7 @@ function BookCard({ book, showEditLink }) {
   const linkPath = showEditLink ? `/book/${book.id}/editor` : `/book/${book.id}`;
   const cardRef = useRef(null); 
   const modalRef = useRef(null);
-  const [averageRating, setAverageRating] = useState(0);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (book.count_comments && book.count_comments > 0) {
-      setAverageRating((book.sum_ratings / book.count_comments).toFixed(1));
-    } else {
-      setAverageRating(0);
-    }
-  }, [book.count_comments, book.sum_ratings]);
 
   useEffect(() => {
     const checkModalPosition = () => {
@@ -74,10 +65,10 @@ function BookCard({ book, showEditLink }) {
             {book.author}
           </Link>
         </p>
-        {averageRating > 0 ? (
+        {book.average_rating > 0 ? (
           <p className="star">
-            <span style={{ color: 'gold' }}>{"★".repeat(Math.round(averageRating))}</span>
-            <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(averageRating))}</span>
+            <span style={{ color: 'gold' }}>{"★".repeat(Math.round(book.average_rating))}</span>
+            <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(book.average_rating))}</span>
           </p>
         ) : (
           <p className="star">
@@ -104,10 +95,10 @@ function BookCard({ book, showEditLink }) {
           >
             <h3 className="truncate">{book.book_title}</h3>
             <p className="truncate">By {book.author}</p>
-            {averageRating > 0 ? (
+            {book.average_rating > 0 ? (
             <p className="star">
-              <span style={{ color: 'gold' }}>{"★".repeat(Math.round(averageRating))}</span>
-              <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(averageRating))}</span>
+              <span style={{ color: 'gold' }}>{"★".repeat(Math.round(book.average_rating))}</span>
+              <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(book.average_rating))}</span>
             </p>
           ) : (
             <p className="star">

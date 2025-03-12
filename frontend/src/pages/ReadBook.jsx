@@ -24,15 +24,6 @@ function ReadBook() {
   const [favoriteBooks, setFavoriteBooks] = useState([]);
   const [loading, setLoading] = useState(false); // Added loading state
   const wordsPerPage = 800;
-  const [averageRating, setAverageRating] = useState(0);
-  
-  const updateRating = async (book) => {
-    if (book.count_comments && book.count_comments > 0) {
-      setAverageRating((book.sum_ratings / book.count_comments).toFixed(1));
-    } else {
-      setAverageRating(0);
-    }
-  };
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -42,7 +33,6 @@ function ReadBook() {
         setSelectedChapter("cover");
         setSelectedChapterName("cover");
         setChapterContent("");
-        updateRating(fetchedBook);
       } catch (error) {
         console.error("Failed to fetch book details:", error);
       }
@@ -50,12 +40,6 @@ function ReadBook() {
   
     fetchBookDetails();
   }, [bookId]);
-
-  useEffect(() => {
-    if (book) {
-      updateRating(book);
-    }
-  }, [book]);
 
   // Fetch the user on component mount
   useEffect(() => {
@@ -285,10 +269,10 @@ function ReadBook() {
           }}/>
           <h3>{book.book_title}</h3>
           <p>By {book.author}</p>
-          {averageRating > 0 ? (
+          {book.average_rating > 0 ? (
             <p className="star">
-              <span style={{ color: 'gold' }}>{"★".repeat(Math.round(averageRating))}</span>
-              <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(averageRating))}</span>
+              <span style={{ color: 'gold' }}>{"★".repeat(Math.round(book.average_rating))}</span>
+              <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(book.average_rating))}</span>
             </p>
           ) : (
             <p className="star">
