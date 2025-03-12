@@ -1,8 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
 import defaultBookCover from "../assets/default-cover.jpg";
-
 import './BookCard.css';
 
 function BookCard({ book, showEditLink }) {
@@ -10,7 +8,7 @@ function BookCard({ book, showEditLink }) {
   const [modalPosition, setModalPosition] = useState('right');
   const maxVisibleTags = 1;
   const linkPath = showEditLink ? `/book/${book.id}/editor` : `/book/${book.id}`;
-  const cardRef = useRef(null); 
+  const cardRef = useRef(null);
   const modalRef = useRef(null);
   const navigate = useNavigate();
 
@@ -34,7 +32,7 @@ function BookCard({ book, showEditLink }) {
     window.addEventListener('resize', checkModalPosition);
 
     return () => {
-        window.removeEventListener('resize', checkModalPosition); 
+      window.removeEventListener('resize', checkModalPosition);
     };
   }, [isModalOpen]);
 
@@ -45,19 +43,19 @@ function BookCard({ book, showEditLink }) {
 
   return (
     <div
-        className="book-card-container"
-        onMouseEnter={() => setIsModalOpen(true)}
-        onMouseLeave={() => setIsModalOpen(false)}
-        ref={cardRef}
+      className="book-card-container"
+      onMouseEnter={() => setIsModalOpen(true)}
+      onMouseLeave={() => setIsModalOpen(false)}
+      ref={cardRef}
     >
       <div className="book-card">
         <div onClick={handleClick} style={{ cursor: 'pointer' }}>
-        <img 
-          src={book.cover_image_url || defaultBookCover} 
-          alt="Cover Not Found" 
-          onError={(e) => { e.target.src = defaultBookCover; }}
-        />
-        <h3>{book.book_title}</h3>
+          <img
+            src={book.cover_image_url || defaultBookCover}
+            alt="Cover Not Found"
+            onError={(e) => { e.target.src = defaultBookCover; }}
+          />
+          <h3>{book.book_title}</h3>
         </div>
         <p>
           By{' '}
@@ -88,14 +86,14 @@ function BookCard({ book, showEditLink }) {
           )}
         </div>
       </div>
-        {isModalOpen && (
-          <div
-              className={`card-modal-content ${modalPosition}`}
-              ref={modalRef}
-          >
-            <h3 className="truncate">{book.book_title}</h3>
-            <p className="truncate">By {book.author}</p>
-            {book.average_rating > 0 ? (
+      {isModalOpen && (
+        <div
+          className={`card-modal-content ${modalPosition}`}
+          ref={modalRef}
+        >
+          <h3 className="truncate">{book.book_title}</h3>
+          <p className="truncate">By {book.author}</p>
+          {book.average_rating > 0 ? (
             <p className="star">
               <span style={{ color: 'gold' }}>{"★".repeat(Math.round(book.average_rating))}</span>
               <span style={{ color: 'gray' }}>{"★".repeat(5 - Math.round(book.average_rating))}</span>
@@ -105,19 +103,19 @@ function BookCard({ book, showEditLink }) {
               <span style={{ marginLeft: '5px', color: 'gray' }}>Not enough ratings</span>
             </p>
           )}
-            <div className="genre-container">
-              {book.genre_tags.map((genre, index) => (
-                <span key={index} className="genre-bubble">
-                  {genre}
-                </span>
-              ))}
-            </div>
-            <p className="truncate-synopsis">
-              {book.book_synopsis ? book.book_synopsis : "No synopsis available."}
-            </p>
+          <div className="genre-container">
+            {book.genre_tags.map((genre, index) => (
+              <span key={index} className="genre-bubble">
+                {genre}
+              </span>
+            ))}
           </div>
-        )}
-      </div>
+          <p className="truncate-synopsis">
+            {book.book_synopsis ? book.book_synopsis : "No synopsis available."}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
 

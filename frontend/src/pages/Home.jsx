@@ -36,7 +36,7 @@ function Home() {
         alert('FAILED TO LOAD TOP RATED BOOKS');
       }
     };
-    
+
     if (!searchQuery && genreFilter.length === 0) {
       loadTopRatedBooks();
     }
@@ -49,7 +49,7 @@ function Home() {
         const response = searchQuery || genreFilter.length > 0
           ? await searchBooks(searchQuery, genreFilter)
           : await getPublishedBooks(15);
-        
+
         setBooks(response);
         if (response.length > 0) {
           setLastDocId(response[response.length - 1].id);

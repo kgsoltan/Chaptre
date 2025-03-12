@@ -1,10 +1,12 @@
-html, body {
+html,
+body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   min-height: 100vh;
 }
+
 .author-link {
   color: #d32f2f !important;
   text-decoration: none;
@@ -13,7 +15,7 @@ html, body {
 }
 
 .main-content {
-  padding-top: 75px; /* Same as the header's total height */
+  padding-top: 75px;
 }
 
 .author-link:hover {
@@ -53,7 +55,7 @@ html, body {
 }
 
 .nav-item:focus {
-  outline: none; 
+  outline: none;
 }
 
 button.nav-item {
@@ -74,7 +76,7 @@ button.nav-item:hover {
 .nav-container {
   flex-grow: 1;
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
   padding-right: 30px;
 }
 
@@ -113,7 +115,9 @@ button.nav-item:hover {
   color: white;
 }
 
-.save-button, .edit-button, .cancel-button {
+.save-button,
+.edit-button,
+.cancel-button {
   margin: 5px;
   padding: 5px 10px;
   cursor: pointer;
@@ -154,12 +158,9 @@ button:hover,
 
 .search-bar {
   display: flex;
-  justify-content: flex-end; /* Align elements to the right */
-  align-items: center; /* Vertically center all items */
-  gap: 10px; /* Space between elements */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
   max-width: 1000px;
   width: 100%;
 }
-
-
-

@@ -1,30 +1,25 @@
-/* components/Sidebar.css */
-
-/* Sidebar container */
 .sidebar {
   position: fixed;
-  top: 35px; /* Adjusted based on header height */
+  top: 35px;
   left: 0;
   width: 250px;
-  height: calc(100vh - 60px); /* Full height minus header */
+  height: calc(100vh - 60px);
   background-color: #f8f8f8;
   padding: 20px 0;
   border-right: 1px solid #ddd;
   z-index: 1;
-  overflow-y: auto; /* Enable vertical scrolling if content overflows */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  transition: width 0.3s ease; /* Smooth transition for potential collapse */
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
 }
 
-/* Navigation container */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 5px; /* Reduced gap for tighter spacing */
-  padding: 0 20px; /* Inner padding for content */
+  gap: 5px;
+  padding: 0 20px;
 }
 
-/* Individual sidebar item (links) */
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -33,56 +28,52 @@
   color: #333;
   font-weight: 500;
   transition: background-color 0.3s ease, color 0.3s ease;
-  border-radius: 8px; /* Rounded corners to match the button */
-  background-color: transparent; /* Default transparent background */
+  border-radius: 8px;
+  background-color: transparent;
 }
 
 .sidebar-item:hover,
 .sidebar-item.active {
-  background-color: #ffecec; /* Light pink background on hover */
-  color: #d32f2f; /* Red text to match the button */
-  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2); /* Subtle shadow for depth */
+  background-color: #ffecec;
+  color: #d32f2f;
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
 }
 
-/* Icon styling */
 .sidebar-icon {
   margin-right: 10px;
-  font-size: 18px; /* Slightly larger icons for better visibility */
-  color: #666; /* Default icon color */
+  font-size: 18px;
+  color: #666;
 }
 
 .sidebar-item:hover .sidebar-icon,
 .sidebar-item.active .sidebar-icon {
-  color: #d32f2f; /* Icon color changes to red on hover/active */
+  color: #d32f2f;
 }
 
-/* Label styling */
 .sidebar-label {
   font-size: 16px;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis for long text */
+  text-overflow: ellipsis;
 }
 
-/* Section container for lists */
 .sidebar-section1 {
   margin-top: 20px;
-  padding: 0 10px 20px; /* Inner padding for sections */
-}
-.sidebar-section2 {
-  margin-bottom: 20px;
-  padding: 0 10px 20px; /* Inner padding for sections */
+  padding: 0 10px 20px;
 }
 
-/* Section title styling */
+.sidebar-section2 {
+  margin-bottom: 20px;
+  padding: 0 10px 20px;
+}
+
 .sidebar-section-title {
   font-weight: 600;
-  color: #d32f2f; /* Red color for section titles */
+  color: #d32f2f;
   margin-bottom: 10px;
   padding-left: 5px;
 }
 
-/* List styling */
 .sidebar-list {
   list-style: none;
   padding: 0;
@@ -92,29 +83,27 @@
   gap: 5px;
 }
 
-/* List item styling */
 .sidebar-list-item {
   padding: 0;
 }
 
 .sidebar-list-item .sidebar-item {
   background-color: #f5efef;
-  padding: 8px 15px; /* Slightly less padding for list items */
-  font-weight: 400; /* Lighter weight for list items */
-  border: 2px solid transparent; /* Default transparent border */
-  border-radius: 8px; /* Rounded corners to match the button */
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  padding: 8px 15px;
+  font-weight: 400;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .sidebar-list-item .sidebar-item:hover,
 .sidebar-list-item .sidebar-item.active {
-  background-color: #ffecec; /* Light pink background on hover */
-  color: #d32f2f; /* Red text to match the button */
-  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2); /* Subtle shadow for depth */
-  border-color: transparent; /* Remove outline effect for this style */
+  background-color: #ffecec;
+  color: #d32f2f;
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+  border-color: transparent;
 }
 
-/* Empty state styling */
 .sidebar-empty {
   font-style: italic;
   color: #777;
@@ -123,11 +112,11 @@
   text-align: center;
 }
 
-/* Responsive design */
+
 @media (max-width: 768px) {
   .sidebar {
-    width: 200px; /* Narrower sidebar on mobile */
-    top: 50px; /* Adjust if header height changes on mobile */
+    width: 200px;
+    top: 50px;
     height: calc(100vh - 50px);
   }
 
@@ -154,6 +143,6 @@
 
 @media (max-width: 480px) {
   .sidebar {
-    display: none; /* Hide sidebar on very small screens */
+    display: none;
   }
 }

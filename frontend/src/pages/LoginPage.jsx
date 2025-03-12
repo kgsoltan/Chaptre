@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import googleLogo from "../assets/google_logo.png";
 import { createAuthor } from "../services/api";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 
 import './LoginPage.css'
@@ -56,7 +56,7 @@ function LoginPage() {
     try {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
-  
+
       let firstName = "";
       let lastName = "";
       if (user.displayName) {
@@ -64,29 +64,27 @@ function LoginPage() {
         firstName = nameParts[0];
         lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
       }
-  
+
       if (isSignUp) {
-        // If user is signing up, create an account and the author profile
         const authorData = {
           email: user.email,
           first_name: firstName,
           last_name: lastName,
         };
-  
+
         await createAuthor(authorData);
         console.log("Google sign-up successful and author profile created!");
       } else {
-        // If user is logging in, we just proceed to the homepage without signing in again
         console.log("Logged in successfully!");
       }
-  
-      navigate("/"); // Navigate to home after successful sign-in or sign-up
+
+      navigate("/");
     } catch (err) {
       console.error(err);
-      setError(err.message); // Set error if any happens
+      setError(err.message);
     }
   };
-  
+
   return (
     <div className="bg login-container">
       <div className="login-box">

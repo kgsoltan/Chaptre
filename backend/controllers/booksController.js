@@ -40,10 +40,7 @@ exports.getTopRatedBooks = async (req, res) => {
 
 exports.getChunk = async (req, res) => {
   const chunkSize = 10;
-  console.log(req.query.count)
   const count = req.query.count === "0" || !req.query.count ? null : req.query.count;
-
-  console.log("Fetching chunk with lastDocId:", count);
   try {
     let query = db.collection('books')
       .where('is_published', '==', true)

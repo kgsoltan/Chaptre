@@ -6,24 +6,23 @@ import ReadBook from './pages/ReadBook';
 import LoginPage from './pages/LoginPage';
 import EditBook from './pages/EditBook';
 import EditChapter from './pages/EditChapter';
-import Sidebar from './components/Sidebar';
 
 function App() {
   return (
-    
+
     <Router>
       <div className="App">
         <Header />
         <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile/:authorId" element={<Profile />} />
-          <Route path="/book/:bookId" element={<ReadBook />} />
-          <Route path="/book/:bookId/editor" element={<EditBook />} />
-          <Route path="/book/:bookId/chapter/:chapterId/editor" element={<EditChapter />} />
-          <Route path="/search" element={<Home />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile/:authorId" element={<Profile />} />
+            <Route path="/book/:bookId" element={<ReadBook />} />
+            <Route path="/book/:bookId/editor" element={<EditBook />} />
+            <Route path="/book/:bookId/chapter/:chapterId/editor" element={<EditChapter />} />
+            <Route path="/search" element={<Home />} />
+          </Routes>
         </main>
       </div>
       <div id="modal-root"></div>

@@ -17,7 +17,7 @@ function EditBook() {
   const [coverImageUrl, setCoverImageUrl] = useState('');
   const [genreTags, setGenreTags] = useState([]);
   const [chapters, setChapters] = useState([]);
-  const [reorderedChapters, setReorderedChapters] = useState([]); // New state for reordering
+  const [reorderedChapters, setReorderedChapters] = useState([]);
   const [newChapterTitle, setNewChapterTitle] = useState('');
   const { bookId } = useParams();
   const navigate = useNavigate();
@@ -97,29 +97,26 @@ function EditBook() {
   };
 
   const validateTags = (tags) => {
-    if (tags.length > 3|| tags.length <= 0) {
+    if (tags.length > 3 || tags.length <= 0) {
       return 'You must select between 1 and 3 tags.';
     }
     return '';
   };
 
   const handleSaveBook = async () => {
-    // Clear existing errors
     setTitleError('');
     setSynopsisError('');
     setTagsError('');
 
-    // Perform validation
     const titleError = validateTitle(bookTitle);
     const synopsisError = validateSynopsis(synonpsis);
     const tagsError = validateTags(genreTags);
 
-    // Update state with errors
     setTitleError(titleError);
     setSynopsisError(synopsisError);
     setTagsError(tagsError);
 
-    // If there are any errors, stop here
+
     if (titleError || synopsisError || tagsError) {
       return;
     }
@@ -193,7 +190,7 @@ function EditBook() {
         await deleteChapter(bookId, chapterId);
         const updatedChapters = chapters.filter(chapter => chapter.id !== chapterId);
         setChapters(updatedChapters);
-        setReorderedChapters(updatedChapters); // Update reorderedChapters as well
+        setReorderedChapters(updatedChapters);
         fetchChapters();
       } catch (error) {
         console.error('Error deleting chapter:', error);
@@ -208,7 +205,7 @@ function EditBook() {
       try {
         await deleteBook(bookId);
         alert('Book deleted successfully!');
-        navigate('/'); // Redirect to home page or author's books list
+        navigate('/');
       } catch (error) {
         console.error('Error deleting book:', error);
         alert('Failed to delete book. Please try again.');

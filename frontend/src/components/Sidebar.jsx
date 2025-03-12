@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getAuthorDetails, getBookDetails, getFollowing } from '../services/api';
-import { auth } from '../services/firebaseConfig';
+import { getAuthorDetails, getBookDetails } from '../services/api';
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -11,7 +10,6 @@ const Sidebar = () => {
   const [user, setUser] = useState(null);
   const auth = getAuth();
 
-  // Function to fetch favorited books
   const getFavoritedBooks = async (favoritedBookIds) => {
     try {
       const favoritedBooksData = [];
@@ -29,7 +27,6 @@ const Sidebar = () => {
     }
   };
 
-  // Function to fetch favorited authors
   const getFavoritedAuthors = async (favoritedAuthorIds) => {
     try {
       const favoritedAuthorsData = [];
@@ -53,11 +50,9 @@ const Sidebar = () => {
       if (currentUser) {
         const userDetails = await getAuthorDetails(currentUser.uid);
         if (userDetails.favorited_books?.length > 0) {
-          console.log(userDetails.favorited_books)
           await getFavoritedBooks(userDetails.favorited_books);
         }
         if (userDetails.following?.length > 0) {
-          console.log(userDetails.following)
           await getFavoritedAuthors(userDetails.following);
         }
       } else {

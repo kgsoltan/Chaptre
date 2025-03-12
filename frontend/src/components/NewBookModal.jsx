@@ -10,11 +10,10 @@ function CreateBookModal({ user, onClose }) {
   const [bookGenre, setBookGenre] = useState([]);
   const [bookSynopsis, setBookSynopsis] = useState('');
 
-  // Error states
   const [titleError, setTitleError] = useState('');
   const [synopsisError, setSynopsisError] = useState('');
   const [genreError, setGenreError] = useState('');
-  const [apiError, setApiError] = useState(null); // Renamed from 'error' to 'apiError'
+  const [apiError, setApiError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -87,11 +86,10 @@ function CreateBookModal({ user, onClose }) {
         author_id: user.uid,
         book_synopsis: bookSynopsis,
         genre_tags: bookGenre,
-        cover_image_url: "https://picsum.photos/id/40/1000/1500",
+        cover_image_url: "https://picsum.photos/id/24/1000/1500",
       };
 
       await createBook(bookData);
-      alert('Book created successfully!');
       onClose();
       navigate(`/profile/${user.uid}`);
     } catch (error) {
@@ -103,9 +101,8 @@ function CreateBookModal({ user, onClose }) {
   return (
     <div className="create-book-modal-overlay">
       <div className="create-book-modal-content">
-        {/* Close Button */}
         <button className="close-button" onClick={onClose}>x</button>
-        
+
         <h2>Create a New Book</h2>
         {apiError && <p className="error-message">{apiError}</p>}
         <form onSubmit={handleCreateBook}>

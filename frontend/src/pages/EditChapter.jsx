@@ -63,7 +63,6 @@ function EditChapter() {
         chapter_num: chapterNum,
       };
       await updateChapter(bookId, chapterId, updates);
-      alert('Chapter saved successfully!');
       navigate(`/book/${bookId}/editor`);
     } catch (error) {
       console.error('Error saving chapter:', error);
@@ -73,21 +72,21 @@ function EditChapter() {
 
   const togglePublish = () => {
     setPublished(!published);
-  };  
+  };
 
   return (
     <div className="edit-chapter-container">
-        <button className="back-button" onClick={() => navigate(`/book/${bookId}/editor`)}> Back to Book</button>
-        <h2>Edit Chapter</h2>
-        <div className='chapter-details-form'>
-          <label>Title</label>
-          {chapterTitleError && <p className="error-message">{chapterTitleError}</p>}
-          <input
-            type="text"
-            value={chapterTitle}
-            onChange={(e) => setChapterTitle(e.target.value)}
-            placeholder="Chapter Title"
-          />
+      <button className="back-button" onClick={() => navigate(`/book/${bookId}/editor`)}> Back to Book</button>
+      <h2>Edit Chapter</h2>
+      <div className='chapter-details-form'>
+        <label>Title</label>
+        {chapterTitleError && <p className="error-message">{chapterTitleError}</p>}
+        <input
+          type="text"
+          value={chapterTitle}
+          onChange={(e) => setChapterTitle(e.target.value)}
+          placeholder="Chapter Title"
+        />
         <TextEditor
           ref={editorRef}
           value={text}
@@ -97,7 +96,7 @@ function EditChapter() {
           <button className={`${published ? 'unpublish-button' : 'publish-button'}`} onClick={togglePublish}>{published ? 'Unpublish' : 'Publish'}</button>
           <button className='save-button' onClick={() => handleSaveChapter()}>Save Chapter</button>
         </div>
-        </div>
+      </div>
     </div>
   );
 }

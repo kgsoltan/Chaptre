@@ -1,73 +1,71 @@
 .bg {
-    width: 100vw;
-    height: 100vh;
-    background-image: url(./assets/cursive_background.jpg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
 
-  .input-group {
-    margin-bottom: 20px; /* Increased margin for more spacing between fields */
-  }
-  
-  .input-group label {
-    display: block;
-    margin-bottom: 8px; /* Increased margin for better spacing */
-  }
-  
-  .input-group input {
-    width: 93%;
-    padding: 12px; /* Increased padding for larger input fields */
-    border: 1px solid #ccc;
-    border-radius: 6px; /* Slightly larger border radius */
-  }
+.input-group {
+  margin-bottom: 20px;
+}
 
-  .login-box {
-    
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    text-align: center;
-  }
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+}
 
-  .toggle-link {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-  }
+.input-group input {
+  width: 93%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
 
-  .google-button {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 1rem;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 4.5rem;
-  }
-  
-  .google-button img {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .google-button:hover {
-    background-color: #f5f5f5;
-  }
-  
+.login-box {
+
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.toggle-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.google-button {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 4.5rem;
+}
+
+.google-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.google-button:hover {
+  background-color: #f5f5f5;
+}

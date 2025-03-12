@@ -1,25 +1,24 @@
 .create-book-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  
-  .create-book-modal-content {
-    background: white;
-    padding: 40px; /* Increased padding for more space inside */
-    border-radius: 8px;
-    width: 90%; /* Increased width for a larger modal */
-    max-width: 600px;
-    max-height: 80vh; /* Limit the height to 80% of the viewport */
-    position: relative; /* Ensure positioning for the close button */
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+
+.create-book-modal-content {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  position: relative;
+}

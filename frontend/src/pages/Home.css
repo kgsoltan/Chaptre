@@ -6,28 +6,26 @@
 .home-book-grid-logged-in {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 0px 0 300px; /* Adds a 50px offset by increasing left padding (20px + 50px = 70px) */
+  padding: 0 0px 0 300px;
 }
-  
-  .home-header{
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
 
-  .search-description {
-    text-overflow: ellipsis;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-  }
+.home-header {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
-  .home-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: px;
-    margin-bottom: 10px;
-  }
+.search-description {
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
 
-  
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: px;
+  margin-bottom: 10px;
+}

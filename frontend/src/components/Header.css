@@ -5,44 +5,44 @@
   height: 45px;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Keep this for now, but we'll adjust the structure */
+  justify-content: space-between;
   width: 100%;
   z-index: 100;
 }
 
 .header-content {
-  flex-grow: 15; /* Allows the content to take up available space */
+  flex-grow: 15;
   display: flex;
-  justify-content: center; /* Centers the search bar */
+  justify-content: center;
 }
 
 .headersearch {
   display: flex;
-  justify-content: center; /* Ensures the search bar itself is centered */
+  justify-content: center;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-  .login-btn {
-    border: 2px solid #d32f2f;
-    padding: 10px 15px;
-  }
-  
-  .login-btn:hover {
-    background: #d32f2f;
-    color: white;
-  }
+.login-btn {
+  border: 2px solid #d32f2f;
+  padding: 10px 15px;
+}
 
-  .icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-  
-  .icon {
-    width: 32px;
-    height: 32px;
-    color: #d32f2f;
-  }
+.login-btn:hover {
+  background: #d32f2f;
+  color: white;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  color: #d32f2f;
+}

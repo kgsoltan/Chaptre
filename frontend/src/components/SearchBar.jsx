@@ -6,22 +6,22 @@ import './SearchBar.css'
 
 // Predefined genres for selection
 const genreOptions = [
-    { value: "Fantasy", label: "Fantasy" },
-    { value: "Sci-Fi", label: "Sci-Fi" },
-    { value: "Mystery", label: "Mystery" },
-    { value: "Romance", label: "Romance" },
-    { value: "Horror", label: "Horror" },
-    { value: "Comedy", label: "Comedy" },
-    { value: "Action", label: "Action" },
-    { value: "Adventure", label: "Adventure" },
-    { value: "Drama", label: "Drama" },
-    { value: "Coming of age", label: "Coming of age" },
-    { value: "Fiction", label: "Fiction" },
-    { value: "Non-Fiction", label: "Non-Fiction" },
-  ];
+  { value: "Fantasy", label: "Fantasy" },
+  { value: "Sci-Fi", label: "Sci-Fi" },
+  { value: "Mystery", label: "Mystery" },
+  { value: "Romance", label: "Romance" },
+  { value: "Horror", label: "Horror" },
+  { value: "Comedy", label: "Comedy" },
+  { value: "Action", label: "Action" },
+  { value: "Adventure", label: "Adventure" },
+  { value: "Drama", label: "Drama" },
+  { value: "Coming of age", label: "Coming of age" },
+  { value: "Fiction", label: "Fiction" },
+  { value: "Non-Fiction", label: "Non-Fiction" },
+];
 
 function SearchBar() {
-  const [query, setQuery] = useState(""); 
+  const [query, setQuery] = useState("");
   const [selectedGenres, setSelectedGenres] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,10 +82,10 @@ function SearchBar() {
           control: (base, state) => ({
             ...base,
             minHeight: "40px",
-            border: state.isFocused ? '2px solid #d32f2f' : '#2px solid #ccc', 
+            border: state.isFocused ? '2px solid #d32f2f' : '#2px solid #ccc',
             boxShadow: 'none',
             '&:hover': {
-                border: state.isFocused ? '2px solid #d32f2f' : '#2px solid #ccc',
+              border: state.isFocused ? '2px solid #d32f2f' : '#2px solid #ccc',
             }
           }),
           option: (base, state) => ({
@@ -100,8 +100,8 @@ function SearchBar() {
       />
       <button type="submit" className="search-btn">
         <div className="search-icon-button">
-        <img src={searchIcon} alt="Search" className="search-icon" />
-        <p>Search</p>
+          <img src={searchIcon} alt="Search" className="search-icon" />
+          <p>Search</p>
         </div>
       </button>
     </form>

@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import BookGrid from '../components/BookGrid';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getAuthorDetails, getAuthorBooks, updateProfilePic, updateAuthor, getBookDetails } from '../services/api';  // Ensure getBookById is imported
-import { auth } from '../services/firebaseConfig';
+import { getAuthorDetails, getAuthorBooks, updateProfilePic, updateAuthor, getBookDetails } from '../services/api';
 import { validateFile, uploadToS3 } from "../services/imageUpload";
 import defaultProfilePic from "../assets/default-profile-pic.jpg";
 import FollowingModal from '../components/FollowingModal';
@@ -21,7 +20,7 @@ function Profile() {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isFavoritedModalOpen, setIsFavoritedModalOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
-  const [favoritedBooks, setFavoritedBooks] = useState([]); // State for favorited books
+  const [favoritedBooks, setFavoritedBooks] = useState([]);
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -34,12 +33,9 @@ function Profile() {
     }
   };
 
-  // Function to fetch favorited books
   const getFavoritedBooks = async (favoritedBookIds) => {
     try {
       const favoritedBooksData = [];
-
-      // Loop through the favorited book IDs
 
       for (const bookId of favoritedBookIds) {
         try {
@@ -80,9 +76,8 @@ function Profile() {
         const userDetails = await getAuthorDetails(currentUser.uid);
         setIsFavorited(userDetails.following?.includes(authorId) || false);
 
-        // Fetch favorited books if user is logged in
         if (userDetails.following?.length > 0) {
-          getFavoritedBooks(userDetails.favorited_books);  // Pass favorited authors
+          getFavoritedBooks(userDetails.favorited_books);
         }
       }
     });
@@ -102,27 +97,18 @@ function Profile() {
 
       let updatedFollowing;
       if (isFavorited) {
-        // Unsubscribe
         updatedFollowing = currentFollowing.filter(id => id !== authorId);
-        alert("Successfully unsubscribed from the author.");
       } else {
-        // Subscribe
         updatedFollowing = [...currentFollowing, authorId];
-        alert("Successfully subscribed to the author.");
       }
 
       await updateAuthor(user.uid, { following: updatedFollowing });
 
-      // Update local state
       setIsFavorited(!isFavorited);
     } catch (error) {
       console.error("Error subscribing/unsubscribing:", error);
       alert("Failed to update subscription.");
     }
-  };
-
-  const handleFavoritedModal = async () => {
-    setIsFavoritedModalOpen(true);
   };
 
   const closeFavoritedModal = async () => {
@@ -151,7 +137,6 @@ function Profile() {
       await updateAuthor(authorId, { bio: bioText });
       setAuthor((prev) => ({ ...prev, bio: bioText }));
       setIsEditingBio(false);
-      alert("Bio updated successfully!");
     } catch (error) {
       console.error("Error updating bio:", error);
       alert("Failed to update bio.");
@@ -165,13 +150,13 @@ function Profile() {
 
   return (
     <div className="profile">
-      <Sidebar/>
+      <Sidebar />
       <div className="profile-header">
         <label htmlFor="file-upload" className="profile-img-label">
-          <img 
+          <img
             className="profile-img"
-            src={author.profile_pic_url || defaultProfilePic} 
-            alt="Profile Pic Error" 
+            src={author.profile_pic_url || defaultProfilePic}
+            alt="Profile Pic Error"
             onError={(e) => { e.target.src = defaultProfilePic; }}
           />
         </label>

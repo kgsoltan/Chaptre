@@ -22,7 +22,7 @@ function ReadBook() {
   const auth = getAuth();
   const [error, setError] = useState(null);
   const [favoriteBooks, setFavoriteBooks] = useState([]);
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false);
   const wordsPerPage = 800;
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function ReadBook() {
         console.error("Failed to fetch book details:", error);
       }
     };
-  
+
     fetchBookDetails();
   }, [bookId]);
 
@@ -49,7 +49,7 @@ function ReadBook() {
   // Fetch chapters and comments on bookId change
   useEffect(() => {
     const fetchChapters = async () => {
-      setLoading(true); // Set loading to true when fetching chapters
+      setLoading(true);
       try {
         const chapterList = await getChapters(bookId);
         const publishedChapterList = chapterList.filter((chapter) => chapter.is_published);
@@ -57,7 +57,7 @@ function ReadBook() {
       } catch (error) {
         console.error("Failed to fetch chapters:", error);
       } finally {
-        setLoading(false); // Set loading to false after chapters are fetched
+        setLoading(false);
       }
     };
 
@@ -114,11 +114,9 @@ function ReadBook() {
       if (currentFavorites.includes(bookId)) {
         // Remove book from favorites (unfavorite)
         updatedFavorites = currentFavorites.filter((id) => id !== bookId);
-        alert("Book removed from favorites.");
       } else {
         // Add book to favorites (favorite)
         updatedFavorites = [...currentFavorites, bookId];
-        alert("Book added to favorites.");
       }
       setFavoriteBooks(updatedFavorites);
       await updateFavoriteBooks(authorId, updatedFavorites);
@@ -132,7 +130,7 @@ function ReadBook() {
 
   // Fetch chapter content for selected chapter
   const fetchChapterContent = async (chapterId) => {
-    setLoading(true); // Set loading to true when fetching chapter content
+    setLoading(true);
 
     try {
       const chapterData = await getChapterDetails(bookId, chapterId);
@@ -143,13 +141,13 @@ function ReadBook() {
     } catch (error) {
       console.error("Failed to fetch chapter content:", error);
     } finally {
-      setLoading(false); // Set loading to false after chapter content is fetched
+      setLoading(false);
     }
   };
 
   // Fetch comments for the selected chapter
   const fetchComments = async (chapterId) => {
-    setLoading(true); // Set loading to true when fetching comments
+    setLoading(true);
 
     try {
       const commentsData = await getComments(bookId, chapterId);
@@ -157,7 +155,7 @@ function ReadBook() {
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     } finally {
-      setLoading(false); // Set loading to false after comments are fetched
+      setLoading(false);
     }
   };
 
@@ -225,13 +223,13 @@ function ReadBook() {
     <div className="read-book-container">
       <div className="chapter-list">
         {/* Favorite Button */}
-        { user && 
-        <button
-          className="save-book-button"
-          onClick={() => handleFavoriteBooks(bookId)}
-        >
-          {favoriteBooks.includes(bookId) ? "Unfavorite" : "Favorite"}
-        </button>
+        {user &&
+          <button
+            className="save-book-button"
+            onClick={() => handleFavoriteBooks(bookId)}
+          >
+            {favoriteBooks.includes(bookId) ? "Unfavorite" : "Favorite"}
+          </button>
         }
         <h3>Table of Contents</h3>
         <cover
@@ -260,13 +258,14 @@ function ReadBook() {
           ))}
         </ul>
       </div>
-      
+
       {selectedChapter === "cover" ? (
         <div className="cover-content">
-          <img src={book.cover_image_url || defaultBookCover} 
-            alt="Cover Not Found" 
-            onError={(e) => { e.target.src = defaultBookCover; 
-          }}/>
+          <img src={book.cover_image_url || defaultBookCover}
+            alt="Cover Not Found"
+            onError={(e) => {
+              e.target.src = defaultBookCover;
+            }} />
           <h3>{book.book_title}</h3>
           <p>By {book.author}</p>
           {book.average_rating > 0 ? (
@@ -310,7 +309,7 @@ function ReadBook() {
 
           <div className="comments-header">
             <h2>Comments</h2>
-            {user && 
+            {user &&
               <button
                 className="new-comment-button"
                 onClick={() => {

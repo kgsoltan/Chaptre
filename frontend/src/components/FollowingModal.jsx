@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Import Link
-import { getAuthorDetails } from '../services/api'; // Your API function to fetch author details
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { getAuthorDetails } from '../services/api';
 
 import './FollowingModal.css'
 
-const FollowingModal = ({onClose}) => {
+const FollowingModal = ({ onClose }) => {
   const { authorId } = useParams();
-  const [followingList, setFollowingList] = useState([]);  // This will store the list of followed authors' details
+  const [followingList, setFollowingList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(true); // State to control modal visibility
 
   useEffect(() => {
     if (!authorId) {
@@ -20,55 +19,54 @@ const FollowingModal = ({onClose}) => {
 
     const fetchFollowingList = async () => {
       try {
-        const author = await getAuthorDetails(authorId); // Fetch the author details
+        const author = await getAuthorDetails(authorId);
 
         if (author && author.following && author.following.length > 0) {
           // Fetch details for each followed author
           const followingDetails = await Promise.all(
             author.following.map(async (followedAuthorId) => {
               const followedAuthorDetails = await getAuthorDetails(followedAuthorId);
-              return followedAuthorDetails;  // Return full details for each followed author
+              return followedAuthorDetails;
             })
           );
-          setFollowingList(followingDetails);  // Set the details in the state
+          setFollowingList(followingDetails);
         } else {
           setError('Author has no following list');
         }
       } catch (err) {
-        setError('Error fetching author data');
+        setError('Error fetching author data', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFollowingList();  // Trigger the fetching of data
-  }, [authorId]);  // Dependency on authorId to fetch when it changes
+    fetchFollowingList();
+  }, [authorId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   const handleClose = () => {
-    onClose(); // Call the onClose prop function
+    onClose();
   };
 
-  if (!isModalOpen) return null; // Don't render anything if the modal is closed
 
   return (
     <div className="following-modal-overlay">
       <div className="following-modal-content">
-        <button className="close-button" onClick={handleClose}>×</button> {/* Use the handleClose function */}
+        <button className="close-button" onClick={handleClose}>×</button>
         <h3>Following List</h3>
         {followingList.length > 0 ? (
           <ul>
             {followingList.map((followedAuthor, index) => (
               <li key={index}>
-                <Link 
-                  to={`/profile/${followedAuthor.id}`} 
-                  className="author-link" 
+                <Link
+                  to={`/profile/${followedAuthor.id}`}
+                  className="author-link"
                   title="View Author's Profile"
                   onClick={handleClose}
                 >
-                  {followedAuthor.first_name} {followedAuthor.last_name} {/* Display first and last name */}
+                  {followedAuthor.first_name} {followedAuthor.last_name}
                 </Link>
               </li>
             ))}

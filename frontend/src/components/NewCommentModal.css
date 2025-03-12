@@ -1,73 +1,70 @@
-/* Modal styling */
 .new-comment-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Moves modal box down */
-    padding-top: 100px; /* Adds space from the top */
-  }
-  
-  .new-comment-modal .modal-content {
-    background-color: white;
-    padding: 50px; /* More padding for a larger look */
-    border-radius: 10px;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-    width: 700px; /* Increased width */
-    max-width: 95%;
-    height: auto; /* Adjusts height dynamically */
-  }
-  
-  .new-comment-modal .modal-content h3 {
-    margin-top: 0;
-    font-size: 2rem; /* Larger heading */
-    color: #333;
-    margin-bottom: 25px;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px;
+}
 
-  .stars {
-    font-size: 30px;
-    color: #ccc; /* Light gray for unfilled stars */
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
+.new-comment-modal .modal-content {
+  background-color: white;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+  width: 700px;
+  max-width: 95%;
+  height: auto;
+}
 
-  .star.filled {
-    color: gold; /* Gold color for filled stars */
-  }
-  
-  .star:hover {
-    color: #ffcc00; /* Highlight color on hover */
-  }
+.new-comment-modal .modal-content h3 {
+  margin-top: 0;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 25px;
+}
 
-  .modal-buttons {
-    display: flex;
-    justify-content: space-between; /* Keeps buttons side by side */
-    gap: 15px; /* Adds spacing between buttons */
-    margin-top: 25px;
-    width: 100%; /* Makes sure buttons stretch to fit the modal */
-  }
+.stars {
+  font-size: 30px;
+  color: #ccc;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
 
-  .modal-button {
-    flex: 1; /* Makes both buttons equal in width */
-    padding: 14px 18px; /* Keeps the larger padding */
-    font-size: 1.1rem; /* Keeps text readable */
-    background-color: #d32f2f;
-    border: none;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 25px; /* More space above button */
-    width: 100%; /* Ensures buttons fit the modal */
-  }
-  
-  .modal-button:hover {
-    background-color: #218838;
-  }
-  
+.star.filled {
+  color: gold;
+}
 
+.star:hover {
+  color: #ffcc00;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 25px;
+  width: 100%;
+}
+
+.modal-button {
+  flex: 1;
+  padding: 14px 18px;
+  font-size: 1.1rem;
+  background-color: #d32f2f;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 25px;
+  width: 100%;
+}
+
+.modal-button:hover {
+  background-color: #218838;
+}

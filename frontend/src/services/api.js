@@ -61,23 +61,22 @@ export const getS3UploadUrl = async () => {
   try {
     console.log("Sending request to get S3 upload URL...");
     const response = await api.get('/s3Url');
-    console.log("poop");
     console.log(response);
     return response.data.url;
   } catch (error) {
     console.error("Error fetching S3 URL:", error);
     throw error;
   }
- };
+};
 
 export const getPublishedBooks = async (count) => {
-    const response = await api.get(`/books?count=${count}`);
-    return response.data;
+  const response = await api.get(`/books?count=${count}`);
+  return response.data;
 
 };
 
 export const getTopRated = async (count) => {
-  const response = await api.get(`/books/toprated?count=6`);
+  const response = await api.get(`/books/toprated?count=${count}`);
   return response.data;
 
 };
@@ -108,11 +107,11 @@ export const searchBooks = async (searchTerm, genres) => {
     }
 
     const url = `/books/search?${searchParams.toString()}`;
-  
+
     // Make the API request and return response
     const response = await api.get(url);
     const books = await response.data;
-    return books; 
+    return books;
   } catch (error) {
     console.error("Error during search:", error);
     return [];
@@ -209,32 +208,32 @@ export const deleteBook = async (bookId) => {
 // Create a new chapter
 export const createChapter = async (bookId, chapterData) => {
   try {
-      const token = await getAuthToken();
-      const response = await api.post(`/books/${bookId}/chapters`, chapterData, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      });
-      return response.data;
+    const token = await getAuthToken();
+    const response = await api.post(`/books/${bookId}/chapters`, chapterData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   } catch (error) {
-      console.error("Error creating chapter:", error);
-      throw error;
+    console.error("Error creating chapter:", error);
+    throw error;
   }
 };
 
 // Delete a chapter
 export const deleteChapter = async (bookId, chapterId) => {
   try {
-      const token = await getAuthToken();
-      const response = await api.delete(`/books/${bookId}/chapters/${chapterId}`, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      });
-      return response.data;
+    const token = await getAuthToken();
+    const response = await api.delete(`/books/${bookId}/chapters/${chapterId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   } catch (error) {
-      console.error("Error deleting chapter:", error);
-      throw error;
+    console.error("Error deleting chapter:", error);
+    throw error;
   }
 };
 
@@ -282,32 +281,32 @@ export const updateBook = async (bookId, updates) => {
 //create new comment
 export const createComment = async (bookId, chapterId, commentData) => {
   try {
-      const token = await getAuthToken();
-      const response = await api.post(`/books/${bookId}/chapters/${chapterId}/comments`, commentData, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      });
-      return response.data;
+    const token = await getAuthToken();
+    const response = await api.post(`/books/${bookId}/chapters/${chapterId}/comments`, commentData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   } catch (error) {
-      console.error("Error creating comment:", error);
-      throw error;
+    console.error("Error creating comment:", error);
+    throw error;
   }
 };
 
 // Delete a comment
 export const deleteComment = async (bookId, chapterId, commentId) => {
   try {
-      const token = await getAuthToken();
-      const response = await api.delete(`/books/${bookId}/chapters/${chapterId}/comments/${commentId}`, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      });
-      return response.data;
+    const token = await getAuthToken();
+    const response = await api.delete(`/books/${bookId}/chapters/${chapterId}/comments/${commentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   } catch (error) {
-      console.error("Error deleting comment:", error);
-      throw error;
+    console.error("Error deleting comment:", error);
+    throw error;
   }
 };
 
